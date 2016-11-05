@@ -1,0 +1,69 @@
+Analyse lexicale :
+
+keyword        --> \Keyword
+ponctuation    --> {},[]
+declarations   -->
+instuctions    --> \leftarrow
+constante      --> $42
+nomVariable
+dimension      --> entier > 0
+blankline      --> \BlankLine
+commentaire    --> \tcc{commentaire}
+emptyset       --> \emptyset
+nomconstante
+
+Analyse syntaxique :
+
+/* Générales */
+VALEUR                  -->
+LIST_EXPR               --> EXPR,EXPR
+                            |ε
+EXPR                    -->
+
+/* Déclarations */
+SUITE_DECLARATION       --> DECLARATION,SUITE_DECLARATION
+                            |emptyset
+                            |ε
+DECLARATION_VAR         --> nomvariable \in TYPE
+DECLARATION_CONSTANTE   --> nomdeconstante = VALEUR \in TYPE_SCALAIRE
+TYPE                    --> TYPE_SCALAIRE
+                            |TYPE_VECTORIEL
+TYPE_SCALAIRE           --> integer
+                            |real
+                            |boolean
+TYPE_VECTORIEL          --> TYPE_SCALAIRE^{dimension}
+/* Instructions */
+INSTRUCTIONS            --> INSTRUCTIONS;INSTRUCTIONS
+                            |INSTRUCTION_AFFECTATION
+                            |STRUCT_CTRL
+                            |ε
+INSTRUCTION_AFFECTATION --> $nomvariable \leftarrow EXPRESSION$
+/* Strucute de contrôle */
+STRUCT_CTRL             --> WHILE
+                            |FOR
+                            |IF
+                            |EIF
+WHILE                   --> \While {$CONDITION$}{INSTRUCTIONS}
+FOR                     --> \For {INSTRUCTION_AFFECTATION \KwTo $EXPRESSION$} {INSTRUCTIONS}
+IF                      --> \If {$CONDITION$}{INSTRUCTIONS}
+EIF                     --> \eIf {$CONDITION$}{INSTRUCTIONS}{INSTRUCTIONS}
+
+/* Appel */
+CALLALGO                --> \mbox{nomalgo}($LIST_EXPR$)}
+
+Partition fichier :
+
+Au début, non interprêté ou rien. (Commentaire)
+
+Le début de l'algo.
+
+Zone de déclaration. --> Se termine par un blankline
+    \Constant{$<suite de déclarations>$}
+    \Input{$<suite de déclarations>$}
+    \Output{$<déclaration>$}
+    \Global{$<suite de déclarations>$}
+    \Local{$<suite de déclarations>$}
+
+Zone des instructions.
+
+Fin de l'algo.
