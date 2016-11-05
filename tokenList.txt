@@ -55,7 +55,7 @@ Partition fichier :
 
 Au début, non interprêté ou rien. (Commentaire)
 
-Le début de l'algo.
+Le début de l'algo : \begin{texsci}{<nom d’algorithme>}
 
 Zone de déclaration. --> Se termine par un blankline
     \Constant{$<suite de déclarations>$}
@@ -66,4 +66,4 @@ Zone de déclaration. --> Se termine par un blankline
 
 Zone des instructions.
 
-Fin de l'algo.
+Fin de l'algo : \end{texsci}
