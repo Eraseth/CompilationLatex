@@ -49,7 +49,7 @@ IF                      --> \If {$CONDITION$}{INSTRUCTIONS}
 EIF                     --> \eIf {$CONDITION$}{INSTRUCTIONS}{INSTRUCTIONS}
 
 /* Appel */
-CALLALGO                --> \mbox{nomalgo}($LIST_EXPR$)}
+CALLALGO                --> \mbox{nomalgo}($LIST_EXPR$)} (Plus tard)
 
 Partition fichier :
 
