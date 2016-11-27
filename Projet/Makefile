@@ -5,20 +5,20 @@
 .SUFFIXES:
 
 # Variables
-CC = gcc#Le compilateur
-PROJECT = Compilateur#Le nom du projet
-TYPE = .out#Le type de l'executable final (exe, out, ...)
-BIN = $(PROJECT)$(TYPE)#L'executable
-DOUT =#Le dossier des objets
-OBJS =#Les .o à utiliser
-EXECY = arithm.y#Le fichier à utiliser pour Yacc
-EXECL = arithm.l#Le fichier à utiliser pour Lex
-LEX = lex#Lex (Flex, ...)
-YACC = yacc -d#Yacc
-SRC =#Le dossier des sources
-DEPS =#Les dépendances à inclure (Fichier h spécifique ou dossier include/*.h)
-CFLAGS = -W -Wall#Les flags pour la compilation classique
-LDFLAGS =  -lfl -ly#Les flags pour lex et yacc
+CC = gcc
+PROJECT = Compilateur
+TYPE = .out
+BIN = $(PROJECT)$(TYPE)
+DOUT =
+OBJS = variable.o tableSymbole.o
+EXECY = latex.y
+EXECL = latex.l
+LEX = lex
+YACC = yacc -d
+SRC =
+DEPS = include/*.h
+CFLAGS = -W -Wall
+LDFLAGS =  -lfl -ly
 
 # Création de l'executable Out
 all: y.tab.c lex.yy.c $(OBJS)

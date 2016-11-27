@@ -101,7 +101,7 @@ constBool        "\\true"|"\\false"
 .                   { }
 
 %%
-
+/*
 int main(int argc, char* argv[])
 {
 	yyin = fopen(argv[1], "r");
@@ -109,3 +109,4 @@ int main(int argc, char* argv[])
 	fclose(yyin);
 	return 0;
 }
+*/

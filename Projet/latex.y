@@ -3,12 +3,14 @@
   #include <stdlib.h>
   #define TEXCC_ERROR_GENERAL 4
 
-  void yyerror(char*);
 
   // Functions and global variables provided by Lex.
   int yylex();
   void texcc_lexer_free();
   extern FILE* yyin;
+ void yyerror (char const *s) {
+   fprintf (stderr, "%s\n", s);
+ }
 %}
 
 %union {
@@ -155,7 +157,7 @@ type:
     }
   ;
 %%
-
+/*
 int main(int argc, char* argv[]) {
   if (argc == 2) {
     if ((yyin = fopen(argv[1], "r")) == NULL) {
@@ -172,3 +174,4 @@ int main(int argc, char* argv[]) {
   texcc_lexer_free();
   return EXIT_SUCCESS;
 }
+*/
