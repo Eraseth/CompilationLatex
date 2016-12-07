@@ -68,8 +68,11 @@ void print_variable(variable var){
 }
 
 void free_variable(variable var){
-  free(var->id);
-  free(var);
+
+  if (var != NULL) {
+    free(var->id);
+    free(var);
+  }
 }
 /*
 int main(){

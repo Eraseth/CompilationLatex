@@ -10,26 +10,26 @@ PROJECT = Compilateur
 TYPE = .out
 BIN = $(PROJECT)$(TYPE)
 DOUT =
-OBJS = variable.o tableSymbole.o
+OBJS = variable.o tableSymbole.o quad.o quad_list.o
 EXECY = latex.y
 EXECL = latex.l
 LEX = lex
 YACC = yacc -d
 SRC =
-DEPS = include/*.h
+DEPS = include/*.h ./*.h
 CFLAGS = -W -Wall
 LDFLAGS =  -lfl -ly
 
 # Création de l'executable Out
-all: y.tab.c lex.yy.c $(OBJS)
-	$(CC) $^ -o $(BIN) $(LDFLAGS) 
+all: y.tab.c lex.yy.c $(OBJS) $(DEPS)
+	$(CC) $^ -o $(BIN) $(LDFLAGS)
 
 #Création du y.tab.c
-y.tab.c: $(EXECY)
+y.tab.c: $(EXECY) $(DEPS)
 	$(YACC) $(EXECY)
 
 #Création du lex.yy.c
-lex.yy.c: $(EXECL)
+lex.yy.c: $(EXECL) $(DEPS)
 	$(LEX) $(EXECL)
 
 #Création des fichiers objets avec les fichiers c renseignés
