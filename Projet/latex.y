@@ -80,41 +80,41 @@ algorithm:
 
 /* Zone de déclarations (ordre obligatoire ici) */
 zone_declarations:
-    declaration_constante declaration_input declaration_output
-    declaration_global declaration_local BLANKLINE
+    zone_declaration_constante zone_declaration_input zone_declaration_output
+    zone_declaration_global zone_declaration_local BLANKLINE
     {
       printf("\nzone déclaration\n");
     }
   ;
-declaration_constante:
+zone_declaration_constante:
     DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n'
     {
       printf("\nzone déclaration DECLARECONSTANT\n");
     }
     | { ; }
   ;
-declaration_input:
+zone_declaration_input:
     DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n'
     {
       printf("\nzone déclaration DECLAREINPUT\n");
     }
     | { ; }
   ;
-declaration_output:
+zone_declaration_output:
     DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n'
     {
       printf("\nzone déclaration DECLAREOUTPUT\n");
     }
     | { ; }
   ;
-declaration_global:
+zone_declaration_global:
     DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n'
     {
       printf("\nzone déclaration DECLAREGLOBAL\n");
     }
     | { ; }
   ;
-declaration_local:
+zone_declaration_local:
     DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n'
     {
       printf("\nzone déclaration local\n");
