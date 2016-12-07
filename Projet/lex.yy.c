@@ -1058,35 +1058,43 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 #line 92 "latex.l"
-{ printf("CONSTINT "); return CONSTINT; }
+{
+                            printf("CONSTINT ");
+                            yylval.valUnion.valInt = atoi(yytext);
+                            return CONSTINT;
+                          }
 	YY_BREAK
 case 37:
 *yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 93 "latex.l"
-{ printf("CONSTFLOAT "); return CONSTFLOAT; }
+#line 97 "latex.l"
+{
+                            printf("CONSTFLOAT ");
+                            yylval.valUnion.valFloat = atof(yytext);
+                            return CONSTFLOAT;
+                          }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 94 "latex.l"
+#line 102 "latex.l"
 { printf("CONSTBOOL "); return CONSTBOOL; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 95 "latex.l"
+#line 103 "latex.l"
 { printf("%c ", yytext[0]);return yytext[0]; }
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 96 "latex.l"
+#line 104 "latex.l"
 { printf("\n"); return yytext[0];}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 97 "latex.l"
+#line 105 "latex.l"
 {
                       yylval.name = strdup(yytext);
                       printf("%s ", yytext);
@@ -1095,15 +1103,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 102 "latex.l"
+#line 110 "latex.l"
 { ; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 104 "latex.l"
+#line 112 "latex.l"
 ECHO;
 	YY_BREAK
-#line 1107 "lex.yy.c"
+#line 1115 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(texsci):
 	yyterminate();
@@ -2068,7 +2076,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 104 "latex.l"
+#line 112 "latex.l"
 
 
 

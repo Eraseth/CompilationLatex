@@ -4,6 +4,10 @@
   #include "include/tableSymbole.h"
   #define TEXCC_ERROR_GENERAL 4
 
+  //Notre liste chaînée TDS
+  tableSymbole tableS = NULL;
+  //Compteur pour la création de variable temporaire
+  int compteurTemporaire = 0;
 
   // Functions and global variables provided by Lex.
   int yylex();
@@ -14,13 +18,32 @@
     fprintf (stderr, "%s\n", s);
   }
 
-  tableSymbole tableS = NULL;
+  char * conversion_int_string(int compteurTemporaire)
+  {
+    char * str = malloc(sizeof(char)*64);
+    sprintf(str,"%d",compteurTemporaire);
+    return str;
+  }
+
+  char * generate_temp_name(int compteurTemporaire){
+    char * str = malloc(sizeof(char)*64);
+    char * str2 = conversion_int_string(compteurTemporaire);
+    strcat(str, "temp");
+    strcat(str,str2);
+    free(str2);
+    return str;
+  }
+
 %}
 
 %union {
   char* name;
   int value;
-  double dvalue;
+  float dvalue;
+  union {
+    int valInt;
+    float valFloat;
+  } valUnion;
 }
 
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN
@@ -35,6 +58,10 @@
 %token <name> ID
 
 %type <value> type
+%type <valUnion> valeur
+
+
+
 %%
 
 algorithm_list:
@@ -95,29 +122,34 @@ declaration_local:
     | { ; }
   ;
 suite_declarations_constante:
-    suite_declarations_constante declaration_constante ','
+    declaration_constante ',' suite_declarations_constante
     {
-
+      printf("\nsuite déclaration constante\n");
+    }
+    |
+    declaration_constante
+    {
+      printf("\ndéclaration constante\n");
     }
     | EMPTYSET
     {
-
+      ;
     }
     | { ; }
   ;
 suite_declarations_variable:
-    suite_declarations_variable declaration_variable ','
+    declaration_variable ',' suite_declarations_variable
     {
       printf("\nsuite déclaration var\n");
     }
     |
-    suite_declarations_variable declaration_variable
+    declaration_variable
     {
-      printf("\nsuite déclaration var (sans virgule)\n");
+      printf("\ndéclaration var\n");
     }
     | EMPTYSET
     {
-
+      ;
     }
     | { ; }
   ;
@@ -139,10 +171,10 @@ declaration_variable:
           var = new_variable_bool($1, 0);
           break;
         case REAL:
-          var = new_variable_double($1, 0.0);
+          var = new_variable_float($1, 0.0);
           break;
         default:
-          printf("\nERROR TYPE NON RECONNU %d(declaration_variable)\n", $3);
+          printf("\nError : Type non reconnu %d(declaration_variable)\n", $3);
           exit(EXIT_FAILURE);
           break;
       }
@@ -179,21 +211,22 @@ type:
   ;
 %%
 
-// int main(int argc, char* argv[]) {
-//   if (argc == 2) {
-//     if ((yyin = fopen(argv[1], "r")) == NULL) {
-//       fprintf(stderr, "[texcc] error: unable to open file %s\n", argv[1]);
-//       exit(TEXCC_ERROR_GENERAL);
-//     }
-//   } else {
-//     fprintf(stderr, "[texcc] usage: %s input_file\n", argv[0]);
-//     exit(TEXCC_ERROR_GENERAL);
-//   }
-//
-//   yyparse();
-//   fclose(yyin);
-//   texcc_lexer_free();
-//   print_tds(tableS);
-//   free_tds(tableS);
-//   return EXIT_SUCCESS;
-// }
+int main(int argc, char* argv[]) {
+  if (argc == 2) {
+    if ((yyin = fopen(argv[1], "r")) == NULL) {
+      fprintf(stderr, "[texcc] error: unable to open file %s\n", argv[1]);
+      exit(TEXCC_ERROR_GENERAL);
+    }
+  } else {
+    fprintf(stderr, "[texcc] usage: %s input_file\n", argv[0]);
+    exit(TEXCC_ERROR_GENERAL);
+  }
+
+  yyparse();
+  fclose(yyin);
+  texcc_lexer_free();
+  print_tds(tableS);
+  free_tds(tableS);
+  return EXIT_SUCCESS;
+
+}

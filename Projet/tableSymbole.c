@@ -77,16 +77,16 @@ variable lookup_tds(tableSymbole table, char *id){
 
 }
 
-void main(){
-  variable v1 = new_variable_int("name", 45);
-  variable v2 = new_variable_double("name", 45.2);
-  tableSymbole tds = new_tds();
-  tds = add_variable(tds, v1);
-  tds = add_variable(tds, v2);
-  print_tds(tds);
-  print_variable(lookup_tds(tds, "name"));
-  if (lookup_tds(tds, "namefqsfqd") == NULL) {
-    printf("NULL\n");
-  }
-  print_variable(lookup_tds(tds, "name1"));
-}
+// void main(){
+//   variable v1 = new_variable_int("name", 45);
+//   variable v2 = new_variable_float("name", 45.2);
+//   tableSymbole tds = new_tds();
+//   tds = add_variable(tds, v1);
+//   tds = add_variable(tds, v2);
+//   print_tds(tds);
+//   print_variable(lookup_tds(tds, "name"));
+//   if (lookup_tds(tds, "namefqsfqd") == NULL) {
+//     printf("NULL\n");
+//   }
+//   print_variable(lookup_tds(tds, "name1"));
+// }

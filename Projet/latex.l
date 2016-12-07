@@ -89,8 +89,16 @@ constBool        "\\true"|"\\false"
 <texsci>{printInt}        { printf("PRINTINT "); return PRINTINT; }
 <texsci>{printText}       { printf("PRINTTEXT "); return PRINTTEXT; }
 <texsci>{printReal}       { printf("PRINTREAL "); return PRINTREAL; }
-<texsci>{constInt}        { printf("CONSTINT "); return CONSTINT; }
-<texsci>{constFloat}      { printf("CONSTFLOAT "); return CONSTFLOAT; }
+<texsci>{constInt}        {
+                            printf("CONSTINT ");
+                            yylval.valUnion.valInt = atoi(yytext);
+                            return CONSTINT;
+                          }
+<texsci>{constFloat}      {
+                            printf("CONSTFLOAT ");
+                            yylval.valUnion.valFloat = atof(yytext);
+                            return CONSTFLOAT;
+                          }
 <texsci>{constBool}       { printf("CONSTBOOL "); return CONSTBOOL; }
 <texsci>[{}()$,^]         { printf("%c ", yytext[0]);return yytext[0]; }
 <texsci>[\n]              { printf("\n"); return yytext[0];}

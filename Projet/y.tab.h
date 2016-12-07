@@ -132,13 +132,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 20 "latex.y" /* yacc.c:1909  */
+#line 39 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
-  double dvalue;
+  float dvalue;
+  union {
+    int valInt;
+    float valFloat;
+  } valUnion;
 
-#line 142 "y.tab.h" /* yacc.c:1909  */
+#line 146 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

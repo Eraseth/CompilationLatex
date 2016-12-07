@@ -26,7 +26,7 @@ all: y.tab.c lex.yy.c $(OBJS) $(DEPS)
 
 #Création du y.tab.c
 y.tab.c: $(EXECY) $(DEPS)
-	$(YACC) $(EXECY)
+	$(YACC) -v $(EXECY)
 
 #Création du lex.yy.c
 lex.yy.c: $(EXECL) $(DEPS)
