@@ -139,17 +139,16 @@ union YYSTYPE
   char* name;
   int value;
   float dvalue;
-  struct valeur_struct{
-    union {
-      int valInt;
-      float valFloat;
-    } valUnion;
-    int type;
-  } valeurSt;
-  variable2 test;
+  struct {
+      union {
+        int valInt;
+        float valFloat;
+      } valUnion;
+      int type;
+    } valeurSt;
+  variable v;
 
-
-#line 153 "y.tab.h" /* yacc.c:1909  */
+#line 152 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

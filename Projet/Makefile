@@ -24,13 +24,14 @@ LDFLAGS =  -lfl -ly
 all: y.tab.c lex.yy.c $(OBJS) $(DEPS)
 	$(CC) $^ -o $(BIN) $(LDFLAGS)
 
+#Création du lex.yy.c
+lex.yy.c: $(EXECL) $(DEPS)
+	$(LEX) $(EXECL)
+
 #Création du y.tab.c
 y.tab.c: $(EXECY) $(DEPS)
 	$(YACC) $(EXECY)
 
-#Création du lex.yy.c
-lex.yy.c: $(EXECL) $(DEPS)
-	$(LEX) $(EXECL)
 
 #Création des fichiers objets avec les fichiers c renseignés
 %.o: %.c $(DEPS)

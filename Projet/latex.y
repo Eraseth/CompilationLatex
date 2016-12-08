@@ -43,15 +43,14 @@
   char* name;
   int value;
   float dvalue;
-  struct valeur_struct{
-    union {
-      int valInt;
-      float valFloat;
-    } valUnion;
-    int type;
-  } valeurSt;
-  variable2 test;
-
+  struct {
+      union {
+        int valInt;
+        float valFloat;
+      } valUnion;
+      int type;
+    } valeurSt;
+  variable v;
 }
 
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN

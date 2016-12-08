@@ -232,17 +232,16 @@ union YYSTYPE
   char* name;
   int value;
   float dvalue;
-  struct valeur_struct{
-    union {
-      int valInt;
-      float valFloat;
-    } valUnion;
-    int type;
-  } valeurSt;
-  variable2 test;
+  struct {
+      union {
+        int valInt;
+        float valFloat;
+      } valUnion;
+      int type;
+    } valeurSt;
+  variable v;
 
-
-#line 246 "y.tab.c" /* yacc.c:355  */
+#line 245 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -259,7 +258,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 263 "y.tab.c" /* yacc.c:358  */
+#line 262 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -560,11 +559,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    79,    79,    80,    87,    97,   103,   108,   113,   116,
-     122,   128,   133,   139,   144,   150,   155,   163,   168,   174,
-     182,   186,   189,   193,   196,   200,   203,   207,   210,   215,
-     219,   223,   226,   231,   235,   239,   242,   264,   286,   291,
-     296,   303,   307,   311
+       0,    78,    78,    79,    86,    96,   102,   107,   112,   115,
+     121,   127,   132,   138,   143,   149,   154,   162,   167,   173,
+     181,   185,   188,   192,   195,   199,   202,   206,   209,   214,
+     218,   222,   225,   230,   234,   238,   241,   263,   285,   290,
+     295,   302,   306,   310
 };
 #endif
 
@@ -1411,260 +1410,260 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 81 "latex.y" /* yacc.c:1646  */
+#line 80 "latex.y" /* yacc.c:1646  */
     {
     printf("Do nothing");
   }
-#line 1419 "y.tab.c" /* yacc.c:1646  */
+#line 1418 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 88 "latex.y" /* yacc.c:1646  */
+#line 87 "latex.y" /* yacc.c:1646  */
     {
       //fprintf(stderr, "[texcc] info: algorithm \"%s\" parsed\n", $3);
       //free($3);
       printf("ALGORITHM\n");
     }
-#line 1429 "y.tab.c" /* yacc.c:1646  */
+#line 1428 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 98 "latex.y" /* yacc.c:1646  */
+#line 97 "latex.y" /* yacc.c:1646  */
     {
     printf("Liste d'instructions\n");
   }
-#line 1437 "y.tab.c" /* yacc.c:1646  */
+#line 1436 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 104 "latex.y" /* yacc.c:1646  */
+#line 103 "latex.y" /* yacc.c:1646  */
     {
     printf("list_instructions");
   }
-#line 1445 "y.tab.c" /* yacc.c:1646  */
+#line 1444 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 109 "latex.y" /* yacc.c:1646  */
+#line 108 "latex.y" /* yacc.c:1646  */
     {
     printf("list_instructions");
   }
-#line 1453 "y.tab.c" /* yacc.c:1646  */
+#line 1452 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 113 "latex.y" /* yacc.c:1646  */
+#line 112 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1459 "y.tab.c" /* yacc.c:1646  */
+#line 1458 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 117 "latex.y" /* yacc.c:1646  */
+#line 116 "latex.y" /* yacc.c:1646  */
     {
     printf("Do nothing");
   }
-#line 1467 "y.tab.c" /* yacc.c:1646  */
+#line 1466 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 123 "latex.y" /* yacc.c:1646  */
+#line 122 "latex.y" /* yacc.c:1646  */
     {
     quad new_quad();
   }
-#line 1475 "y.tab.c" /* yacc.c:1646  */
+#line 1474 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 129 "latex.y" /* yacc.c:1646  */
+#line 128 "latex.y" /* yacc.c:1646  */
     {
 
   }
-#line 1483 "y.tab.c" /* yacc.c:1646  */
+#line 1482 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 134 "latex.y" /* yacc.c:1646  */
+#line 133 "latex.y" /* yacc.c:1646  */
     {
 
   }
-#line 1491 "y.tab.c" /* yacc.c:1646  */
+#line 1490 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 140 "latex.y" /* yacc.c:1646  */
+#line 139 "latex.y" /* yacc.c:1646  */
     {
 
   }
-#line 1499 "y.tab.c" /* yacc.c:1646  */
+#line 1498 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 145 "latex.y" /* yacc.c:1646  */
+#line 144 "latex.y" /* yacc.c:1646  */
     {
 
   }
-#line 1507 "y.tab.c" /* yacc.c:1646  */
+#line 1506 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 151 "latex.y" /* yacc.c:1646  */
+#line 150 "latex.y" /* yacc.c:1646  */
     {
 
   }
-#line 1515 "y.tab.c" /* yacc.c:1646  */
+#line 1514 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 156 "latex.y" /* yacc.c:1646  */
+#line 155 "latex.y" /* yacc.c:1646  */
     {
     variable var;
 
   }
-#line 1524 "y.tab.c" /* yacc.c:1646  */
+#line 1523 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 165 "latex.y" /* yacc.c:1646  */
+#line 164 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration\n");
     }
-#line 1532 "y.tab.c" /* yacc.c:1646  */
+#line 1531 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 169 "latex.y" /* yacc.c:1646  */
+#line 168 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration vide\n");
     }
-#line 1540 "y.tab.c" /* yacc.c:1646  */
+#line 1539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 175 "latex.y" /* yacc.c:1646  */
+#line 174 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration DECLARECONSTANT\n");
     }
-#line 1548 "y.tab.c" /* yacc.c:1646  */
+#line 1547 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 183 "latex.y" /* yacc.c:1646  */
+#line 182 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration DECLAREINPUT\n");
     }
-#line 1556 "y.tab.c" /* yacc.c:1646  */
+#line 1555 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 186 "latex.y" /* yacc.c:1646  */
+#line 185 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1562 "y.tab.c" /* yacc.c:1646  */
+#line 1561 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 190 "latex.y" /* yacc.c:1646  */
+#line 189 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration DECLAREOUTPUT\n");
     }
-#line 1570 "y.tab.c" /* yacc.c:1646  */
+#line 1569 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 193 "latex.y" /* yacc.c:1646  */
+#line 192 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1576 "y.tab.c" /* yacc.c:1646  */
+#line 1575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 197 "latex.y" /* yacc.c:1646  */
+#line 196 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration DECLAREGLOBAL\n");
     }
-#line 1584 "y.tab.c" /* yacc.c:1646  */
+#line 1583 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 200 "latex.y" /* yacc.c:1646  */
+#line 199 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1590 "y.tab.c" /* yacc.c:1646  */
+#line 1589 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 204 "latex.y" /* yacc.c:1646  */
+#line 203 "latex.y" /* yacc.c:1646  */
     {
       printf("\nzone déclaration local\n");
     }
-#line 1598 "y.tab.c" /* yacc.c:1646  */
+#line 1597 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 207 "latex.y" /* yacc.c:1646  */
+#line 206 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1604 "y.tab.c" /* yacc.c:1646  */
+#line 1603 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 211 "latex.y" /* yacc.c:1646  */
+#line 210 "latex.y" /* yacc.c:1646  */
     {
       printf("\nsuite déclaration constante\n");
     }
-#line 1612 "y.tab.c" /* yacc.c:1646  */
+#line 1611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 216 "latex.y" /* yacc.c:1646  */
+#line 215 "latex.y" /* yacc.c:1646  */
     {
       printf("\ndéclaration constante\n");
     }
-#line 1620 "y.tab.c" /* yacc.c:1646  */
+#line 1619 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 220 "latex.y" /* yacc.c:1646  */
+#line 219 "latex.y" /* yacc.c:1646  */
     {
       ;
     }
-#line 1628 "y.tab.c" /* yacc.c:1646  */
+#line 1627 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 223 "latex.y" /* yacc.c:1646  */
+#line 222 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1634 "y.tab.c" /* yacc.c:1646  */
+#line 1633 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 227 "latex.y" /* yacc.c:1646  */
+#line 226 "latex.y" /* yacc.c:1646  */
     {
       printf("\nsuite déclaration var\n");
     }
-#line 1642 "y.tab.c" /* yacc.c:1646  */
+#line 1641 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 232 "latex.y" /* yacc.c:1646  */
+#line 231 "latex.y" /* yacc.c:1646  */
     {
       printf("\ndéclaration var\n");
     }
-#line 1650 "y.tab.c" /* yacc.c:1646  */
+#line 1649 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 236 "latex.y" /* yacc.c:1646  */
+#line 235 "latex.y" /* yacc.c:1646  */
     {
       ;
     }
-#line 1658 "y.tab.c" /* yacc.c:1646  */
+#line 1657 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 239 "latex.y" /* yacc.c:1646  */
+#line 238 "latex.y" /* yacc.c:1646  */
     { ; }
-#line 1664 "y.tab.c" /* yacc.c:1646  */
+#line 1663 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 243 "latex.y" /* yacc.c:1646  */
+#line 242 "latex.y" /* yacc.c:1646  */
     {
       variable var;
       switch ((yyvsp[0].value)) {
@@ -1684,11 +1683,11 @@ yyreduce:
       }
       tableS = add_variable(tableS, var);
     }
-#line 1688 "y.tab.c" /* yacc.c:1646  */
+#line 1687 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 265 "latex.y" /* yacc.c:1646  */
+#line 264 "latex.y" /* yacc.c:1646  */
     {
       variable var;
       switch ((yyvsp[0].value)) {
@@ -1708,62 +1707,62 @@ yyreduce:
       }
       tableS = add_variable(tableS, var);
     }
-#line 1712 "y.tab.c" /* yacc.c:1646  */
+#line 1711 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 287 "latex.y" /* yacc.c:1646  */
+#line 286 "latex.y" /* yacc.c:1646  */
     {
       (yyval.valeurSt).valUnion.valInt = yylval.value;
       (yyval.valeurSt).type = TYPE_INT;
     }
-#line 1721 "y.tab.c" /* yacc.c:1646  */
+#line 1720 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 292 "latex.y" /* yacc.c:1646  */
+#line 291 "latex.y" /* yacc.c:1646  */
     {
       (yyval.valeurSt).valUnion.valFloat = yylval.dvalue;
       (yyval.valeurSt).type = TYPE_FLOAT;
     }
-#line 1730 "y.tab.c" /* yacc.c:1646  */
+#line 1729 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 297 "latex.y" /* yacc.c:1646  */
+#line 296 "latex.y" /* yacc.c:1646  */
     {
       (yyval.valeurSt).valUnion.valInt = yylval.value;
       (yyval.valeurSt).type = TYPE_BOOL;
     }
-#line 1739 "y.tab.c" /* yacc.c:1646  */
+#line 1738 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 304 "latex.y" /* yacc.c:1646  */
+#line 303 "latex.y" /* yacc.c:1646  */
     {
       (yyval.value) = INTEGER;
     }
-#line 1747 "y.tab.c" /* yacc.c:1646  */
+#line 1746 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 308 "latex.y" /* yacc.c:1646  */
+#line 307 "latex.y" /* yacc.c:1646  */
     {
       (yyval.value) = BOOLEAN;
     }
-#line 1755 "y.tab.c" /* yacc.c:1646  */
+#line 1754 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 312 "latex.y" /* yacc.c:1646  */
+#line 311 "latex.y" /* yacc.c:1646  */
     {
       (yyval.value) = REAL;
     }
-#line 1763 "y.tab.c" /* yacc.c:1646  */
+#line 1762 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1767 "y.tab.c" /* yacc.c:1646  */
+#line 1766 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1991,7 +1990,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 316 "latex.y" /* yacc.c:1906  */
+#line 315 "latex.y" /* yacc.c:1906  */
 
 
 int main(int argc, char* argv[]) {

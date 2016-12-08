@@ -19,17 +19,6 @@ typedef struct variable_struct
 
 }*variable;
 
-typedef struct variable_struct_2
-{
-  char *id;
-	int type;  /*0 --> int 1 --> float/float2 --> bool (iValue = 0 || 1)*/
-  union Value2 {
-    float dValue;
-    int iValue;
-  } val2;
-
-}variable2;
-
 /* Fonctions sur la structure variable */
 variable new_variable_int(char *id, int val);
 
