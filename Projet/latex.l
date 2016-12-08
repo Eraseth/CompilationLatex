@@ -4,6 +4,10 @@
   #include <stdlib.h>
   #include <stdio.h>
   #include <string.h>
+  #include "include/tableSymbole.h"
+  #include "include/quad_list.h"
+  #include "include/quad.h"
+  #include "include/variable.h"
   #include "y.tab.h"
 %}
 
@@ -46,8 +50,9 @@ printInt         "printInt"
 printText        "printText"
 printReal        "printReal"
 constInt         [-+]?[0-9]([0-9])*
-constFloat       [-+]?[0-9]*\.?[0-9]+([-+]?[0-9]+)?$
+constFloat       [-+]?[0-9]*\.?[0-9]+([-+]?[0-9]+)?
 constBool        "\\true"|"\\false"
+eoi              "\\;"
 %%
 
 {begin}             { BEGIN(texsci); printf("BEGIN{texsci} ");   // Start TexSci scanning mode
@@ -62,6 +67,7 @@ constBool        "\\true"|"\\false"
 <texsci>{integer}         { printf("INTEGER "); return INTEGER; }
 <texsci>{commentaire}     { printf("COMMENTAIRE "); }
 <texsci>{boolean}         { printf("BOOLEAN "); return BOOLEAN; }
+<texsci>{eoi}             { printf("EOI (End of instruction) "); return EOI; }
 <texsci>{real}            { printf("REAL "); return REAL; }
 <texsci>{emptyset}        { printf("EMPTYSET "); return EMPTYSET; }
 <texsci>{while}           { printf("WHILE "); return WHILE; }
@@ -91,15 +97,24 @@ constBool        "\\true"|"\\false"
 <texsci>{printReal}       { printf("PRINTREAL "); return PRINTREAL; }
 <texsci>{constInt}        {
                             printf("CONSTINT ");
-                            yylval.valUnion.valInt = atoi(yytext);
+                            yylval.value = atoi(yytext);
                             return CONSTINT;
                           }
+
 <texsci>{constFloat}      {
                             printf("CONSTFLOAT ");
-                            yylval.valUnion.valFloat = atof(yytext);
+                            yylval.dvalue = atof(yytext);
                             return CONSTFLOAT;
                           }
-<texsci>{constBool}       { printf("CONSTBOOL "); return CONSTBOOL; }
+<texsci>{constBool}       {
+                            printf("CONSTBOOL ");
+                            if(strcmp(yytext, "\\true") == 0){
+                              yylval.value = 1;
+                            } else {
+                              yylval.value = 0;
+                            }
+                            return CONSTBOOL;
+                          }
 <texsci>[{}()$,^]         { printf("%c ", yytext[0]);return yytext[0]; }
 <texsci>[\n]              { printf("\n"); return yytext[0];}
 <texsci>{id}        {

@@ -83,7 +83,8 @@ extern int yydebug;
     MULT = 293,
     MINUS = 294,
     PLUS = 295,
-    ID = 296
+    EOI = 296,
+    ID = 297
   };
 #endif
 /* Tokens.  */
@@ -125,24 +126,30 @@ extern int yydebug;
 #define MULT 293
 #define MINUS 294
 #define PLUS 295
-#define ID 296
+#define EOI 296
+#define ID 297
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 39 "latex.y" /* yacc.c:1909  */
+#line 42 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
   float dvalue;
-  union {
-    int valInt;
-    float valFloat;
-  } valUnion;
+  struct valeur_struct{
+    union {
+      int valInt;
+      float valFloat;
+    } valUnion;
+    int type;
+  } valeurSt;
+  variable2 test;
 
-#line 146 "y.tab.h" /* yacc.c:1909  */
+
+#line 153 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
