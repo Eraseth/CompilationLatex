@@ -1,0 +1,38 @@
+Assembleur MIPS en deux parties
+	-Une partie "données"
+		Ce qu'il y a dans la mémoire
+		Commence par le mot clé .data
+	-Une partie "instructions"
+		Les instructions à executer
+		Commence par le mot clé .text
+	Le programme commence à l'instruction ayant le label main.
+	Chaque données et chaque instructions peut avoir un label.
+
+	.data #Commentaire assembleur
+	x: .word 30
+	y: .word 12
+	z: .word 0
+	string : .asciiz "hello world"
+
+	.text
+	main: lw $t0, x
+		  load word - registre t0 - mémoire (label)
+	  lw $t1, y
+	  add $t2, $t0, $t1
+	  	  res  op1  op2
+  	  sw $t2, z
+  	  store word
+
+
+	  Sprim offre quelques appels système. Ca se passe en trois temps.
+	  On place le n d'appel système dans lee $v0 : 1 print int
+	  											   4 print_string
+	  											   10: exit
+	   Li $v0, 1 # li --> load immediate
+	   On place les paramss dans $a0
+	   	Lw $a0, z
+	   On effectue l'appel syscall
+
+	   Pour exit :
+	   	Li $v0, 10
+	   	syscall

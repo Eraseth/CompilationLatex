@@ -20,6 +20,7 @@ tableSymbole add_variable(tableSymbole table, variable var);
 void print_tds(tableSymbole table);
 
 void free_tds(tableSymbole table);
+variable lookup_tds(tableSymbole table, char *id);
 
 int test_existence(tableSymbole table,variable var);/*
 Return 1 si la variable varest déjà présente dans la table
