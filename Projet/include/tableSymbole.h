@@ -14,8 +14,15 @@ typedef struct tds_struct
 }*tableSymbole;
 
 tableSymbole new_tds();
+
 tableSymbole add_variable(tableSymbole table, variable var);
+
 void print_tds(tableSymbole table);
+
 void free_tds(tableSymbole table);
+
+int test_existence(tableSymbole table,variable var);/*
+Return 1 si la variable varest déjà présente dans la table
+*/
 
 #endif

@@ -10,11 +10,11 @@
 //Structure pour nos variables
 typedef struct variable_struct
 {
-  char *id;
-	int type;  /*0 --> int 1 --> double/float2 --> bool (iValue = 0 || 1)*/
-  union Value {
-  double dValue;
-  int iValue;
+char *id;
+int type;  /*0 --> int 1 --> double/float2 --> bool (iValue = 0 || 1)*/
+union Value {
+	double dValue;
+	int iValue;
 } val;
 
 }*variable;

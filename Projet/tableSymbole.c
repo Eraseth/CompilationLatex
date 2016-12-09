@@ -26,6 +26,10 @@ tableSymbole add_variable(tableSymbole table, variable var){
 	}
 }
 
+int test_existence(tableSymbole table,variable var){
+;
+}
+
 void print_tds(tableSymbole table){
 
   printf("Table des symboles :\n");
