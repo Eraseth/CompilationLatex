@@ -50,7 +50,6 @@
       } valUnion;
       int type;
     } valeurSt;
-  variable v;
 }
 
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN
@@ -78,7 +77,7 @@ algorithm_list:
     algorithm_list algorithm
   | algorithm
   {
-    printf("Do nothing");
+    printf("Algorithm Found !");
   }
   ;
 
@@ -99,12 +98,12 @@ zone_instructions:
   }
   ;
 list_instructions:
-  instruction  list_instructions
+  instruction '\n' list_instructions
   {
     printf("list_instructions");
   }
   |
-  instruction EOI '\n'
+  instruction '\n'
   {
     printf("list_instructions");
   }
@@ -112,15 +111,14 @@ list_instructions:
   { ; }
   ;
 instruction:
-  instruction_affectation
+  instruction_affectation EOI
   {
-    printf("Do nothing");
+    printf("Instruction Affectation");
   }
   ;
 instruction_affectation:
   '$' ID LEFTARROW expression_arithmetique '$'
   {
-    quad new_quad();
   }
   ;
 expression_arithmetique:
@@ -152,8 +150,28 @@ expression_arithmetique_f:
   }
   |
   valeur
+  //On a reconnu une valeur on doit donc ajouter un nouveau temporaire dans la table des symboles
   {
     variable var;
+    switch($1.type){
+              case TYPE_INT:
+              var = new_variable_int(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
+              break;
+              case TYPE_FLOAT:
+              var = new_variable_float(generate_temp_name(compteurTemporaire),$1.valUnion.valFloat);
+              break;
+              case TYPE_BOOL:
+              var = new_variable_bool(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
+              break;
+              default:
+                printf("\nError : Type non reconnu %d(valeur)\n",$1.type);
+                exit(EXIT_FAILURE);
+                break;
+              }
+      tableS = add_variable(tableS, var);
+      compteurTemporaire++;
+
+
 
   }
   ;

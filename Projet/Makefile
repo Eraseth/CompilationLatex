@@ -21,8 +21,8 @@ CFLAGS = -W -Wall
 LDFLAGS =  -lfl -ly
 
 # Création de l'executable Out
-all: y.tab.c lex.yy.c $(OBJS) $(DEPS)
-	$(CC) $^ -o $(BIN) $(LDFLAGS)
+all: y.tab.c lex.yy.c $(OBJS)
+	$(CC) $^ -o $(BIN)
 
 #Création du lex.yy.c
 lex.yy.c: $(EXECL) $(DEPS)
