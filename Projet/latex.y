@@ -5,6 +5,8 @@
   #include "include/quad_list.h"
   #include "include/quad.h"
   #include "include/variable.h"
+  #include "include/expression_arithm.h"
+
   #define TEXCC_ERROR_GENERAL 4
 
   //Notre liste chaînée TDS
@@ -21,19 +23,20 @@
     fprintf (stderr, "%s\n", s);
   }
 
-  char * conversion_int_string(int compteurTemporaire)
+  char * conversion_int_string()
   {
     char * str = malloc(sizeof(char)*64);
     sprintf(str,"%d",compteurTemporaire);
     return str;
   }
 
-  char * generate_temp_name(int compteurTemporaire){
+  char * generate_temp_name(){
     char * str = malloc(sizeof(char)*64);
     char * str2 = conversion_int_string(compteurTemporaire);
     strcat(str, "temp");
     strcat(str,str2);
     free(str2);
+    compteurTemporaire++;
     return str;
   }
 
@@ -50,6 +53,7 @@
       } valUnion;
       int type;
     } valeurSt;
+    expr_arithm expr_arithm;
 }
 
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN
@@ -65,7 +69,7 @@
 
 %type <value> type
 %type <valeurSt> valeur
-%type <quadExpr> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
+%type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
 
 %right '=' LEFTARROW
 %left '+' '-'
@@ -119,6 +123,7 @@ instruction:
 instruction_affectation:
   '$' ID LEFTARROW expression_arithmetique '$'
   {
+
   }
   ;
 expression_arithmetique:
@@ -135,24 +140,52 @@ expression_arithmetique:
 expression_arithmetique_t:
   expression_arithmetique_t MULT expression_arithmetique_f
   {
-
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr_arithm expr_arithm;
+    switch($1->resultat->type){
+              case TYPE_INT:
+              var = new_variable_int(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_FLOAT:
+              var = new_variable_float(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_BOOL:
+              var = new_variable_bool(generate_temp_name(compteurTemporaire),0);
+              break;
+              default:
+                printf("\nError : Type non reconnu %d(valeur)\n",$1->resultat->type);
+                exit(EXIT_FAILURE);
+                break;
+              }
+      tableS = add_variable(tableS, var);
+      quad q = new_quad(MULT,$1->resultat,$3->resultat,var);
+      quad_list ql = add_quad(NULL,q);
+      $$ = new_expr_arithm(var,add_quad_list(add_quad_list($1->code,$3->code),ql));
+      print_expr_arithm($$);
   }
   |
   expression_arithmetique_f
   {
-
+    $$ =  $1;
   }
   ;
 expression_arithmetique_f:
   '(' expression_arithmetique ')'
   {
-
+    $$ =  $2;
   }
   |
   valeur
   //On a reconnu une valeur on doit donc ajouter un nouveau temporaire dans la table des symboles
   {
     variable var;
+    expr_arithm expr_arithm;
     switch($1.type){
               case TYPE_INT:
               var = new_variable_int(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
@@ -169,10 +202,7 @@ expression_arithmetique_f:
                 break;
               }
       tableS = add_variable(tableS, var);
-      compteurTemporaire++;
-
-
-
+      $$ =  new_expr_arithm(var,NULL);
   }
   ;
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */

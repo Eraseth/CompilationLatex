@@ -11,7 +11,7 @@ quad new_quad(int operateur, variable arg1, variable arg2, variable res){
 }
 
 void print_quad(quad q){
-  printf("%c\n", q->operateur);
+  printf("%d\n", q->operateur);
   print_variable(q->arg1);
   print_variable(q->arg2);
   print_variable(q->res);

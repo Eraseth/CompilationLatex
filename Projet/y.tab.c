@@ -74,6 +74,8 @@
   #include "include/quad_list.h"
   #include "include/quad.h"
   #include "include/variable.h"
+  #include "include/expression_arithm.h"
+
   #define TEXCC_ERROR_GENERAL 4
 
   //Notre liste chaînée TDS
@@ -90,26 +92,27 @@
     fprintf (stderr, "%s\n", s);
   }
 
-  char * conversion_int_string(int compteurTemporaire)
+  char * conversion_int_string()
   {
     char * str = malloc(sizeof(char)*64);
     sprintf(str,"%d",compteurTemporaire);
     return str;
   }
 
-  char * generate_temp_name(int compteurTemporaire){
+  char * generate_temp_name(){
     char * str = malloc(sizeof(char)*64);
     char * str2 = conversion_int_string(compteurTemporaire);
     strcat(str, "temp");
     strcat(str,str2);
     free(str2);
+    compteurTemporaire++;
     return str;
   }
 
 
 
 /* Line 268 of yacc.c  */
-#line 113 "y.tab.c"
+#line 116 "y.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -228,7 +231,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 42 "latex.y"
+#line 45 "latex.y"
 
   char* name;
   int value;
@@ -240,11 +243,12 @@ typedef union YYSTYPE
       } valUnion;
       int type;
     } valeurSt;
+    expr_arithm expr_arithm;
 
 
 
 /* Line 293 of yacc.c  */
-#line 248 "y.tab.c"
+#line 252 "y.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -256,7 +260,7 @@ typedef union YYSTYPE
 
 
 /* Line 343 of yacc.c  */
-#line 260 "y.tab.c"
+#line 264 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -563,11 +567,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    77,    77,    78,    85,    95,   101,   106,   111,   114,
-     120,   125,   130,   136,   141,   147,   152,   180,   185,   191,
-     199,   203,   206,   210,   213,   217,   220,   224,   227,   232,
-     236,   240,   243,   248,   252,   256,   259,   281,   303,   308,
-     313,   320,   324,   328
+       0,    81,    81,    82,    89,    99,   105,   110,   115,   118,
+     124,   130,   135,   141,   173,   179,   184,   210,   215,   221,
+     229,   233,   236,   240,   243,   247,   250,   254,   257,   262,
+     266,   270,   273,   278,   282,   286,   289,   311,   333,   338,
+     343,   350,   354,   358
 };
 #endif
 
@@ -1570,7 +1574,7 @@ yyreduce:
         case 3:
 
 /* Line 1806 of yacc.c  */
-#line 79 "latex.y"
+#line 83 "latex.y"
     {
     printf("Algorithm Found !");
   }
@@ -1579,7 +1583,7 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 86 "latex.y"
+#line 90 "latex.y"
     {
       //fprintf(stderr, "[texcc] info: algorithm \"%s\" parsed\n", $3);
       //free($3);
@@ -1590,7 +1594,7 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 96 "latex.y"
+#line 100 "latex.y"
     {
     printf("Liste d'instructions\n");
   }
@@ -1599,7 +1603,7 @@ yyreduce:
   case 6:
 
 /* Line 1806 of yacc.c  */
-#line 102 "latex.y"
+#line 106 "latex.y"
     {
     printf("list_instructions");
   }
@@ -1608,7 +1612,7 @@ yyreduce:
   case 7:
 
 /* Line 1806 of yacc.c  */
-#line 107 "latex.y"
+#line 111 "latex.y"
     {
     printf("list_instructions");
   }
@@ -1617,14 +1621,14 @@ yyreduce:
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 111 "latex.y"
+#line 115 "latex.y"
     { ; }
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 115 "latex.y"
+#line 119 "latex.y"
     {
     printf("Instruction Affectation");
   }
@@ -1633,21 +1637,13 @@ yyreduce:
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 121 "latex.y"
+#line 125 "latex.y"
     {
+
   }
     break;
 
   case 11:
-
-/* Line 1806 of yacc.c  */
-#line 126 "latex.y"
-    {
-
-  }
-    break;
-
-  case 12:
 
 /* Line 1806 of yacc.c  */
 #line 131 "latex.y"
@@ -1656,39 +1652,76 @@ yyreduce:
   }
     break;
 
+  case 12:
+
+/* Line 1806 of yacc.c  */
+#line 136 "latex.y"
+    {
+
+  }
+    break;
+
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 137 "latex.y"
+#line 142 "latex.y"
     {
-
+    if (((yyvsp[(1) - (3)].expr_arithm)->resultat->type) != ((yyvsp[(3) - (3)].expr_arithm)->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,(yyvsp[(1) - (3)].expr_arithm)->resultat->id,(yyvsp[(3) - (3)].expr_arithm)->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr_arithm expr_arithm;
+    switch((yyvsp[(1) - (3)].expr_arithm)->resultat->type){
+              case TYPE_INT:
+              var = new_variable_int(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_FLOAT:
+              var = new_variable_float(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_BOOL:
+              var = new_variable_bool(generate_temp_name(compteurTemporaire),0);
+              break;
+              default:
+                printf("\nError : Type non reconnu %d(valeur)\n",(yyvsp[(1) - (3)].expr_arithm)->resultat->type);
+                exit(EXIT_FAILURE);
+                break;
+              }
+      tableS = add_variable(tableS, var);
+      quad q = new_quad(MULT,(yyvsp[(1) - (3)].expr_arithm)->resultat,(yyvsp[(3) - (3)].expr_arithm)->resultat,var);
+      quad_list ql = add_quad(NULL,q);
+      (yyval.expr_arithm) = new_expr_arithm(var,add_quad_list(add_quad_list((yyvsp[(1) - (3)].expr_arithm)->code,(yyvsp[(3) - (3)].expr_arithm)->code),ql));
+      print_expr_arithm((yyval.expr_arithm));
   }
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 142 "latex.y"
+#line 174 "latex.y"
     {
-
+    (yyval.expr_arithm) =  (yyvsp[(1) - (1)].expr_arithm);
   }
     break;
 
   case 15:
 
 /* Line 1806 of yacc.c  */
-#line 148 "latex.y"
+#line 180 "latex.y"
     {
-
+    (yyval.expr_arithm) =  (yyvsp[(2) - (3)].expr_arithm);
   }
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 154 "latex.y"
+#line 186 "latex.y"
     {
     variable var;
+    expr_arithm expr_arithm;
     switch((yyvsp[(1) - (1)].valeurSt).type){
               case TYPE_INT:
               var = new_variable_int(generate_temp_name(compteurTemporaire),(yyvsp[(1) - (1)].valeurSt).valUnion.valInt);
@@ -1705,17 +1738,14 @@ yyreduce:
                 break;
               }
       tableS = add_variable(tableS, var);
-      compteurTemporaire++;
-
-
-
+      (yyval.expr_arithm) =  new_expr_arithm(var,NULL);
   }
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 182 "latex.y"
+#line 212 "latex.y"
     {
       printf("\nzone déclaration\n");
     }
@@ -1724,7 +1754,7 @@ yyreduce:
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 186 "latex.y"
+#line 216 "latex.y"
     {
       printf("\nzone déclaration vide\n");
     }
@@ -1733,7 +1763,7 @@ yyreduce:
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 192 "latex.y"
+#line 222 "latex.y"
     {
       printf("\nzone déclaration DECLARECONSTANT\n");
     }
@@ -1742,7 +1772,7 @@ yyreduce:
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 200 "latex.y"
+#line 230 "latex.y"
     {
       printf("\nzone déclaration DECLAREINPUT\n");
     }
@@ -1751,14 +1781,14 @@ yyreduce:
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 203 "latex.y"
+#line 233 "latex.y"
     { ; }
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 207 "latex.y"
+#line 237 "latex.y"
     {
       printf("\nzone déclaration DECLAREOUTPUT\n");
     }
@@ -1767,14 +1797,14 @@ yyreduce:
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 210 "latex.y"
+#line 240 "latex.y"
     { ; }
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 214 "latex.y"
+#line 244 "latex.y"
     {
       printf("\nzone déclaration DECLAREGLOBAL\n");
     }
@@ -1783,14 +1813,14 @@ yyreduce:
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 217 "latex.y"
+#line 247 "latex.y"
     { ; }
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 221 "latex.y"
+#line 251 "latex.y"
     {
       printf("\nzone déclaration local\n");
     }
@@ -1799,14 +1829,14 @@ yyreduce:
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 224 "latex.y"
+#line 254 "latex.y"
     { ; }
     break;
 
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 228 "latex.y"
+#line 258 "latex.y"
     {
       printf("\nsuite déclaration constante\n");
     }
@@ -1815,7 +1845,7 @@ yyreduce:
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 233 "latex.y"
+#line 263 "latex.y"
     {
       printf("\ndéclaration constante\n");
     }
@@ -1824,7 +1854,7 @@ yyreduce:
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 237 "latex.y"
+#line 267 "latex.y"
     {
       ;
     }
@@ -1833,14 +1863,14 @@ yyreduce:
   case 31:
 
 /* Line 1806 of yacc.c  */
-#line 240 "latex.y"
+#line 270 "latex.y"
     { ; }
     break;
 
   case 32:
 
 /* Line 1806 of yacc.c  */
-#line 244 "latex.y"
+#line 274 "latex.y"
     {
       printf("\nsuite déclaration var\n");
     }
@@ -1849,7 +1879,7 @@ yyreduce:
   case 33:
 
 /* Line 1806 of yacc.c  */
-#line 249 "latex.y"
+#line 279 "latex.y"
     {
       printf("\ndéclaration var\n");
     }
@@ -1858,7 +1888,7 @@ yyreduce:
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 253 "latex.y"
+#line 283 "latex.y"
     {
       ;
     }
@@ -1867,14 +1897,14 @@ yyreduce:
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 256 "latex.y"
+#line 286 "latex.y"
     { ; }
     break;
 
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 260 "latex.y"
+#line 290 "latex.y"
     {
       variable var;
       switch ((yyvsp[(5) - (5)].value)) {
@@ -1899,7 +1929,7 @@ yyreduce:
   case 37:
 
 /* Line 1806 of yacc.c  */
-#line 282 "latex.y"
+#line 312 "latex.y"
     {
       variable var;
       switch ((yyvsp[(3) - (3)].value)) {
@@ -1924,7 +1954,7 @@ yyreduce:
   case 38:
 
 /* Line 1806 of yacc.c  */
-#line 304 "latex.y"
+#line 334 "latex.y"
     {
       (yyval.valeurSt).valUnion.valInt = yylval.value;
       (yyval.valeurSt).type = TYPE_INT;
@@ -1934,7 +1964,7 @@ yyreduce:
   case 39:
 
 /* Line 1806 of yacc.c  */
-#line 309 "latex.y"
+#line 339 "latex.y"
     {
       (yyval.valeurSt).valUnion.valFloat = yylval.dvalue;
       (yyval.valeurSt).type = TYPE_FLOAT;
@@ -1944,7 +1974,7 @@ yyreduce:
   case 40:
 
 /* Line 1806 of yacc.c  */
-#line 314 "latex.y"
+#line 344 "latex.y"
     {
       (yyval.valeurSt).valUnion.valInt = yylval.value;
       (yyval.valeurSt).type = TYPE_BOOL;
@@ -1954,7 +1984,7 @@ yyreduce:
   case 41:
 
 /* Line 1806 of yacc.c  */
-#line 321 "latex.y"
+#line 351 "latex.y"
     {
       (yyval.value) = INTEGER;
     }
@@ -1963,7 +1993,7 @@ yyreduce:
   case 42:
 
 /* Line 1806 of yacc.c  */
-#line 325 "latex.y"
+#line 355 "latex.y"
     {
       (yyval.value) = BOOLEAN;
     }
@@ -1972,7 +2002,7 @@ yyreduce:
   case 43:
 
 /* Line 1806 of yacc.c  */
-#line 329 "latex.y"
+#line 359 "latex.y"
     {
       (yyval.value) = REAL;
     }
@@ -1981,7 +2011,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 1985 "y.tab.c"
+#line 2015 "y.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2212,7 +2242,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 333 "latex.y"
+#line 363 "latex.y"
 
 
 int main(int argc, char* argv[]) {

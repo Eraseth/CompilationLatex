@@ -7,6 +7,7 @@
   #include "include/quad_list.h"
   #include "include/quad.h"
   #include "include/variable.h"
+  #include "include/expression_arithm.h"
   #include "y.tab.h"
 %}
 

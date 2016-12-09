@@ -7,7 +7,7 @@ tableSymbole new_tds(){
 
 tableSymbole add_variable(tableSymbole table, variable var){
   if (lookup_tds(table, var->id) != NULL) {
-    printf("Error : %s is already defined.\n", var->id);
+    fprintf(stderr, "\n: La variable %s est déjà défini dans la Table des Symboles", var->id);
     exit(EXIT_FAILURE);
   }
 	tableSymbole ajout = malloc(sizeof(struct tds_struct));
