@@ -1104,7 +1104,7 @@ YY_RULE_SETUP
 #line 120 "latex.l"
 {
                       yylval.name = strdup(yytext);
-                      printf("%s ", yytext);
+                      printf("ID ", yytext);
                       return ID;
                     }
 	YY_BREAK

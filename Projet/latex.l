@@ -119,7 +119,7 @@ eoi              "\\;"
 <texsci>[\n]              { printf("\n"); return yytext[0];}
 <texsci>{id}        {
                       yylval.name = strdup(yytext);
-                      printf("%s ", yytext);
+                      printf("ID ", yytext);
                       return ID;
                     }
 .                   { ; }

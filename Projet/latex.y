@@ -115,13 +115,13 @@ list_instructions:
   { ; }
   ;
 instruction:
-  instruction_affectation EOI
+  instruction_affectation
   {
     printf("Instruction Affectation");
   }
   ;
 instruction_affectation:
-  '$' ID LEFTARROW expression_arithmetique '$'
+  '$' ID LEFTARROW expression_arithmetique '$' EOI
   {
 
   }
@@ -185,7 +185,6 @@ expression_arithmetique_f:
   //On a reconnu une valeur on doit donc ajouter un nouveau temporaire dans la table des symboles
   {
     variable var;
-    expr_arithm expr_arithm;
     switch($1.type){
               case TYPE_INT:
               var = new_variable_int(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
@@ -203,7 +202,13 @@ expression_arithmetique_f:
               }
       tableS = add_variable(tableS, var);
       $$ =  new_expr_arithm(var,NULL);
-  }
+    }
+    |
+    ID
+    {
+      variable var = lookup_tds(tableS,$1);
+      $$ =  new_expr_arithm(var,NULL);
+    }
   ;
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:
