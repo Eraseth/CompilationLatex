@@ -1,0 +1,3 @@
+Attention : FLoat --> int. Si dans le latex 5.5 IN \Real alors float mais 5 constint. On pourrait préciser le type à la valeur
+//Ici decale/reduce
+/*| { ; }*/ dans zone_declaration_constante
