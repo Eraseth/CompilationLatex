@@ -77,6 +77,33 @@ variable lookup_tds(tableSymbole table, char *id){
 
 }
 
+void gen_assembleur_data(FILE *assembleur_file, tableSymbole table_symbole){
+  tableSymbole temp = table_symbole;
+
+  while(temp!=NULL)
+	{
+    variable var = temp->var;
+    switch (var->type) {
+      case TYPE_INT:
+        fprintf(assembleur_file, "%s: %s %d\n", var->id, ".word", var->val.iValue);
+        break;
+      case TYPE_FLOAT:
+        fprintf(assembleur_file, "%s: %s %f\n", var->id, ".float", var->val.dValue);
+        break;
+      case TYPE_BOOL:
+        fprintf(assembleur_file, "%s: %s %d\n", var->id, ".word", var->val.iValue);
+        break;
+      default:
+        printf("\nERROR, génération de code assembleur. Type non reconnu\n");
+        break;
+    }
+    temp = temp->next;
+  }
+  if (temp == NULL) {
+    return ;
+  }
+}
+
 // void main(){
 //   variable v1 = new_variable_int("name", 45);
 //   variable v2 = new_variable_float("name", 45.2);

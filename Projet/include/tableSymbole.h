@@ -21,5 +21,5 @@ void print_tds(tableSymbole table);
 
 void free_tds(tableSymbole table);
 variable lookup_tds(tableSymbole table, char *id);
-
+void gen_assembleur_data(FILE *assembleur_file, tableSymbole table_symbole);
 #endif

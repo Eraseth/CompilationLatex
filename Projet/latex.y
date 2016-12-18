@@ -6,11 +6,14 @@
   #include "include/quad.h"
   #include "include/variable.h"
   #include "include/expression_arithm.h"
+  #include "include/gen_assembleur.h"
+  #include "y.tab.h"
 
   #define TEXCC_ERROR_GENERAL 4
 
   //Notre liste chaînée TDS
   tableSymbole tableS = NULL;
+  quad_list code = NULL;
   //Compteur pour la création de variable temporaire
   int compteurTemporaire = 0;
 
@@ -67,7 +70,7 @@
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
 
-%type <value> type
+%type <value> type operateur_f operateur_m
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
 
@@ -100,6 +103,8 @@ zone_instructions:
   {
     printf("Liste d'instructions\n");
   }
+  |
+  { ; }
   ;
 list_instructions:
   instruction '\n' list_instructions
@@ -111,8 +116,6 @@ list_instructions:
   {
     printf("list_instructions");
   }
-  |
-  { ; }
   ;
 instruction:
   instruction_affectation
@@ -123,22 +126,11 @@ instruction:
 instruction_affectation:
   '$' ID LEFTARROW expression_arithmetique '$' EOI
   {
-
+    code = add_quad_list(code, $4->code);
   }
   ;
 expression_arithmetique:
-  expression_arithmetique PLUS expression_arithmetique_t
-  {
-
-  }
-  |
-  expression_arithmetique_t
-  {
-
-  }
-  ;
-expression_arithmetique_t:
-  expression_arithmetique_t MULT expression_arithmetique_f
+  expression_arithmetique operateur_m expression_arithmetique_t
   {
     if (($1->resultat->type) != ($3->resultat->type))
     {
@@ -164,7 +156,45 @@ expression_arithmetique_t:
                 break;
               }
       tableS = add_variable(tableS, var);
-      quad q = new_quad(MULT,$1->resultat,$3->resultat,var);
+      quad q = new_quad($2,$1->resultat,$3->resultat,var);
+      quad_list ql = add_quad(NULL,q);
+      $$ = new_expr_arithm(var,add_quad_list(add_quad_list($1->code,$3->code),ql));
+      print_expr_arithm($$);
+  }
+  |
+  expression_arithmetique_t
+  {
+
+  }
+  ;
+expression_arithmetique_t:
+  expression_arithmetique_t operateur_f expression_arithmetique_f
+  {
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr_arithm expr_arithm;
+    switch($1->resultat->type){
+              case TYPE_INT:
+              var = new_variable_int(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_FLOAT:
+              var = new_variable_float(generate_temp_name(compteurTemporaire),0);
+              break;
+              case TYPE_BOOL:
+              var = new_variable_bool(generate_temp_name(compteurTemporaire),0);
+              break;
+              default:
+                printf("\nError : Type non reconnu %d(valeur)\n",$1->resultat->type);
+                exit(EXIT_FAILURE);
+                break;
+              }
+      tableS = add_variable(tableS, var);
+      quad q = new_quad($2,$1->resultat,$3->resultat,var);
       quad_list ql = add_quad(NULL,q);
       $$ = new_expr_arithm(var,add_quad_list(add_quad_list($1->code,$3->code),ql));
       print_expr_arithm($$);
@@ -210,6 +240,28 @@ expression_arithmetique_f:
       $$ =  new_expr_arithm(var,NULL);
     }
   ;
+
+  operateur_f:
+  DIV
+  {
+    $$ = DIV;
+  }
+  |
+  MULT
+  {
+    $$ = MULT;
+  };
+
+  operateur_m:
+  PLUS
+  {
+    $$ = PLUS;
+  }
+  |
+  MINUS
+  {
+    $$ = MINUS;
+  };
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:
     zone_declaration_constante zone_declaration_input zone_declaration_output
@@ -217,18 +269,13 @@ zone_declarations:
     {
       printf("\nzone déclaration\n");
     }
-    | BLANKLINE '\n'
-    {
-      printf("\nzone déclaration vide\n");
-    }
   ;
 zone_declaration_constante:
     DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n'
     {
       printf("\nzone déclaration DECLARECONSTANT\n");
     }
-    //Ici decale/reduce
-    /*| { ; }*/
+    | { ; }
   ;
 zone_declaration_input:
     DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n'
@@ -368,6 +415,7 @@ type:
 %%
 
 int main(int argc, char* argv[]) {
+  FILE *fd = fopen("assembleur.s", "w+");
   if (argc == 2) {
     if ((yyin = fopen(argv[1], "r")) == NULL) {
       fprintf(stderr, "[texcc] error: unable to open file %s\n", argv[1]);
@@ -379,7 +427,10 @@ int main(int argc, char* argv[]) {
   }
 
   yyparse();
+  generate_text(fd, code);
+  generate_data(fd, tableS);
   fclose(yyin);
+  fclose(fd);
   texcc_lexer_free();
   print_tds(tableS);
   free_tds(tableS);

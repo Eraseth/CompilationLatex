@@ -10,14 +10,14 @@ PROJECT = Compilateur
 TYPE = .out
 BIN = $(PROJECT)$(TYPE)
 DOUT =
-OBJS = variable.o tableSymbole.o quad.o quad_list.o expression_arithm.o
+OBJS = variable.o tableSymbole.o quad.o quad_list.o expression_arithm.o gen_assembleur.o
 EXECY = latex.y
 EXECL = latex.l
 LEX = lex
 YACC = yacc -d -v
 SRC =
 DEPS = include/*.h ./*.h
-CFLAGS = -W -Wall
+CFLAGS = -g -W -Wall
 LDFLAGS =  -lfl -ly
 
 # Création de l'executable Out

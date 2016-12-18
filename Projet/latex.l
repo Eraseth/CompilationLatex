@@ -9,6 +9,7 @@
   #include "include/variable.h"
   #include "include/expression_arithm.h"
   #include "y.tab.h"
+  
 %}
 
 %s texsci
@@ -119,7 +120,7 @@ eoi              "\\;"
 <texsci>[\n]              { printf("\n"); return yytext[0];}
 <texsci>{id}        {
                       yylval.name = strdup(yytext);
-                      printf("ID ", yytext);
+                      printf("ID --> %s", yytext);
                       return ID;
                     }
 .                   { ; }

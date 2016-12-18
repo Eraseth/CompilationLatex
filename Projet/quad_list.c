@@ -75,6 +75,21 @@ quad_list add_quad_list(quad_list q1 , quad_list q2)
 		return q1;
   }
 }
+
+void gen_assembleur_text(FILE *assembleur_file, quad_list code)
+{
+  quad_list temp = code;
+
+  while(temp!=NULL)
+  {
+    assembleur_quad(assembleur_file, temp->quad);
+    temp = temp->next;
+  }
+  if (temp == NULL) {
+    return ;
+  }
+}
+
 /* Pensez au doubles free */
 /*
 void main(){
