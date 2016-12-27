@@ -85,13 +85,13 @@ void gen_assembleur_data(FILE *assembleur_file, tableSymbole table_symbole){
     variable var = temp->var;
     switch (var->type) {
       case TYPE_INT:
-        fprintf(assembleur_file, "%s: %s %d\n", var->id, ".word", var->val.iValue);
+        fprintf(assembleur_file, "var_%s: %s %d\n", var->id, ".word", var->val.iValue);
         break;
       case TYPE_FLOAT:
-        fprintf(assembleur_file, "%s: %s %f\n", var->id, ".float", var->val.dValue);
+        fprintf(assembleur_file, "var_%s: %s %f\n", var->id, ".float", var->val.dValue);
         break;
       case TYPE_BOOL:
-        fprintf(assembleur_file, "%s: %s %d\n", var->id, ".word", var->val.iValue);
+        fprintf(assembleur_file, "var_%s: %s %d\n", var->id, ".word", var->val.iValue);
         break;
       default:
         printf("\nERROR, génération de code assembleur. Type non reconnu\n");

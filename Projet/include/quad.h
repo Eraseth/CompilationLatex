@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "variable.h"
 
+#define CONVERSION_INT_FLOAT -2
+#define CONVERSION_FLOAT_INT -3
 //Structure pour notre code 3 adresses
 typedef struct quad_struct
 {

@@ -24,6 +24,7 @@
 
   void yyerror (char const *s) {
     fprintf (stderr, "%s\n", s);
+    exit(EXIT_FAILURE);
   }
 
   char * conversion_int_string()
@@ -70,7 +71,7 @@
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
 
-%type <value> type operateur_f operateur_m
+%type <value> type operateur_f operateur_m operateur_affectation
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
 
@@ -124,9 +125,35 @@ instruction:
   }
   ;
 instruction_affectation:
-  '$' ID LEFTARROW expression_arithmetique '$' EOI
+  '$' ID operateur_affectation expression_arithmetique '$' EOI
   {
-    code = add_quad_list(code, $4->code);
+    variable var = lookup_tds(tableS, $2);
+    if(var == NULL){
+      printf("ERROR : Variable %s non définie.\n", $2);
+      exit(EXIT_FAILURE);
+    }
+
+    //Ajout du code de l'expression arithmétiques
+    code = add_quad_list(code,$4->code);
+    quad_list ql;
+    quad q;
+    //Convertit le type pour permettre l'Assignation
+    if((var->type == TYPE_INT || var->type == TYPE_BOOL) && $4->resultat->type == TYPE_FLOAT){
+      //Float to Int
+      q = new_quad(CONVERSION_FLOAT_INT, $4->resultat, NULL, var);
+      ql = add_quad(NULL,q);
+    } else if(($4->resultat->type == TYPE_INT || $4->resultat->type == TYPE_BOOL) && var->type == TYPE_FLOAT){
+      //Int to Float
+      q = new_quad(CONVERSION_INT_FLOAT, $4->resultat, NULL, var);
+      ql = add_quad(NULL,q);
+    } else {
+      q = new_quad($3,$4->resultat,NULL,var);
+      //Ajout de notre nouveau quad (quad d'Assignation)
+      ql = add_quad(NULL,q);
+    }
+
+    print_quad_list(ql);
+    code = add_quad_list(code,ql);
   }
   ;
 expression_arithmetique:
@@ -164,7 +191,7 @@ expression_arithmetique:
   |
   expression_arithmetique_t
   {
-
+    $$ = $1;
   }
   ;
 expression_arithmetique_t:
@@ -237,6 +264,10 @@ expression_arithmetique_f:
     ID
     {
       variable var = lookup_tds(tableS,$1);
+      if(var == NULL){
+        printf("ERROR : Variable %s non définie.\n", $1);
+        exit(EXIT_FAILURE);
+      }
       $$ =  new_expr_arithm(var,NULL);
     }
   ;
@@ -261,6 +292,12 @@ expression_arithmetique_f:
   MINUS
   {
     $$ = MINUS;
+  };
+
+  operateur_affectation:
+  LEFTARROW
+  {
+    $$ = LEFTARROW;
   };
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:

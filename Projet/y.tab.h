@@ -134,7 +134,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 48 "latex.y" /* yacc.c:1909  */
+#line 49 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;

@@ -54,6 +54,10 @@ void update_variable_bool(variable var, int val){
 
 
 void print_variable(variable var){
+  if (var == NULL) {
+    printf("Variable : NULL\n");
+    return ;
+  }
   switch (var->type) {
     case TYPE_INT:
       printf("Variable : Nom : %s, Type : %s, Valeur : %d\n", var->id, "int", var->val.iValue);

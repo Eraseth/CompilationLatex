@@ -40,7 +40,7 @@ Grammaire
 
     8 instruction: instruction_affectation
 
-    9 instruction_affectation: '$' ID LEFTARROW expression_arithmetique '$' EOI
+    9 instruction_affectation: '$' ID operateur_affectation expression_arithmetique '$' EOI
 
    10 expression_arithmetique: expression_arithmetique operateur_m expression_arithmetique_t
    11                        | expression_arithmetique_t
@@ -58,86 +58,88 @@ Grammaire
    19 operateur_m: PLUS
    20            | MINUS
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
+   21 operateur_affectation: LEFTARROW
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n'
-   23                           | %empty
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
 
-   24 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n'
-   25                       | %empty
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n'
+   24                           | %empty
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n'
-   27                        | %empty
+   25 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n'
+   26                       | %empty
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n'
-   29                        | %empty
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n'
+   28                        | %empty
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n'
-   31                       | %empty
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n'
+   30                        | %empty
 
-   32 suite_declarations_constante: declaration_constante ',' suite_declarations_constante
-   33                             | declaration_constante
-   34                             | EMPTYSET
-   35                             | %empty
+   31 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n'
+   32                       | %empty
 
-   36 suite_declarations_variable: declaration_variable ',' suite_declarations_variable
-   37                            | declaration_variable
-   38                            | EMPTYSET
-   39                            | %empty
+   33 suite_declarations_constante: declaration_constante ',' suite_declarations_constante
+   34                             | declaration_constante
+   35                             | EMPTYSET
+   36                             | %empty
 
-   40 declaration_constante: ID EGAL valeur IN type
+   37 suite_declarations_variable: declaration_variable ',' suite_declarations_variable
+   38                            | declaration_variable
+   39                            | EMPTYSET
+   40                            | %empty
 
-   41 declaration_variable: ID IN type
+   41 declaration_constante: ID EGAL valeur IN type
 
-   42 valeur: CONSTINT
-   43       | CONSTFLOAT
-   44       | CONSTBOOL
+   42 declaration_variable: ID IN type
 
-   45 type: INTEGER
-   46     | BOOLEAN
-   47     | REAL
+   43 valeur: CONSTINT
+   44       | CONSTFLOAT
+   45       | CONSTBOOL
+
+   46 type: INTEGER
+   47     | BOOLEAN
+   48     | REAL
 
 
 Terminaux, suivis des règles où ils apparaissent
 
 $end (0) 0
-'\n' (10) 3 6 7 21 22 24 26 28 30
-'$' (36) 9 22 24 26 28 30
+'\n' (10) 3 6 7 22 23 25 27 29 31
+'$' (36) 9 23 25 27 29 31
 '(' (40) 14
 ')' (41) 14
 '*' (42)
 '+' (43)
-',' (44) 32 36
+',' (44) 33 37
 '-' (45)
 '/' (47)
 '=' (61)
-'{' (123) 3 22 24 26 28 30
-'}' (125) 3 22 24 26 28 30
+'{' (123) 3 23 25 27 29 31
+'}' (125) 3 23 25 27 29 31
 error (256)
 TEXSCI_BEGIN (258) 3
 TEXSCI_END (259) 3
-BLANKLINE (260) 21
-LEFTARROW (261) 9
-IN (262) 40 41
-INTEGER (263) 45
+BLANKLINE (260) 22
+LEFTARROW (261) 21
+IN (262) 41 42
+INTEGER (263) 46
 COMMENTAIRE (264)
-BOOLEAN (265) 46
-REAL (266) 47
-EMPTYSET (267) 34 38
+BOOLEAN (265) 47
+REAL (266) 48
+EMPTYSET (267) 35 39
 WHILE (268)
 FOR (269)
 KWTO (270)
 IF (271)
 ELSEIF (272)
-DECLARECONSTANT (273) 22
-DECLAREINPUT (274) 24
-DECLAREOUTPUT (275) 26
-DECLAREGLOBAL (276) 28
-DECLARELOCAL (277) 30
+DECLARECONSTANT (273) 23
+DECLAREINPUT (274) 25
+DECLAREOUTPUT (275) 27
+DECLAREGLOBAL (276) 29
+DECLARELOCAL (277) 31
 NO (278)
 ET (279)
 OU (280)
-EGAL (281) 40
+EGAL (281) 41
 SUP (282)
 INF (283)
 INFEGAL (284)
@@ -145,15 +147,15 @@ SUPEGAL (285)
 PRINTINT (286)
 PRINTTEXT (287)
 PRINTREAL (288)
-CONSTINT (289) 42
-CONSTBOOL (290) 44
+CONSTINT (289) 43
+CONSTBOOL (290) 45
 DIV (291) 17
-CONSTFLOAT (292) 43
+CONSTFLOAT (292) 44
 MULT (293) 18
 MINUS (294) 20
 PLUS (295) 19
 EOI (296) 9
-ID (297) 3 9 16 40 41
+ID (297) 3 9 16 41 42
 
 
 Non-terminaux, suivis des règles où ils apparaissent
@@ -182,30 +184,32 @@ operateur_f (65)
     à gauche: 17 18, à droite: 12
 operateur_m (66)
     à gauche: 19 20, à droite: 10
-zone_declarations (67)
-    à gauche: 21, à droite: 3
-zone_declaration_constante (68)
-    à gauche: 22 23, à droite: 21
-zone_declaration_input (69)
-    à gauche: 24 25, à droite: 21
-zone_declaration_output (70)
-    à gauche: 26 27, à droite: 21
-zone_declaration_global (71)
-    à gauche: 28 29, à droite: 21
-zone_declaration_local (72)
-    à gauche: 30 31, à droite: 21
-suite_declarations_constante (73)
-    à gauche: 32 33 34 35, à droite: 22 32
-suite_declarations_variable (74)
-    à gauche: 36 37 38 39, à droite: 24 28 30 36
-declaration_constante (75)
-    à gauche: 40, à droite: 32 33
-declaration_variable (76)
-    à gauche: 41, à droite: 26 36 37
-valeur (77)
-    à gauche: 42 43 44, à droite: 15 40
-type (78)
-    à gauche: 45 46 47, à droite: 40 41
+operateur_affectation (67)
+    à gauche: 21, à droite: 9
+zone_declarations (68)
+    à gauche: 22, à droite: 3
+zone_declaration_constante (69)
+    à gauche: 23 24, à droite: 22
+zone_declaration_input (70)
+    à gauche: 25 26, à droite: 22
+zone_declaration_output (71)
+    à gauche: 27 28, à droite: 22
+zone_declaration_global (72)
+    à gauche: 29 30, à droite: 22
+zone_declaration_local (73)
+    à gauche: 31 32, à droite: 22
+suite_declarations_constante (74)
+    à gauche: 33 34 35 36, à droite: 23 33
+suite_declarations_variable (75)
+    à gauche: 37 38 39 40, à droite: 25 29 31 37
+declaration_constante (76)
+    à gauche: 41, à droite: 33 34
+declaration_variable (77)
+    à gauche: 42, à droite: 27 37 38
+valeur (78)
+    à gauche: 43 44 45, à droite: 15 41
+type (79)
+    à gauche: 46 47 48, à droite: 41 42
 
 
 État 0
@@ -284,7 +288,7 @@ type (78)
 
     DECLARECONSTANT  décalage et aller à l'état 10
 
-    $défaut  réduction par utilisation de la règle 23 (zone_declaration_constante)
+    $défaut  réduction par utilisation de la règle 24 (zone_declaration_constante)
 
     zone_declarations           aller à l'état 11
     zone_declaration_constante  aller à l'état 12
@@ -292,7 +296,7 @@ type (78)
 
 État 10
 
-   22 zone_declaration_constante: DECLARECONSTANT . '{' '$' suite_declarations_constante '$' '}' '\n'
+   23 zone_declaration_constante: DECLARECONSTANT . '{' '$' suite_declarations_constante '$' '}' '\n'
 
     '{'  décalage et aller à l'état 13
 
@@ -313,25 +317,25 @@ type (78)
 
 État 12
 
-   21 zone_declarations: zone_declaration_constante . zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
+   22 zone_declarations: zone_declaration_constante . zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
 
     DECLAREINPUT  décalage et aller à l'état 19
 
-    $défaut  réduction par utilisation de la règle 25 (zone_declaration_input)
+    $défaut  réduction par utilisation de la règle 26 (zone_declaration_input)
 
     zone_declaration_input  aller à l'état 20
 
 
 État 13
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' . '$' suite_declarations_constante '$' '}' '\n'
+   23 zone_declaration_constante: DECLARECONSTANT '{' . '$' suite_declarations_constante '$' '}' '\n'
 
     '$'  décalage et aller à l'état 21
 
 
 État 14
 
-    9 instruction_affectation: '$' . ID LEFTARROW expression_arithmetique '$' EOI
+    9 instruction_affectation: '$' . ID operateur_affectation expression_arithmetique '$' EOI
 
     ID  décalage et aller à l'état 22
 
@@ -367,30 +371,30 @@ type (78)
 
 État 19
 
-   24 zone_declaration_input: DECLAREINPUT . '{' '$' suite_declarations_variable '$' '}' '\n'
+   25 zone_declaration_input: DECLAREINPUT . '{' '$' suite_declarations_variable '$' '}' '\n'
 
     '{'  décalage et aller à l'état 25
 
 
 État 20
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input . zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
+   22 zone_declarations: zone_declaration_constante zone_declaration_input . zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n'
 
     DECLAREOUTPUT  décalage et aller à l'état 26
 
-    $défaut  réduction par utilisation de la règle 27 (zone_declaration_output)
+    $défaut  réduction par utilisation de la règle 28 (zone_declaration_output)
 
     zone_declaration_output  aller à l'état 27
 
 
 État 21
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' . suite_declarations_constante '$' '}' '\n'
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' . suite_declarations_constante '$' '}' '\n'
 
     EMPTYSET  décalage et aller à l'état 28
     ID        décalage et aller à l'état 29
 
-    $défaut  réduction par utilisation de la règle 35 (suite_declarations_constante)
+    $défaut  réduction par utilisation de la règle 36 (suite_declarations_constante)
 
     suite_declarations_constante  aller à l'état 30
     declaration_constante         aller à l'état 31
@@ -398,9 +402,11 @@ type (78)
 
 État 22
 
-    9 instruction_affectation: '$' ID . LEFTARROW expression_arithmetique '$' EOI
+    9 instruction_affectation: '$' ID . operateur_affectation expression_arithmetique '$' EOI
 
     LEFTARROW  décalage et aller à l'état 32
+
+    operateur_affectation  aller à l'état 33
 
 
 État 23
@@ -419,665 +425,672 @@ type (78)
 
     $défaut  réduction par utilisation de la règle 7 (list_instructions)
 
-    list_instructions        aller à l'état 33
+    list_instructions        aller à l'état 34
     instruction              aller à l'état 17
     instruction_affectation  aller à l'état 18
 
 
 État 25
 
-   24 zone_declaration_input: DECLAREINPUT '{' . '$' suite_declarations_variable '$' '}' '\n'
+   25 zone_declaration_input: DECLAREINPUT '{' . '$' suite_declarations_variable '$' '}' '\n'
 
-    '$'  décalage et aller à l'état 34
+    '$'  décalage et aller à l'état 35
 
 
 État 26
 
-   26 zone_declaration_output: DECLAREOUTPUT . '{' '$' declaration_variable '$' '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT . '{' '$' declaration_variable '$' '}' '\n'
 
-    '{'  décalage et aller à l'état 35
+    '{'  décalage et aller à l'état 36
 
 
 État 27
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output . zone_declaration_global zone_declaration_local BLANKLINE '\n'
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output . zone_declaration_global zone_declaration_local BLANKLINE '\n'
 
-    DECLAREGLOBAL  décalage et aller à l'état 36
+    DECLAREGLOBAL  décalage et aller à l'état 37
 
-    $défaut  réduction par utilisation de la règle 29 (zone_declaration_global)
+    $défaut  réduction par utilisation de la règle 30 (zone_declaration_global)
 
-    zone_declaration_global  aller à l'état 37
+    zone_declaration_global  aller à l'état 38
 
 
 État 28
 
-   34 suite_declarations_constante: EMPTYSET .
+   35 suite_declarations_constante: EMPTYSET .
 
-    $défaut  réduction par utilisation de la règle 34 (suite_declarations_constante)
+    $défaut  réduction par utilisation de la règle 35 (suite_declarations_constante)
 
 
 État 29
 
-   40 declaration_constante: ID . EGAL valeur IN type
+   41 declaration_constante: ID . EGAL valeur IN type
 
-    EGAL  décalage et aller à l'état 38
+    EGAL  décalage et aller à l'état 39
 
 
 État 30
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante . '$' '}' '\n'
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante . '$' '}' '\n'
 
-    '$'  décalage et aller à l'état 39
+    '$'  décalage et aller à l'état 40
 
 
 État 31
 
-   32 suite_declarations_constante: declaration_constante . ',' suite_declarations_constante
-   33                             | declaration_constante .
+   33 suite_declarations_constante: declaration_constante . ',' suite_declarations_constante
+   34                             | declaration_constante .
 
-    ','  décalage et aller à l'état 40
+    ','  décalage et aller à l'état 41
 
-    $défaut  réduction par utilisation de la règle 33 (suite_declarations_constante)
+    $défaut  réduction par utilisation de la règle 34 (suite_declarations_constante)
 
 
 État 32
 
-    9 instruction_affectation: '$' ID LEFTARROW . expression_arithmetique '$' EOI
+   21 operateur_affectation: LEFTARROW .
 
-    CONSTINT    décalage et aller à l'état 41
-    CONSTBOOL   décalage et aller à l'état 42
-    CONSTFLOAT  décalage et aller à l'état 43
-    ID          décalage et aller à l'état 44
-    '('         décalage et aller à l'état 45
-
-    expression_arithmetique    aller à l'état 46
-    expression_arithmetique_t  aller à l'état 47
-    expression_arithmetique_f  aller à l'état 48
-    valeur                     aller à l'état 49
+    $défaut  réduction par utilisation de la règle 21 (operateur_affectation)
 
 
 État 33
+
+    9 instruction_affectation: '$' ID operateur_affectation . expression_arithmetique '$' EOI
+
+    CONSTINT    décalage et aller à l'état 42
+    CONSTBOOL   décalage et aller à l'état 43
+    CONSTFLOAT  décalage et aller à l'état 44
+    ID          décalage et aller à l'état 45
+    '('         décalage et aller à l'état 46
+
+    expression_arithmetique    aller à l'état 47
+    expression_arithmetique_t  aller à l'état 48
+    expression_arithmetique_f  aller à l'état 49
+    valeur                     aller à l'état 50
+
+
+État 34
 
     6 list_instructions: instruction '\n' list_instructions .
 
     $défaut  réduction par utilisation de la règle 6 (list_instructions)
 
 
-État 34
-
-   24 zone_declaration_input: DECLAREINPUT '{' '$' . suite_declarations_variable '$' '}' '\n'
-
-    EMPTYSET  décalage et aller à l'état 50
-    ID        décalage et aller à l'état 51
-
-    $défaut  réduction par utilisation de la règle 39 (suite_declarations_variable)
-
-    suite_declarations_variable  aller à l'état 52
-    declaration_variable         aller à l'état 53
-
-
 État 35
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' . '$' declaration_variable '$' '}' '\n'
+   25 zone_declaration_input: DECLAREINPUT '{' '$' . suite_declarations_variable '$' '}' '\n'
 
-    '$'  décalage et aller à l'état 54
+    EMPTYSET  décalage et aller à l'état 51
+    ID        décalage et aller à l'état 52
+
+    $défaut  réduction par utilisation de la règle 40 (suite_declarations_variable)
+
+    suite_declarations_variable  aller à l'état 53
+    declaration_variable         aller à l'état 54
 
 
 État 36
 
-   28 zone_declaration_global: DECLAREGLOBAL . '{' '$' suite_declarations_variable '$' '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' . '$' declaration_variable '$' '}' '\n'
 
-    '{'  décalage et aller à l'état 55
+    '$'  décalage et aller à l'état 55
 
 
 État 37
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global . zone_declaration_local BLANKLINE '\n'
+   29 zone_declaration_global: DECLAREGLOBAL . '{' '$' suite_declarations_variable '$' '}' '\n'
 
-    DECLARELOCAL  décalage et aller à l'état 56
-
-    $défaut  réduction par utilisation de la règle 31 (zone_declaration_local)
-
-    zone_declaration_local  aller à l'état 57
+    '{'  décalage et aller à l'état 56
 
 
 État 38
 
-   40 declaration_constante: ID EGAL . valeur IN type
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global . zone_declaration_local BLANKLINE '\n'
 
-    CONSTINT    décalage et aller à l'état 41
-    CONSTBOOL   décalage et aller à l'état 42
-    CONSTFLOAT  décalage et aller à l'état 43
+    DECLARELOCAL  décalage et aller à l'état 57
 
-    valeur  aller à l'état 58
+    $défaut  réduction par utilisation de la règle 32 (zone_declaration_local)
+
+    zone_declaration_local  aller à l'état 58
 
 
 État 39
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' . '}' '\n'
+   41 declaration_constante: ID EGAL . valeur IN type
 
-    '}'  décalage et aller à l'état 59
+    CONSTINT    décalage et aller à l'état 42
+    CONSTBOOL   décalage et aller à l'état 43
+    CONSTFLOAT  décalage et aller à l'état 44
+
+    valeur  aller à l'état 59
 
 
 État 40
 
-   32 suite_declarations_constante: declaration_constante ',' . suite_declarations_constante
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' . '}' '\n'
 
-    EMPTYSET  décalage et aller à l'état 28
-    ID        décalage et aller à l'état 29
-
-    $défaut  réduction par utilisation de la règle 35 (suite_declarations_constante)
-
-    suite_declarations_constante  aller à l'état 60
-    declaration_constante         aller à l'état 31
+    '}'  décalage et aller à l'état 60
 
 
 État 41
 
-   42 valeur: CONSTINT .
+   33 suite_declarations_constante: declaration_constante ',' . suite_declarations_constante
 
-    $défaut  réduction par utilisation de la règle 42 (valeur)
+    EMPTYSET  décalage et aller à l'état 28
+    ID        décalage et aller à l'état 29
+
+    $défaut  réduction par utilisation de la règle 36 (suite_declarations_constante)
+
+    suite_declarations_constante  aller à l'état 61
+    declaration_constante         aller à l'état 31
 
 
 État 42
 
-   44 valeur: CONSTBOOL .
-
-    $défaut  réduction par utilisation de la règle 44 (valeur)
-
-
-État 43
-
-   43 valeur: CONSTFLOAT .
+   43 valeur: CONSTINT .
 
     $défaut  réduction par utilisation de la règle 43 (valeur)
 
 
+État 43
+
+   45 valeur: CONSTBOOL .
+
+    $défaut  réduction par utilisation de la règle 45 (valeur)
+
+
 État 44
+
+   44 valeur: CONSTFLOAT .
+
+    $défaut  réduction par utilisation de la règle 44 (valeur)
+
+
+État 45
 
    16 expression_arithmetique_f: ID .
 
     $défaut  réduction par utilisation de la règle 16 (expression_arithmetique_f)
 
 
-État 45
+État 46
 
    14 expression_arithmetique_f: '(' . expression_arithmetique ')'
 
-    CONSTINT    décalage et aller à l'état 41
-    CONSTBOOL   décalage et aller à l'état 42
-    CONSTFLOAT  décalage et aller à l'état 43
-    ID          décalage et aller à l'état 44
-    '('         décalage et aller à l'état 45
+    CONSTINT    décalage et aller à l'état 42
+    CONSTBOOL   décalage et aller à l'état 43
+    CONSTFLOAT  décalage et aller à l'état 44
+    ID          décalage et aller à l'état 45
+    '('         décalage et aller à l'état 46
 
-    expression_arithmetique    aller à l'état 61
-    expression_arithmetique_t  aller à l'état 47
-    expression_arithmetique_f  aller à l'état 48
-    valeur                     aller à l'état 49
-
-
-État 46
-
-    9 instruction_affectation: '$' ID LEFTARROW expression_arithmetique . '$' EOI
-   10 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
-
-    MINUS  décalage et aller à l'état 62
-    PLUS   décalage et aller à l'état 63
-    '$'    décalage et aller à l'état 64
-
-    operateur_m  aller à l'état 65
+    expression_arithmetique    aller à l'état 62
+    expression_arithmetique_t  aller à l'état 48
+    expression_arithmetique_f  aller à l'état 49
+    valeur                     aller à l'état 50
 
 
 État 47
 
-   11 expression_arithmetique: expression_arithmetique_t .
-   12 expression_arithmetique_t: expression_arithmetique_t . operateur_f expression_arithmetique_f
+    9 instruction_affectation: '$' ID operateur_affectation expression_arithmetique . '$' EOI
+   10 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
 
-    DIV   décalage et aller à l'état 66
-    MULT  décalage et aller à l'état 67
+    MINUS  décalage et aller à l'état 63
+    PLUS   décalage et aller à l'état 64
+    '$'    décalage et aller à l'état 65
 
-    $défaut  réduction par utilisation de la règle 11 (expression_arithmetique)
-
-    operateur_f  aller à l'état 68
+    operateur_m  aller à l'état 66
 
 
 État 48
+
+   11 expression_arithmetique: expression_arithmetique_t .
+   12 expression_arithmetique_t: expression_arithmetique_t . operateur_f expression_arithmetique_f
+
+    DIV   décalage et aller à l'état 67
+    MULT  décalage et aller à l'état 68
+
+    $défaut  réduction par utilisation de la règle 11 (expression_arithmetique)
+
+    operateur_f  aller à l'état 69
+
+
+État 49
 
    13 expression_arithmetique_t: expression_arithmetique_f .
 
     $défaut  réduction par utilisation de la règle 13 (expression_arithmetique_t)
 
 
-État 49
+État 50
 
    15 expression_arithmetique_f: valeur .
 
     $défaut  réduction par utilisation de la règle 15 (expression_arithmetique_f)
 
 
-État 50
-
-   38 suite_declarations_variable: EMPTYSET .
-
-    $défaut  réduction par utilisation de la règle 38 (suite_declarations_variable)
-
-
 État 51
 
-   41 declaration_variable: ID . IN type
+   39 suite_declarations_variable: EMPTYSET .
 
-    IN  décalage et aller à l'état 69
+    $défaut  réduction par utilisation de la règle 39 (suite_declarations_variable)
 
 
 État 52
 
-   24 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable . '$' '}' '\n'
+   42 declaration_variable: ID . IN type
 
-    '$'  décalage et aller à l'état 70
+    IN  décalage et aller à l'état 70
 
 
 État 53
 
-   36 suite_declarations_variable: declaration_variable . ',' suite_declarations_variable
-   37                            | declaration_variable .
+   25 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable . '$' '}' '\n'
 
-    ','  décalage et aller à l'état 71
-
-    $défaut  réduction par utilisation de la règle 37 (suite_declarations_variable)
+    '$'  décalage et aller à l'état 71
 
 
 État 54
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' . declaration_variable '$' '}' '\n'
+   37 suite_declarations_variable: declaration_variable . ',' suite_declarations_variable
+   38                            | declaration_variable .
 
-    ID  décalage et aller à l'état 51
+    ','  décalage et aller à l'état 72
 
-    declaration_variable  aller à l'état 72
+    $défaut  réduction par utilisation de la règle 38 (suite_declarations_variable)
 
 
 État 55
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' . '$' suite_declarations_variable '$' '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' . declaration_variable '$' '}' '\n'
 
-    '$'  décalage et aller à l'état 73
+    ID  décalage et aller à l'état 52
+
+    declaration_variable  aller à l'état 73
 
 
 État 56
 
-   30 zone_declaration_local: DECLARELOCAL . '{' '$' suite_declarations_variable '$' '}' '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' . '$' suite_declarations_variable '$' '}' '\n'
 
-    '{'  décalage et aller à l'état 74
+    '$'  décalage et aller à l'état 74
 
 
 État 57
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local . BLANKLINE '\n'
+   31 zone_declaration_local: DECLARELOCAL . '{' '$' suite_declarations_variable '$' '}' '\n'
 
-    BLANKLINE  décalage et aller à l'état 75
+    '{'  décalage et aller à l'état 75
 
 
 État 58
 
-   40 declaration_constante: ID EGAL valeur . IN type
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local . BLANKLINE '\n'
 
-    IN  décalage et aller à l'état 76
+    BLANKLINE  décalage et aller à l'état 76
 
 
 État 59
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' . '\n'
+   41 declaration_constante: ID EGAL valeur . IN type
 
-    '\n'  décalage et aller à l'état 77
+    IN  décalage et aller à l'état 77
 
 
 État 60
 
-   32 suite_declarations_constante: declaration_constante ',' suite_declarations_constante .
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' . '\n'
 
-    $défaut  réduction par utilisation de la règle 32 (suite_declarations_constante)
+    '\n'  décalage et aller à l'état 78
 
 
 État 61
 
-   10 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
-   14 expression_arithmetique_f: '(' expression_arithmetique . ')'
+   33 suite_declarations_constante: declaration_constante ',' suite_declarations_constante .
 
-    MINUS  décalage et aller à l'état 62
-    PLUS   décalage et aller à l'état 63
-    ')'    décalage et aller à l'état 78
-
-    operateur_m  aller à l'état 65
+    $défaut  réduction par utilisation de la règle 33 (suite_declarations_constante)
 
 
 État 62
+
+   10 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
+   14 expression_arithmetique_f: '(' expression_arithmetique . ')'
+
+    MINUS  décalage et aller à l'état 63
+    PLUS   décalage et aller à l'état 64
+    ')'    décalage et aller à l'état 79
+
+    operateur_m  aller à l'état 66
+
+
+État 63
 
    20 operateur_m: MINUS .
 
     $défaut  réduction par utilisation de la règle 20 (operateur_m)
 
 
-État 63
+État 64
 
    19 operateur_m: PLUS .
 
     $défaut  réduction par utilisation de la règle 19 (operateur_m)
 
 
-État 64
-
-    9 instruction_affectation: '$' ID LEFTARROW expression_arithmetique '$' . EOI
-
-    EOI  décalage et aller à l'état 79
-
-
 État 65
 
-   10 expression_arithmetique: expression_arithmetique operateur_m . expression_arithmetique_t
+    9 instruction_affectation: '$' ID operateur_affectation expression_arithmetique '$' . EOI
 
-    CONSTINT    décalage et aller à l'état 41
-    CONSTBOOL   décalage et aller à l'état 42
-    CONSTFLOAT  décalage et aller à l'état 43
-    ID          décalage et aller à l'état 44
-    '('         décalage et aller à l'état 45
-
-    expression_arithmetique_t  aller à l'état 80
-    expression_arithmetique_f  aller à l'état 48
-    valeur                     aller à l'état 49
+    EOI  décalage et aller à l'état 80
 
 
 État 66
+
+   10 expression_arithmetique: expression_arithmetique operateur_m . expression_arithmetique_t
+
+    CONSTINT    décalage et aller à l'état 42
+    CONSTBOOL   décalage et aller à l'état 43
+    CONSTFLOAT  décalage et aller à l'état 44
+    ID          décalage et aller à l'état 45
+    '('         décalage et aller à l'état 46
+
+    expression_arithmetique_t  aller à l'état 81
+    expression_arithmetique_f  aller à l'état 49
+    valeur                     aller à l'état 50
+
+
+État 67
 
    17 operateur_f: DIV .
 
     $défaut  réduction par utilisation de la règle 17 (operateur_f)
 
 
-État 67
+État 68
 
    18 operateur_f: MULT .
 
     $défaut  réduction par utilisation de la règle 18 (operateur_f)
 
 
-État 68
+État 69
 
    12 expression_arithmetique_t: expression_arithmetique_t operateur_f . expression_arithmetique_f
 
-    CONSTINT    décalage et aller à l'état 41
-    CONSTBOOL   décalage et aller à l'état 42
-    CONSTFLOAT  décalage et aller à l'état 43
-    ID          décalage et aller à l'état 44
-    '('         décalage et aller à l'état 45
+    CONSTINT    décalage et aller à l'état 42
+    CONSTBOOL   décalage et aller à l'état 43
+    CONSTFLOAT  décalage et aller à l'état 44
+    ID          décalage et aller à l'état 45
+    '('         décalage et aller à l'état 46
 
-    expression_arithmetique_f  aller à l'état 81
-    valeur                     aller à l'état 49
-
-
-État 69
-
-   41 declaration_variable: ID IN . type
-
-    INTEGER  décalage et aller à l'état 82
-    BOOLEAN  décalage et aller à l'état 83
-    REAL     décalage et aller à l'état 84
-
-    type  aller à l'état 85
+    expression_arithmetique_f  aller à l'état 82
+    valeur                     aller à l'état 50
 
 
 État 70
 
-   24 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' . '}' '\n'
+   42 declaration_variable: ID IN . type
 
-    '}'  décalage et aller à l'état 86
+    INTEGER  décalage et aller à l'état 83
+    BOOLEAN  décalage et aller à l'état 84
+    REAL     décalage et aller à l'état 85
+
+    type  aller à l'état 86
 
 
 État 71
 
-   36 suite_declarations_variable: declaration_variable ',' . suite_declarations_variable
+   25 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' . '}' '\n'
 
-    EMPTYSET  décalage et aller à l'état 50
-    ID        décalage et aller à l'état 51
-
-    $défaut  réduction par utilisation de la règle 39 (suite_declarations_variable)
-
-    suite_declarations_variable  aller à l'état 87
-    declaration_variable         aller à l'état 53
+    '}'  décalage et aller à l'état 87
 
 
 État 72
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable . '$' '}' '\n'
+   37 suite_declarations_variable: declaration_variable ',' . suite_declarations_variable
 
-    '$'  décalage et aller à l'état 88
+    EMPTYSET  décalage et aller à l'état 51
+    ID        décalage et aller à l'état 52
+
+    $défaut  réduction par utilisation de la règle 40 (suite_declarations_variable)
+
+    suite_declarations_variable  aller à l'état 88
+    declaration_variable         aller à l'état 54
 
 
 État 73
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' . suite_declarations_variable '$' '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable . '$' '}' '\n'
 
-    EMPTYSET  décalage et aller à l'état 50
-    ID        décalage et aller à l'état 51
-
-    $défaut  réduction par utilisation de la règle 39 (suite_declarations_variable)
-
-    suite_declarations_variable  aller à l'état 89
-    declaration_variable         aller à l'état 53
+    '$'  décalage et aller à l'état 89
 
 
 État 74
 
-   30 zone_declaration_local: DECLARELOCAL '{' . '$' suite_declarations_variable '$' '}' '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' . suite_declarations_variable '$' '}' '\n'
 
-    '$'  décalage et aller à l'état 90
+    EMPTYSET  décalage et aller à l'état 51
+    ID        décalage et aller à l'état 52
+
+    $défaut  réduction par utilisation de la règle 40 (suite_declarations_variable)
+
+    suite_declarations_variable  aller à l'état 90
+    declaration_variable         aller à l'état 54
 
 
 État 75
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE . '\n'
+   31 zone_declaration_local: DECLARELOCAL '{' . '$' suite_declarations_variable '$' '}' '\n'
 
-    '\n'  décalage et aller à l'état 91
+    '$'  décalage et aller à l'état 91
 
 
 État 76
 
-   40 declaration_constante: ID EGAL valeur IN . type
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE . '\n'
 
-    INTEGER  décalage et aller à l'état 82
-    BOOLEAN  décalage et aller à l'état 83
-    REAL     décalage et aller à l'état 84
-
-    type  aller à l'état 92
+    '\n'  décalage et aller à l'état 92
 
 
 État 77
 
-   22 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n' .
+   41 declaration_constante: ID EGAL valeur IN . type
 
-    $défaut  réduction par utilisation de la règle 22 (zone_declaration_constante)
+    INTEGER  décalage et aller à l'état 83
+    BOOLEAN  décalage et aller à l'état 84
+    REAL     décalage et aller à l'état 85
+
+    type  aller à l'état 93
 
 
 État 78
+
+   23 zone_declaration_constante: DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n' .
+
+    $défaut  réduction par utilisation de la règle 23 (zone_declaration_constante)
+
+
+État 79
 
    14 expression_arithmetique_f: '(' expression_arithmetique ')' .
 
     $défaut  réduction par utilisation de la règle 14 (expression_arithmetique_f)
 
 
-État 79
+État 80
 
-    9 instruction_affectation: '$' ID LEFTARROW expression_arithmetique '$' EOI .
+    9 instruction_affectation: '$' ID operateur_affectation expression_arithmetique '$' EOI .
 
     $défaut  réduction par utilisation de la règle 9 (instruction_affectation)
 
 
-État 80
+État 81
 
    10 expression_arithmetique: expression_arithmetique operateur_m expression_arithmetique_t .
    12 expression_arithmetique_t: expression_arithmetique_t . operateur_f expression_arithmetique_f
 
-    DIV   décalage et aller à l'état 66
-    MULT  décalage et aller à l'état 67
+    DIV   décalage et aller à l'état 67
+    MULT  décalage et aller à l'état 68
 
     $défaut  réduction par utilisation de la règle 10 (expression_arithmetique)
 
-    operateur_f  aller à l'état 68
+    operateur_f  aller à l'état 69
 
 
-État 81
+État 82
 
    12 expression_arithmetique_t: expression_arithmetique_t operateur_f expression_arithmetique_f .
 
     $défaut  réduction par utilisation de la règle 12 (expression_arithmetique_t)
 
 
-État 82
-
-   45 type: INTEGER .
-
-    $défaut  réduction par utilisation de la règle 45 (type)
-
-
 État 83
 
-   46 type: BOOLEAN .
+   46 type: INTEGER .
 
     $défaut  réduction par utilisation de la règle 46 (type)
 
 
 État 84
 
-   47 type: REAL .
+   47 type: BOOLEAN .
 
     $défaut  réduction par utilisation de la règle 47 (type)
 
 
 État 85
 
-   41 declaration_variable: ID IN type .
+   48 type: REAL .
 
-    $défaut  réduction par utilisation de la règle 41 (declaration_variable)
+    $défaut  réduction par utilisation de la règle 48 (type)
 
 
 État 86
 
-   24 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' . '\n'
+   42 declaration_variable: ID IN type .
 
-    '\n'  décalage et aller à l'état 93
+    $défaut  réduction par utilisation de la règle 42 (declaration_variable)
 
 
 État 87
 
-   36 suite_declarations_variable: declaration_variable ',' suite_declarations_variable .
+   25 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' . '\n'
 
-    $défaut  réduction par utilisation de la règle 36 (suite_declarations_variable)
+    '\n'  décalage et aller à l'état 94
 
 
 État 88
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' . '}' '\n'
+   37 suite_declarations_variable: declaration_variable ',' suite_declarations_variable .
 
-    '}'  décalage et aller à l'état 94
+    $défaut  réduction par utilisation de la règle 37 (suite_declarations_variable)
 
 
 État 89
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable . '$' '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' . '}' '\n'
 
-    '$'  décalage et aller à l'état 95
+    '}'  décalage et aller à l'état 95
 
 
 État 90
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' . suite_declarations_variable '$' '}' '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable . '$' '}' '\n'
 
-    EMPTYSET  décalage et aller à l'état 50
-    ID        décalage et aller à l'état 51
-
-    $défaut  réduction par utilisation de la règle 39 (suite_declarations_variable)
-
-    suite_declarations_variable  aller à l'état 96
-    declaration_variable         aller à l'état 53
+    '$'  décalage et aller à l'état 96
 
 
 État 91
 
-   21 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n' .
+   31 zone_declaration_local: DECLARELOCAL '{' '$' . suite_declarations_variable '$' '}' '\n'
 
-    $défaut  réduction par utilisation de la règle 21 (zone_declarations)
+    EMPTYSET  décalage et aller à l'état 51
+    ID        décalage et aller à l'état 52
+
+    $défaut  réduction par utilisation de la règle 40 (suite_declarations_variable)
+
+    suite_declarations_variable  aller à l'état 97
+    declaration_variable         aller à l'état 54
 
 
 État 92
 
-   40 declaration_constante: ID EGAL valeur IN type .
+   22 zone_declarations: zone_declaration_constante zone_declaration_input zone_declaration_output zone_declaration_global zone_declaration_local BLANKLINE '\n' .
 
-    $défaut  réduction par utilisation de la règle 40 (declaration_constante)
+    $défaut  réduction par utilisation de la règle 22 (zone_declarations)
 
 
 État 93
 
-   24 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n' .
+   41 declaration_constante: ID EGAL valeur IN type .
 
-    $défaut  réduction par utilisation de la règle 24 (zone_declaration_input)
+    $défaut  réduction par utilisation de la règle 41 (declaration_constante)
 
 
 État 94
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' . '\n'
+   25 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n' .
 
-    '\n'  décalage et aller à l'état 97
+    $défaut  réduction par utilisation de la règle 25 (zone_declaration_input)
 
 
 État 95
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' . '}' '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' . '\n'
 
-    '}'  décalage et aller à l'état 98
+    '\n'  décalage et aller à l'état 98
 
 
 État 96
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable . '$' '}' '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' . '}' '\n'
 
-    '$'  décalage et aller à l'état 99
+    '}'  décalage et aller à l'état 99
 
 
 État 97
 
-   26 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n' .
+   31 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable . '$' '}' '\n'
 
-    $défaut  réduction par utilisation de la règle 26 (zone_declaration_output)
+    '$'  décalage et aller à l'état 100
 
 
 État 98
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' . '\n'
+   27 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n' .
 
-    '\n'  décalage et aller à l'état 100
+    $défaut  réduction par utilisation de la règle 27 (zone_declaration_output)
 
 
 État 99
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' . '}' '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' . '\n'
 
-    '}'  décalage et aller à l'état 101
+    '\n'  décalage et aller à l'état 101
 
 
 État 100
 
-   28 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n' .
+   31 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' . '}' '\n'
 
-    $défaut  réduction par utilisation de la règle 28 (zone_declaration_global)
+    '}'  décalage et aller à l'état 102
 
 
 État 101
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' . '\n'
+   29 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n' .
 
-    '\n'  décalage et aller à l'état 102
+    $défaut  réduction par utilisation de la règle 29 (zone_declaration_global)
 
 
 État 102
 
-   30 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n' .
+   31 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' . '\n'
 
-    $défaut  réduction par utilisation de la règle 30 (zone_declaration_local)
+    '\n'  décalage et aller à l'état 103
+
+
+État 103
+
+   31 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n' .
+
+    $défaut  réduction par utilisation de la règle 31 (zone_declaration_local)

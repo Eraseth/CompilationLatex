@@ -11,7 +11,7 @@
 typedef struct variable_struct
 {
   char *id;
-	int type;  /*0 --> int 1 --> float/float2 --> bool (iValue = 0 || 1)*/
+	int type;  /*0 --> int 1 --> float/float 2 --> bool (iValue = 0 || 1)*/
   union Value {
     float dValue;
     int iValue;
