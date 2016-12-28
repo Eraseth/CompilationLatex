@@ -132,6 +132,15 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       fprintf(assembleur_file, "mfc1 $t1, $f1\n");
       fprintf(assembleur_file, "sw $t1,var_%s\n", result->id);
       break;
+    case PRINT_INT:
+      fprintf(assembleur_file, "# Affichage d'un entier\n");
+      fprintf(assembleur_file, "li $v0,1\n");
+      fprintf(assembleur_file, "lw $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case PRINT_FLOAT:
+      fprintf(assembleur_file, "# Affichage d'un float\n");
+      break;
   }
 
   fprintf(assembleur_file, "\n");
@@ -206,6 +215,14 @@ void print_op(int operator)
       printf("float to int")
       ;
       break;
+    case PRINT_INT:
+      printf("print int")
+      ;
+      break;
+      case PRINT_FLOAT:
+        printf("print float")
+        ;
+        break;
     default:
       printf("Operateur non reconnu\n");
       break;

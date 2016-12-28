@@ -9,7 +9,7 @@
   #include "include/variable.h"
   #include "include/expression_arithm.h"
   #include "y.tab.h"
-  
+
 %}
 
 %s texsci
@@ -17,6 +17,7 @@
 begin            "\\begin{texsci}"
 end              "\\end{texsci}"
 blankline        "\\BlankLine"
+mbox             "\\mbox"
 id               [a-zA-Z_][a-zA-Z0-9_]*
 leftarrow        "\\leftarrow"|"\\gets"
 in               "\\in"
@@ -96,6 +97,7 @@ eoi              "\\;"
 <texsci>{printInt}        { printf("PRINTINT "); return PRINTINT; }
 <texsci>{printText}       { printf("PRINTTEXT "); return PRINTTEXT; }
 <texsci>{printReal}       { printf("PRINTREAL "); return PRINTREAL; }
+<texsci>{mbox}       { printf("MBOX "); return MBOX; }
 <texsci>{constInt}        {
                             printf("CONSTINT ");
                             yylval.value = atoi(yytext);

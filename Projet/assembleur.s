@@ -12,10 +12,6 @@ cvt.w.s $f1,$f2
 mfc1 $t1, $f1
 sw $t1,var_c
 
-li $v0,1         # appel système pour afficher un entier
-lw $a0,var_c         # chargement de l'entier à afficher
-syscall          # affichage
-
 # Addition d'un entier
 lw $t0,var_temp3
 lw $t1,var_temp4
@@ -28,10 +24,6 @@ mtc1 $t2, $f12
 cvt.s.w $f1,$f12
 s.s $f1,var_c2
 
-li $v0,2         # appel système pour afficher un réel
-l.s $f12,var_c2   # chargement du réel à afficher
-syscall          # affichage
-
 # Addition d'un réel
 l.s $f0,var_temp6
 l.s $f1,var_temp7
@@ -41,10 +33,6 @@ s.s $f0,var_temp8
 # Assignation d'un réel
 l.s $f0,var_temp8
 s.s $f0,var_c3
-
-li $v0,2         # appel système pour afficher un réel
-l.s $f12,var_c3   # chargement du réel à afficher
-syscall          # affichage
 
 # Addition d'un entier
 lw $t0,var_temp9
@@ -56,9 +44,10 @@ sw $t0,var_temp11
 lw $t0,var_temp11
 sw $t0,var_c4
 
-li $v0,1         # appel système pour afficher un entier
-lw $a0,var_c4         # chargement de l'entier à afficher
-syscall          # affichage
+# Affichage d'un entier
+li $v0,1
+lw $a0,var_temp12
+syscall
 
 li $v0,10
 syscall
@@ -81,3 +70,4 @@ var_temp8: .float 0.000000
 var_temp9: .word 12
 var_temp10: .word 30
 var_temp11: .word 0
+var_temp12: .word 42

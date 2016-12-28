@@ -5,8 +5,11 @@
 #include <stdlib.h>
 #include "variable.h"
 
+//Définition de types de quads supplémentaires
 #define CONVERSION_INT_FLOAT -2
 #define CONVERSION_FLOAT_INT -3
+#define PRINT_INT -4
+#define PRINT_FLOAT -5
 //Structure pour notre code 3 adresses
 typedef struct quad_struct
 {

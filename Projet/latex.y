@@ -60,7 +60,7 @@
     expr_arithm expr_arithm;
 }
 
-%token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN
+%token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN MBOX
 %token <value> INTEGER COMMENTAIRE BOOLEAN REAL EMPTYSET
 %token <value> WHILE FOR KWTO IF ELSEIF
 %token <value> DECLARECONSTANT DECLAREINPUT DECLAREOUTPUT DECLAREGLOBAL DECLARELOCAL
@@ -71,7 +71,7 @@
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
 
-%type <value> type operateur_f operateur_m operateur_affectation
+%type <value> type operateur_f operateur_m operateur_affectation argument_entier
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
 
@@ -108,12 +108,12 @@ zone_instructions:
   { ; }
   ;
 list_instructions:
-  instruction '\n' list_instructions
+  '$'  instruction '$' EOI '\n' list_instructions
   {
     printf("list_instructions");
   }
   |
-  instruction '\n'
+  '$' instruction  '$' EOI  '\n'
   {
     printf("list_instructions");
   }
@@ -123,31 +123,36 @@ instruction:
   {
     printf("Instruction Affectation");
   }
+  |
+  instruction_fonction
+  {
+    printf("Instruction Fonction");
+  }
   ;
 instruction_affectation:
-  '$' ID operateur_affectation expression_arithmetique '$' EOI
+  ID operateur_affectation expression_arithmetique
   {
-    variable var = lookup_tds(tableS, $2);
+    variable var = lookup_tds(tableS, $1);
     if(var == NULL){
-      printf("ERROR : Variable %s non définie.\n", $2);
+      printf("ERROR : Variable %s non définie.\n", $1);
       exit(EXIT_FAILURE);
     }
 
     //Ajout du code de l'expression arithmétiques
-    code = add_quad_list(code,$4->code);
+    code = add_quad_list(code,$3->code);
     quad_list ql;
     quad q;
     //Convertit le type pour permettre l'Assignation
-    if((var->type == TYPE_INT || var->type == TYPE_BOOL) && $4->resultat->type == TYPE_FLOAT){
+    if((var->type == TYPE_INT || var->type == TYPE_BOOL) && $3->resultat->type == TYPE_FLOAT){
       //Float to Int
-      q = new_quad(CONVERSION_FLOAT_INT, $4->resultat, NULL, var);
+      q = new_quad(CONVERSION_FLOAT_INT, $3->resultat, NULL, var);
       ql = add_quad(NULL,q);
-    } else if(($4->resultat->type == TYPE_INT || $4->resultat->type == TYPE_BOOL) && var->type == TYPE_FLOAT){
+    } else if(($3->resultat->type == TYPE_INT || $3->resultat->type == TYPE_BOOL) && var->type == TYPE_FLOAT){
       //Int to Float
-      q = new_quad(CONVERSION_INT_FLOAT, $4->resultat, NULL, var);
+      q = new_quad(CONVERSION_INT_FLOAT, $3->resultat, NULL, var);
       ql = add_quad(NULL,q);
     } else {
-      q = new_quad($3,$4->resultat,NULL,var);
+      q = new_quad($2,$3->resultat,NULL,var);
       //Ajout de notre nouveau quad (quad d'Assignation)
       ql = add_quad(NULL,q);
     }
@@ -156,6 +161,55 @@ instruction_affectation:
     code = add_quad_list(code,ql);
   }
   ;
+instruction_fonction:
+    MBOX '{' PRINTINT '('  '$' argument_entier '$' ')' '}'
+    {
+
+      variable var = new_variable_int(generate_temp_name(compteurTemporaire),$6);
+      tableS = add_variable(tableS, var);
+      quad q = new_quad(PRINT_INT, var, var, var);
+
+      quad_list ql = add_quad(NULL,q);
+      code = add_quad_list(code,ql);
+
+    }
+    |
+    MBOX '{' PRINTREAL '('  '$' argument_real '$' ')' '}'
+    {
+      ;
+    }
+    ;
+argument_entier:
+  CONSTINT
+  {
+    $$ = yylval.value;
+  }
+  |ID
+  {
+    variable var = lookup_tds(tableS, $1);
+    if(var == NULL){
+      printf("ERROR : Variable %s non définie.\n", $1);
+      exit(EXIT_FAILURE);
+    }
+    if(var->type != TYPE_INT)
+    {
+      printf("ERROR : printInt demande un type entier en argumet.\n");
+      exit(EXIT_FAILURE);
+    }
+    $$ = var->val.iValue;
+  }
+  ;
+
+argument_real:
+CONSTFLOAT
+{
+  ;
+}
+|ID
+{
+  ;//Vérifier le type de ID
+}
+;
 expression_arithmetique:
   expression_arithmetique operateur_m expression_arithmetique_t
   {
