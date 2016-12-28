@@ -7,6 +7,7 @@ expr_arithm new_expr_arithm(variable var,quad_list ql)
   new->code = ql;
   return new;
 }
+
 void print_expr_arithm(expr_arithm e)
 {
   printf("Expression arithmetique \n resultat :");
@@ -14,6 +15,7 @@ void print_expr_arithm(expr_arithm e)
   printf("\n code :");
   print_quad_list(e->code);
 }
+
 void free_expr_arithm(expr_arithm e)
 {
   ;

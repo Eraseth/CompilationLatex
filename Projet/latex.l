@@ -19,6 +19,7 @@ end              "\\end{texsci}"
 blankline        "\\BlankLine"
 mbox             "\\mbox"
 id               [a-zA-Z_][a-zA-Z0-9_]*
+string           \"(\\.|[^"])*\"
 leftarrow        "\\leftarrow"|"\\gets"
 in               "\\in"
 integer          "\\Integer"
@@ -97,7 +98,7 @@ eoi              "\\;"
 <texsci>{printInt}        { printf("PRINTINT "); return PRINTINT; }
 <texsci>{printText}       { printf("PRINTTEXT "); return PRINTTEXT; }
 <texsci>{printReal}       { printf("PRINTREAL "); return PRINTREAL; }
-<texsci>{mbox}       { printf("MBOX "); return MBOX; }
+<texsci>{mbox}            { printf("MBOX "); return MBOX; }
 <texsci>{constInt}        {
                             printf("CONSTINT ");
                             yylval.value = atoi(yytext);
@@ -120,11 +121,21 @@ eoi              "\\;"
                           }
 <texsci>[{}()$,^]         { printf("%c ", yytext[0]);return yytext[0]; }
 <texsci>[\n]              { printf("\n"); return yytext[0];}
+
+<texsci>{string}    {
+                      yylval.name = strdup(yytext);
+                      printf("String --> %s", yytext);
+                      return STRING;
+                    }
+
 <texsci>{id}        {
                       yylval.name = strdup(yytext);
                       printf("ID --> %s", yytext);
                       return ID;
                     }
+
+
+
 .                   { ; }
 
 %%

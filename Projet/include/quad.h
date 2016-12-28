@@ -10,6 +10,7 @@
 #define CONVERSION_FLOAT_INT -3
 #define PRINT_INT -4
 #define PRINT_FLOAT -5
+#define PRINT_STRING -6
 //Structure pour notre code 3 adresses
 typedef struct quad_struct
 {
@@ -17,6 +18,7 @@ typedef struct quad_struct
   variable arg1;
   variable arg2;
   variable res;
+  int label;
 }*quad;
 
 

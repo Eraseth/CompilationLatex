@@ -1,19 +1,19 @@
-/* A Bison parser, made by GNU Bison 2.5.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
-   
-      Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
-   
+
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,59 +26,68 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
 
-/* Tokens.  */
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     TEXSCI_BEGIN = 258,
-     TEXSCI_END = 259,
-     BLANKLINE = 260,
-     LEFTARROW = 261,
-     IN = 262,
-     MBOX = 263,
-     INTEGER = 264,
-     COMMENTAIRE = 265,
-     BOOLEAN = 266,
-     REAL = 267,
-     EMPTYSET = 268,
-     WHILE = 269,
-     FOR = 270,
-     KWTO = 271,
-     IF = 272,
-     ELSEIF = 273,
-     DECLARECONSTANT = 274,
-     DECLAREINPUT = 275,
-     DECLAREOUTPUT = 276,
-     DECLAREGLOBAL = 277,
-     DECLARELOCAL = 278,
-     NO = 279,
-     ET = 280,
-     OU = 281,
-     EGAL = 282,
-     SUP = 283,
-     INF = 284,
-     INFEGAL = 285,
-     SUPEGAL = 286,
-     PRINTINT = 287,
-     PRINTTEXT = 288,
-     PRINTREAL = 289,
-     CONSTINT = 290,
-     CONSTBOOL = 291,
-     DIV = 292,
-     CONSTFLOAT = 293,
-     MULT = 294,
-     MINUS = 295,
-     PLUS = 296,
-     EOI = 297,
-     ID = 298
-   };
+  enum yytokentype
+  {
+    TEXSCI_BEGIN = 258,
+    TEXSCI_END = 259,
+    BLANKLINE = 260,
+    LEFTARROW = 261,
+    IN = 262,
+    MBOX = 263,
+    STRING = 264,
+    INTEGER = 265,
+    COMMENTAIRE = 266,
+    BOOLEAN = 267,
+    REAL = 268,
+    EMPTYSET = 269,
+    WHILE = 270,
+    FOR = 271,
+    KWTO = 272,
+    IF = 273,
+    ELSEIF = 274,
+    DECLARECONSTANT = 275,
+    DECLAREINPUT = 276,
+    DECLAREOUTPUT = 277,
+    DECLAREGLOBAL = 278,
+    DECLARELOCAL = 279,
+    NO = 280,
+    ET = 281,
+    OU = 282,
+    EGAL = 283,
+    SUP = 284,
+    INF = 285,
+    INFEGAL = 286,
+    SUPEGAL = 287,
+    PRINTINT = 288,
+    PRINTTEXT = 289,
+    PRINTREAL = 290,
+    CONSTINT = 291,
+    CONSTBOOL = 292,
+    DIV = 293,
+    CONSTFLOAT = 294,
+    MULT = 295,
+    MINUS = 296,
+    PLUS = 297,
+    EOI = 298,
+    ID = 299
+  };
 #endif
 /* Tokens.  */
 #define TEXSCI_BEGIN 258
@@ -87,51 +96,49 @@
 #define LEFTARROW 261
 #define IN 262
 #define MBOX 263
-#define INTEGER 264
-#define COMMENTAIRE 265
-#define BOOLEAN 266
-#define REAL 267
-#define EMPTYSET 268
-#define WHILE 269
-#define FOR 270
-#define KWTO 271
-#define IF 272
-#define ELSEIF 273
-#define DECLARECONSTANT 274
-#define DECLAREINPUT 275
-#define DECLAREOUTPUT 276
-#define DECLAREGLOBAL 277
-#define DECLARELOCAL 278
-#define NO 279
-#define ET 280
-#define OU 281
-#define EGAL 282
-#define SUP 283
-#define INF 284
-#define INFEGAL 285
-#define SUPEGAL 286
-#define PRINTINT 287
-#define PRINTTEXT 288
-#define PRINTREAL 289
-#define CONSTINT 290
-#define CONSTBOOL 291
-#define DIV 292
-#define CONSTFLOAT 293
-#define MULT 294
-#define MINUS 295
-#define PLUS 296
-#define EOI 297
-#define ID 298
+#define STRING 264
+#define INTEGER 265
+#define COMMENTAIRE 266
+#define BOOLEAN 267
+#define REAL 268
+#define EMPTYSET 269
+#define WHILE 270
+#define FOR 271
+#define KWTO 272
+#define IF 273
+#define ELSEIF 274
+#define DECLARECONSTANT 275
+#define DECLAREINPUT 276
+#define DECLAREOUTPUT 277
+#define DECLAREGLOBAL 278
+#define DECLARELOCAL 279
+#define NO 280
+#define ET 281
+#define OU 282
+#define EGAL 283
+#define SUP 284
+#define INF 285
+#define INFEGAL 286
+#define SUPEGAL 287
+#define PRINTINT 288
+#define PRINTTEXT 289
+#define PRINTREAL 290
+#define CONSTINT 291
+#define CONSTBOOL 292
+#define DIV 293
+#define CONSTFLOAT 294
+#define MULT 295
+#define MINUS 296
+#define PLUS 297
+#define EOI 298
+#define ID 299
 
-
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-{
 
-/* Line 2068 of yacc.c  */
-#line 49 "latex.y"
+union YYSTYPE
+{
+#line 51 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
@@ -144,17 +151,19 @@ typedef union YYSTYPE
       int type;
     } valeurSt;
     expr_arithm expr_arithm;
+    variable var;
 
+#line 157 "y.tab.h" /* yacc.c:1909  */
+};
 
-
-/* Line 2068 of yacc.c  */
-#line 152 "y.tab.h"
-} YYSTYPE;
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+
 extern YYSTYPE yylval;
 
+int yyparse (void);
 
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */

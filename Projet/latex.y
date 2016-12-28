@@ -16,6 +16,8 @@
   quad_list code = NULL;
   //Compteur pour la création de variable temporaire
   int compteurTemporaire = 0;
+  //Compteur pour le prochain quad (marqueur)
+  int next_quad = 0;
 
   // Functions and global variables provided by Lex.
   int yylex();
@@ -58,9 +60,10 @@
       int type;
     } valeurSt;
     expr_arithm expr_arithm;
+    variable var;
 }
 
-%token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN MBOX
+%token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN MBOX STRING
 %token <value> INTEGER COMMENTAIRE BOOLEAN REAL EMPTYSET
 %token <value> WHILE FOR KWTO IF ELSEIF
 %token <value> DECLARECONSTANT DECLAREINPUT DECLAREOUTPUT DECLAREGLOBAL DECLARELOCAL
@@ -71,13 +74,20 @@
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
 
-%type <value> type operateur_f operateur_m operateur_affectation argument_entier
+%type <value> type operateur_f operateur_m operateur_affectation marqueur
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
+%type <var> argument_real argument_entier
 
 %right '=' LEFTARROW
-%left '+' '-'
-%left '*' '/'
+%left OU
+%left ET
+%left '(' ')'
+%left EGAL SUP INF INFEGAL SUPEGAL
+%left NO
+%left PLUS MINUS
+%left MULT DIV
+
 
 %%
 
@@ -128,6 +138,11 @@ instruction:
   {
     printf("Instruction Fonction");
   }
+  |
+  structure_controle
+  {
+    printf("Structure de contrôle");
+  }
   ;
 instruction_affectation:
   ID operateur_affectation expression_arithmetique
@@ -165,9 +180,7 @@ instruction_fonction:
     MBOX '{' PRINTINT '('  '$' argument_entier '$' ')' '}'
     {
 
-      variable var = new_variable_int(generate_temp_name(compteurTemporaire),$6);
-      tableS = add_variable(tableS, var);
-      quad q = new_quad(PRINT_INT, var, var, var);
+      quad q = new_quad(PRINT_INT, $6, $6, $6);
 
       quad_list ql = add_quad(NULL,q);
       code = add_quad_list(code,ql);
@@ -176,13 +189,28 @@ instruction_fonction:
     |
     MBOX '{' PRINTREAL '('  '$' argument_real '$' ')' '}'
     {
-      ;
+
+      quad q = new_quad(PRINT_FLOAT, $6, $6, $6);
+
+      quad_list ql = add_quad(NULL,q);
+      code = add_quad_list(code,ql);
+    }
+    |
+    MBOX '{' PRINTTEXT '('  '$' STRING '$' ')' '}'
+    {
+      variable var = new_variable_string(generate_temp_name(compteurTemporaire),yylval.name);
+      tableS = add_variable(tableS, var);
+      quad q = new_quad(PRINT_STRING, var, var, var);
+      quad_list ql = add_quad(NULL,q);
+      code = add_quad_list(code,ql);
     }
     ;
 argument_entier:
   CONSTINT
   {
-    $$ = yylval.value;
+    variable var = new_variable_int(generate_temp_name(compteurTemporaire),yylval.value);
+    tableS = add_variable(tableS, var);
+    $$ = var;
   }
   |ID
   {
@@ -193,23 +221,59 @@ argument_entier:
     }
     if(var->type != TYPE_INT)
     {
-      printf("ERROR : printInt demande un type entier en argumet.\n");
+      printf("ERROR : printInt demande un type entier en argument.\n");
       exit(EXIT_FAILURE);
     }
-    $$ = var->val.iValue;
+    $$ = var;
   }
   ;
 
 argument_real:
-CONSTFLOAT
-{
+  CONSTFLOAT
+  {
+    variable var = new_variable_float(generate_temp_name(compteurTemporaire),yylval.dvalue);
+    tableS = add_variable(tableS, var);
+    $$ = var;
+  }
+  |ID
+  {
+    variable var = lookup_tds(tableS, $1);
+    if(var == NULL){
+      printf("ERROR : Variable %s non définie.\n", $1);
+      exit(EXIT_FAILURE);
+    }
+    if(var->type != TYPE_FLOAT)
+    {
+      printf("ERROR : printReal demande un type réel en argument.\n");
+      exit(EXIT_FAILURE);
+    }
+    $$ = var;
+  }
   ;
-}
-|ID
-{
-  ;//Vérifier le type de ID
-}
-;
+  /*
+  Structure de contrôle
+  */
+structure_controle:
+  WHILE '{' '$' expr_boolean '$' '}' '{' list_instructions '}'
+  {
+    ;
+  }
+  |
+  IF '{' '$' expr_boolean '$' '}' '{' list_instructions '}'
+  {
+    ;
+  }
+  |
+  FOR '{' '$' instruction_affectation '$' KWTO '$' expression_arithmetique '$' '}' '{' list_instructions '}'
+  {
+    ;
+  }
+  |
+  ELSEIF '{' '$' expr_boolean '$' '}' '{' list_instructions '}' '{' list_instructions '}'
+  {
+    ;
+  }
+  ;
 expression_arithmetique:
   expression_arithmetique operateur_m expression_arithmetique_t
   {
@@ -325,8 +389,7 @@ expression_arithmetique_f:
       $$ =  new_expr_arithm(var,NULL);
     }
   ;
-
-  operateur_f:
+operateur_f:
   DIV
   {
     $$ = DIV;
@@ -353,6 +416,66 @@ expression_arithmetique_f:
   {
     $$ = LEFTARROW;
   };
+
+/* Expression Boolean */
+expr_boolean:
+  expr_boolean OU marqueur expr_boolean
+  {
+    ;
+  }
+  |
+  expr_boolean ET marqueur expr_boolean
+  {
+    ;
+  }
+  |
+  NO expr_boolean
+  {
+    ;
+  }
+  |
+  expression_arithmetique relop expression_arithmetique
+  {
+    ;
+  }
+  |CONSTBOOL
+  {
+    ;
+  }
+  ;
+  /* Operateur relationelle */
+  relop:
+    EGAL
+    {
+      ;
+    }
+    |
+    SUP
+    {
+      ;
+    }
+    |
+    INF
+    {
+      ;
+    }
+    |
+    INFEGAL
+    {
+      ;
+    }
+    |
+    SUPEGAL
+    {
+      ;
+    }
+    ;
+marqueur:
+  {
+      $$ = next_quad;
+  }
+  ;
+
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:
     zone_declaration_constante zone_declaration_input zone_declaration_output

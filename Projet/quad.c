@@ -9,6 +9,7 @@ quad new_quad(int operateur, variable arg1, variable arg2, variable res){
   new_quad->arg1 = arg1;
   new_quad->arg2 = arg2;
   new_quad->res = res;
+  // new_quad->label = label;
   return new_quad;
 }
 
@@ -22,6 +23,7 @@ void print_quad(quad q){
   print_variable(q->arg1);
   print_variable(q->arg2);
   print_variable(q->res);
+  // printf("Label : %d\n", q);
 }
 
 void assembleur_quad(FILE *assembleur_file, quad q){
@@ -140,9 +142,17 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       break;
     case PRINT_FLOAT:
       fprintf(assembleur_file, "# Affichage d'un float\n");
+      fprintf(assembleur_file, "li $v0,2\n");
+      fprintf(assembleur_file, "l.s $f12,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case PRINT_STRING:
+      fprintf(assembleur_file, "# Affichage d'un string\n");
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
       break;
   }
-
   fprintf(assembleur_file, "\n");
 }
 
@@ -219,10 +229,14 @@ void print_op(int operator)
       printf("print int")
       ;
       break;
-      case PRINT_FLOAT:
-        printf("print float")
-        ;
-        break;
+    case PRINT_FLOAT:
+      printf("print float")
+      ;
+      break;
+    case PRINT_STRING:
+      printf("print string")
+      ;
+      break;
     default:
       printf("Operateur non reconnu\n");
       break;

@@ -93,6 +93,10 @@ void gen_assembleur_data(FILE *assembleur_file, tableSymbole table_symbole){
       case TYPE_BOOL:
         fprintf(assembleur_file, "var_%s: %s %d\n", var->id, ".word", var->val.iValue);
         break;
+      case TYPE_STRING:
+        fprintf(assembleur_file, "var_%s: %s %s\n", var->id, ".asciiz", var->val.sValue);
+        break;
+
       default:
         printf("\nERROR, génération de code assembleur. Type non reconnu\n");
         break;

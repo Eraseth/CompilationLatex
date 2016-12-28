@@ -6,21 +6,25 @@
 #define TYPE_INT 0
 #define TYPE_FLOAT 1
 #define TYPE_BOOL 2
+#define TYPE_STRING 3
 
 //Structure pour nos variables
 typedef struct variable_struct
 {
   char *id;
-	int type;  /*0 --> int 1 --> float/float 2 --> bool (iValue = 0 || 1)*/
+	int type;  /*0 --> int 1 --> float/float 2 --> bool (iValue = 0 || 1) 3 --> string*/
   union Value {
     float dValue;
     int iValue;
+    char * sValue;
   } val;
 
 }*variable;
 
 /* Fonctions sur la structure variable */
 variable new_variable_int(char *id, int val);
+
+variable new_variable_string(char *id, char * val);
 
 variable new_variable_float(char *id, float val);
 

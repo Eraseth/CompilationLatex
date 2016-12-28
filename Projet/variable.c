@@ -1,5 +1,12 @@
 #include "include/variable.h"
 
+variable new_variable_string(char *id, char * val){
+  variable res = malloc(sizeof(struct variable_struct));
+  res->type = TYPE_STRING;
+  res->id = strdup(id);
+  res->val.sValue = strdup(val);
+  return res;
+}
 variable new_variable_int(char *id, int val){
   variable res = malloc(sizeof(struct variable_struct));
   res->type = TYPE_INT;
@@ -67,6 +74,9 @@ void print_variable(variable var){
       break;
     case TYPE_BOOL:
       printf("Variable : Nom : %s, Type : %s, Valeur : %d\n", var->id, "boolean", var->val.iValue);
+      break;
+    case TYPE_STRING:
+      printf("Variable : Nom : %s, Type : %s, Valeur : %s\n", var->id, "string", var->val.sValue);
       break;
   }
 }
