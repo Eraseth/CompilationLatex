@@ -7,12 +7,13 @@
 #define TYPE_FLOAT 1
 #define TYPE_BOOL 2
 #define TYPE_STRING 3
+#define TYPE_JUMP 4
 
 //Structure pour nos variables
 typedef struct variable_struct
 {
   char *id;
-	int type;  /*0 --> int 1 --> float/float 2 --> bool (iValue = 0 || 1) 3 --> string*/
+	int type;  /*0 --> int 1 --> float/float 2 --> bool (iValue = 0 || 1) 3 --> string 4--> Jump*/
   union Value {
     float dValue;
     int iValue;
@@ -29,6 +30,8 @@ variable new_variable_string(char *id, char * val);
 variable new_variable_float(char *id, float val);
 
 variable new_variable_bool(char *id, int val);
+
+variable new_variable_goto(int val);
 
 void update_variable_int(variable var, int val);
 

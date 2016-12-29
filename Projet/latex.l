@@ -8,6 +8,8 @@
   #include "include/quad.h"
   #include "include/variable.h"
   #include "include/expression_arithm.h"
+  #include "include/expression_bool.h"
+  #include "include/structure_controle.h"
   #include "y.tab.h"
 
 %}

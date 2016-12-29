@@ -24,8 +24,14 @@ typedef struct quad_struct
 
 
 quad new_quad(int operateur, variable arg1, variable arg2, variable res);
+void set_label(quad q, int label);
 void print_quad(quad q);
 void free_quad(quad q);
 void print_op(int operator);
 void assembleur_quad(FILE *assembleur_file, quad q);
+void convertIntToFloat(FILE *assembleur_file, variable arg, char * registerSrc, char * registerDest);
+void convertFloatToInt(FILE *assembleur_file, variable arg, char * registerSrc, char * registerTemp, char * registerDest);
+char * parse_label(int label);
+int testTypeVariables(variable var1, variable var2);
+char * conversion_int_string(int val);
 #endif

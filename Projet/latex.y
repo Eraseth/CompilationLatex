@@ -6,7 +6,9 @@
   #include "include/quad.h"
   #include "include/variable.h"
   #include "include/expression_arithm.h"
+  #include "include/expression_bool.h"
   #include "include/gen_assembleur.h"
+  #include "include/structure_controle.h"
   #include "y.tab.h"
 
   #define TEXCC_ERROR_GENERAL 4
@@ -29,15 +31,8 @@
     exit(EXIT_FAILURE);
   }
 
-  char * conversion_int_string()
-  {
-    char * str = malloc(sizeof(char)*64);
-    sprintf(str,"%d",compteurTemporaire);
-    return str;
-  }
-
   char * generate_temp_name(){
-    char * str = malloc(sizeof(char)*64);
+    char * str = malloc(sizeof(char)*64*2);
     char * str2 = conversion_int_string(compteurTemporaire);
     strcat(str, "temp");
     strcat(str,str2);
@@ -60,7 +55,10 @@
       int type;
     } valeurSt;
     expr_arithm expr_arithm;
+    expr_bool expr_bool;
+    struct_ctrl str_ctrl;
     variable var;
+
 }
 
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN MBOX STRING
@@ -77,7 +75,10 @@
 %type <value> type operateur_f operateur_m operateur_affectation marqueur
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
+%type <expr_bool> expr_boolean
 %type <var> argument_real argument_entier
+%type <str_ctrl> structure_controle
+
 
 %right '=' LEFTARROW
 %left OU
@@ -198,7 +199,7 @@ instruction_fonction:
     |
     MBOX '{' PRINTTEXT '('  '$' STRING '$' ')' '}'
     {
-      variable var = new_variable_string(generate_temp_name(compteurTemporaire),yylval.name);
+      variable var = new_variable_string(generate_temp_name(),yylval.name);
       tableS = add_variable(tableS, var);
       quad q = new_quad(PRINT_STRING, var, var, var);
       quad_list ql = add_quad(NULL,q);
@@ -208,7 +209,7 @@ instruction_fonction:
 argument_entier:
   CONSTINT
   {
-    variable var = new_variable_int(generate_temp_name(compteurTemporaire),yylval.value);
+    variable var = new_variable_int(generate_temp_name(),yylval.value);
     tableS = add_variable(tableS, var);
     $$ = var;
   }
@@ -231,7 +232,7 @@ argument_entier:
 argument_real:
   CONSTFLOAT
   {
-    variable var = new_variable_float(generate_temp_name(compteurTemporaire),yylval.dvalue);
+    variable var = new_variable_float(generate_temp_name(),yylval.dvalue);
     tableS = add_variable(tableS, var);
     $$ = var;
   }
@@ -254,22 +255,22 @@ argument_real:
   Structure de contrôle
   */
 structure_controle:
-  WHILE '{' '$' expr_boolean '$' '}' '{' list_instructions '}'
+  WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}'
   {
     ;
   }
   |
-  IF '{' '$' expr_boolean '$' '}' '{' list_instructions '}'
+  IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}'
   {
     ;
   }
   |
-  FOR '{' '$' instruction_affectation '$' KWTO '$' expression_arithmetique '$' '}' '{' list_instructions '}'
+  FOR marqueur '{' '$' instruction_affectation '$' KWTO '$' expression_arithmetique '$' '}' '{' list_instructions '}'
   {
     ;
   }
   |
-  ELSEIF '{' '$' expr_boolean '$' '}' '{' list_instructions '}' '{' list_instructions '}'
+  ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'
   {
     ;
   }
@@ -287,13 +288,13 @@ expression_arithmetique:
     expr_arithm expr_arithm;
     switch($1->resultat->type){
               case TYPE_INT:
-              var = new_variable_int(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_int(generate_temp_name(),0);
               break;
               case TYPE_FLOAT:
-              var = new_variable_float(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_float(generate_temp_name(),0);
               break;
               case TYPE_BOOL:
-              var = new_variable_bool(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_bool(generate_temp_name(),0);
               break;
               default:
                 printf("\nError : Type non reconnu %d(valeur)\n",$1->resultat->type);
@@ -317,21 +318,28 @@ expression_arithmetique_t:
   {
     if (($1->resultat->type) != ($3->resultat->type))
     {
-      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
-      ,$1->resultat->id,$3->resultat->id);
-      exit(EXIT_FAILURE);
+      if (($1->resultat->type) == TYPE_INT && ($3->resultat->type) == TYPE_BOOL || ($1->resultat->type) == TYPE_BOOL && ($3->resultat->type) == TYPE_INT)
+      {
+        ;
+      }
+      else {
+        fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+        ,$1->resultat->id,$3->resultat->id);
+        exit(EXIT_FAILURE);
+      }
     }
+
     variable var;
     expr_arithm expr_arithm;
     switch($1->resultat->type){
               case TYPE_INT:
-              var = new_variable_int(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_int(generate_temp_name(),0);
               break;
               case TYPE_FLOAT:
-              var = new_variable_float(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_float(generate_temp_name(),0);
               break;
               case TYPE_BOOL:
-              var = new_variable_bool(generate_temp_name(compteurTemporaire),0);
+              var = new_variable_bool(generate_temp_name(),0);
               break;
               default:
                 printf("\nError : Type non reconnu %d(valeur)\n",$1->resultat->type);
@@ -362,13 +370,13 @@ expression_arithmetique_f:
     variable var;
     switch($1.type){
               case TYPE_INT:
-              var = new_variable_int(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
+              var = new_variable_int(generate_temp_name(),$1.valUnion.valInt);
               break;
               case TYPE_FLOAT:
-              var = new_variable_float(generate_temp_name(compteurTemporaire),$1.valUnion.valFloat);
+              var = new_variable_float(generate_temp_name(),$1.valUnion.valFloat);
               break;
               case TYPE_BOOL:
-              var = new_variable_bool(generate_temp_name(compteurTemporaire),$1.valUnion.valInt);
+              var = new_variable_bool(generate_temp_name(),$1.valUnion.valInt);
               break;
               default:
                 printf("\nError : Type non reconnu %d(valeur)\n",$1.type);
@@ -641,6 +649,13 @@ int main(int argc, char* argv[]) {
   }
 
   yyparse();
+  variable v1 = new_variable_int("v1", 5);
+  variable v2 = new_variable_int("v2", 5);
+  variable v3 = new_variable_goto(5);
+  quad q = new_quad(EGAL,v1,v2,v3);
+  set_label(q, 5);
+  quad_list ql = add_quad(NULL,q);
+  code = add_quad_list(code,ql);
   generate_text(fd, code);
   generate_data(fd, tableS);
   fclose(yyin);

@@ -1,5 +1,7 @@
 #include "include/quad.h"
 #include "include/expression_arithm.h"
+#include "include/expression_bool.h"
+#include "include/structure_controle.h"
 #include "y.tab.h"
 
 
@@ -9,8 +11,12 @@ quad new_quad(int operateur, variable arg1, variable arg2, variable res){
   new_quad->arg1 = arg1;
   new_quad->arg2 = arg2;
   new_quad->res = res;
-  // new_quad->label = label;
+  new_quad->label = -1;
   return new_quad;
+}
+
+void set_label(quad q, int label){
+  q->label = label;
 }
 
 void print_quad(quad q){
@@ -31,6 +37,9 @@ void assembleur_quad(FILE *assembleur_file, quad q){
   variable arg2 = q->arg2;
   variable result = q->res;
 
+  if (q->label > -1) {
+    fprintf(assembleur_file, "%s:\n", parse_label(q->label));
+  }
   /*
   ====================================
   Gestion des opérations arithmétiques
@@ -115,25 +124,35 @@ void assembleur_quad(FILE *assembleur_file, quad q){
   }
 
   /*
-  ====================================
-  Gestion de la conversion (int to flaot et float to int)
-  ====================================
+  ========================================================
+  Gestion de la conversion (int to flaot et float to int),
+  de l'affichage des valeurs en fonction de leur type,
+  des opérateurs de comparaison
+  ========================================================
   */
   switch (q->operateur) {
+    /*
+    -------------------------------------------------------
+    Gestion de la conversion (int to flaot et float to int)
+    -------------------------------------------------------
+    */
     case CONVERSION_INT_FLOAT:
       fprintf(assembleur_file, "# Conversion d'un entier en réel et assignation\n");
-      fprintf(assembleur_file, "lw $t2,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "mtc1 $t2, $f12\n");
-      fprintf(assembleur_file, "cvt.s.w $f1,$f12\n");
-      fprintf(assembleur_file, "s.s $f1,var_%s\n", result->id);
+      char registreDestFloat[3] = "$f1";
+      convertIntToFloat(assembleur_file, arg1, "$t1", registreDestFloat);
+      fprintf(assembleur_file, "s.s %s,var_%s\n", registreDestFloat, result->id);
       break;
     case CONVERSION_FLOAT_INT:
       fprintf(assembleur_file, "# Conversion d'un réel en entier et assignation\n");
-      fprintf(assembleur_file, "l.s $f2,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "cvt.w.s $f1,$f2\n");
-      fprintf(assembleur_file, "mfc1 $t1, $f1\n");
-      fprintf(assembleur_file, "sw $t1,var_%s\n", result->id);
+      char registreDestInt[3] = "$t1";
+      convertFloatToInt(assembleur_file, arg1, "$f2", "$f1", registreDestInt);
+      fprintf(assembleur_file, "sw %s,var_%s\n", registreDestInt, result->id);
       break;
+    /*
+    -------------------------------------------------------
+    Gestion de l'affichage' (int to flaot et float to int)
+    -------------------------------------------------------
+    */
     case PRINT_INT:
       fprintf(assembleur_file, "# Affichage d'un entier\n");
       fprintf(assembleur_file, "li $v0,1\n");
@@ -152,8 +171,181 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
       fprintf(assembleur_file, "syscall\n");
       break;
+    /*
+    -------------------------------------------------------
+    Gestion des opérateurs de comparaison (<, ==, !=, ...)
+    -------------------------------------------------------
+    */
+    case EGAL:
+      fprintf(assembleur_file, "# Jump conditionelle (==)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+        fprintf(assembleur_file, "# Type int ou bool\n");
+        fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+        fprintf(assembleur_file, "beq $t1, $t2, %s\n", parse_label(result->val.iValue));
+
+          break;
+        case TYPE_FLOAT:
+        fprintf(assembleur_file, "# Type float\n");
+
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case SUP:
+      fprintf(assembleur_file, "# Jump conditionelle (>)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+
+          break;
+        case TYPE_FLOAT:
+
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case INF:
+      fprintf(assembleur_file, "# Jump conditionelle (<)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+
+          break;
+        case TYPE_FLOAT:
+
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case INFEGAL:
+      fprintf(assembleur_file, "# Jump conditionelle (<=)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+
+          break;
+        case TYPE_FLOAT:
+
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
+    case SUPEGAL:
+      fprintf(assembleur_file, "# Jump conditionelle (>=)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+
+          break;
+        case TYPE_FLOAT:
+
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      fprintf(assembleur_file, "li $v0,4\n");
+      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
+      fprintf(assembleur_file, "syscall\n");
+      break;
   }
   fprintf(assembleur_file, "\n");
+}
+
+
+void convertIntToFloat(FILE *assembleur_file, variable arg, char * registerSrc, char * registerDest){
+  //fprintf(assembleur_file, "lw $t2,var_%s\n", arg1->id);
+  fprintf(assembleur_file, "lw %s,var_%s\n", registerSrc, arg->id);
+  //fprintf(assembleur_file, "mtc1 $t2, $f12\n");
+  fprintf(assembleur_file, "mtc1 %s, $f12\n", registerSrc);
+  //fprintf(assembleur_file, "cvt.s.w $f1,$f12\n");
+  fprintf(assembleur_file, "cvt.s.w %s,$f12\n", registerDest);
+}
+
+void convertFloatToInt(FILE *assembleur_file, variable arg, char * registerSrc, char * registerTemp, char * registerDest){
+  //fprintf(assembleur_file, "l.s $f2,var_%s\n", arg1->id);
+  fprintf(assembleur_file, "l.s %s,var_%s\n", registerSrc, arg->id);
+  //fprintf(assembleur_file, "cvt.w.s $f1,$f2\n");
+  fprintf(assembleur_file, "cvt.w.s %s,%s\n", registerTemp, registerSrc);
+  //fprintf(assembleur_file, "mfc1 $t1, $f1\n");
+  fprintf(assembleur_file, "mfc1 %s, %s\n", registerDest, registerTemp);
+}
+
+/* Renvoi le type en cas d'égalité, sinon -1 */
+int testTypeVariables(variable var1, variable var2){
+  if (var1->type == var2->type) {
+    return var1->type;
+  }
+  return -1;
+}
+
+char * conversion_int_string(int val)
+{
+  char * str = malloc(sizeof(char)*64);
+  sprintf(str,"%d",val);
+  return str;
+}
+
+char * parse_label(int label){
+  char * str = malloc(sizeof(char)*64*2);
+  char * str2 = conversion_int_string(label);
+  strcat(str, "label");
+  strcat(str,str2);
+  free(str2);
+  return str;
 }
 
 void free_quad(quad q){

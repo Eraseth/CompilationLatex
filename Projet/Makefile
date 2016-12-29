@@ -10,7 +10,8 @@ PROJECT = Compilateur
 TYPE = .out
 BIN = $(PROJECT)$(TYPE)
 DOUT =
-OBJS = variable.o tableSymbole.o quad.o quad_list.o expression_arithm.o gen_assembleur.o
+OBJS = variable.o tableSymbole.o quad.o quad_list.o expression_arithm.o\
+gen_assembleur.o expression_bool.o structure_controle.o
 EXECY = latex.y
 EXECL = latex.l
 LEX = lex

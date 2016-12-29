@@ -23,6 +23,14 @@ variable new_variable_float(char *id, float val){
   return res;
 }
 
+variable new_variable_goto(int val){
+  variable res = malloc(sizeof(struct variable_struct));
+  res->type = TYPE_JUMP;
+  res->id = NULL;
+  res->val.iValue = val;
+  return res;
+}
+
 variable new_variable_bool(char *id, int val){
   variable res = malloc(sizeof(struct variable_struct));
   res->type = TYPE_BOOL;
@@ -77,6 +85,9 @@ void print_variable(variable var){
       break;
     case TYPE_STRING:
       printf("Variable : Nom : %s, Type : %s, Valeur : %s\n", var->id, "string", var->val.sValue);
+      break;
+    case TYPE_JUMP:
+      printf("Variable : Nom : %s, Type : %s, Valeur : %d\n", var->id, "jump", var->val.iValue);
       break;
   }
 }

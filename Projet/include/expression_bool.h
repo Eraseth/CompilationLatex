@@ -1,6 +1,6 @@
 #if !defined( EXPR_BOOL_H )
 
-#define EXPR_ARITHM_H
+#define EXPR_BOOL_H
 #include <stdio.h>
 #include <stdlib.h>
 #include "quad_list.h"

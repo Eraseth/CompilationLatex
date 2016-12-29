@@ -616,10 +616,12 @@ char *yytext;
   #include "include/quad.h"
   #include "include/variable.h"
   #include "include/expression_arithm.h"
+  #include "include/expression_bool.h"
+  #include "include/structure_controle.h"
   #include "y.tab.h"
 
 
-#line 623 "lex.yy.c"
+#line 625 "lex.yy.c"
 
 #define INITIAL 0
 #define texsci 1
@@ -838,10 +840,10 @@ YY_DECL
 		}
 
 	{
-#line 59 "latex.l"
+#line 61 "latex.l"
 
 
-#line 845 "lex.yy.c"
+#line 847 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -900,196 +902,196 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 61 "latex.l"
+#line 63 "latex.l"
 { BEGIN(texsci); printf("BEGIN{texsci} ");   // Start TexSci scanning mode
                       return TEXSCI_BEGIN;
                     }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 64 "latex.l"
+#line 66 "latex.l"
 { BEGIN(INITIAL); printf("END "); // Reset to default scanning mode
                       return TEXSCI_END;
 		                }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 67 "latex.l"
+#line 69 "latex.l"
 { printf("BLANKLINE "); return BLANKLINE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 68 "latex.l"
+#line 70 "latex.l"
 { printf("LEFTARROW "); return LEFTARROW; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 69 "latex.l"
+#line 71 "latex.l"
 { printf("IN "); return IN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 70 "latex.l"
+#line 72 "latex.l"
 { printf("INTEGER "); return INTEGER; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 71 "latex.l"
+#line 73 "latex.l"
 { printf("COMMENTAIRE "); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 72 "latex.l"
+#line 74 "latex.l"
 { printf("BOOLEAN "); return BOOLEAN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 73 "latex.l"
+#line 75 "latex.l"
 { printf("EOI (End of instruction) "); return EOI; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 74 "latex.l"
+#line 76 "latex.l"
 { printf("REAL "); return REAL; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 75 "latex.l"
+#line 77 "latex.l"
 { printf("EMPTYSET "); return EMPTYSET; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 76 "latex.l"
+#line 78 "latex.l"
 { printf("WHILE "); return WHILE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 77 "latex.l"
+#line 79 "latex.l"
 { printf("FOR "); return FOR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 78 "latex.l"
+#line 80 "latex.l"
 { printf("KWTO "); return KWTO; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 79 "latex.l"
+#line 81 "latex.l"
 { printf("IF "); return IF; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 80 "latex.l"
+#line 82 "latex.l"
 { printf("ELSEIF "); return ELSEIF; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 81 "latex.l"
+#line 83 "latex.l"
 { printf("DELCARECONSTANT "); return DECLARECONSTANT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 82 "latex.l"
+#line 84 "latex.l"
 { printf("DECLAREINPUT "); return DECLAREINPUT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 83 "latex.l"
+#line 85 "latex.l"
 { printf("DECLAREOUTPUT "); return DECLAREOUTPUT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 84 "latex.l"
+#line 86 "latex.l"
 { printf("DECLAREGLOBAL "); return DECLAREGLOBAL; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 85 "latex.l"
+#line 87 "latex.l"
 { printf("DECLARELOCAL "); return DECLARELOCAL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 86 "latex.l"
+#line 88 "latex.l"
 { printf("DIV "); return DIV; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 87 "latex.l"
+#line 89 "latex.l"
 { printf("MULT "); return MULT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 88 "latex.l"
+#line 90 "latex.l"
 { printf("MINUS "); return MINUS; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 89 "latex.l"
+#line 91 "latex.l"
 { printf("PLUS "); return PLUS; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 90 "latex.l"
+#line 92 "latex.l"
 { printf("NO "); return NO; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 91 "latex.l"
+#line 93 "latex.l"
 { printf("ET "); return ET; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 92 "latex.l"
+#line 94 "latex.l"
 { printf("OU "); return OU; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 93 "latex.l"
+#line 95 "latex.l"
 { printf("EGAL "); return EGAL; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 94 "latex.l"
+#line 96 "latex.l"
 { printf("SUP "); return SUP; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 95 "latex.l"
+#line 97 "latex.l"
 { printf("INF "); return INF; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 96 "latex.l"
+#line 98 "latex.l"
 { printf("INFEGAL "); return INFEGAL; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 97 "latex.l"
+#line 99 "latex.l"
 { printf("SUPEGAL "); return SUPEGAL; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 98 "latex.l"
+#line 100 "latex.l"
 { printf("PRINTINT "); return PRINTINT; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 99 "latex.l"
+#line 101 "latex.l"
 { printf("PRINTTEXT "); return PRINTTEXT; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 100 "latex.l"
+#line 102 "latex.l"
 { printf("PRINTREAL "); return PRINTREAL; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 101 "latex.l"
+#line 103 "latex.l"
 { printf("MBOX "); return MBOX; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 102 "latex.l"
+#line 104 "latex.l"
 {
                             printf("CONSTINT ");
                             yylval.value = atoi(yytext);
@@ -1098,7 +1100,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 108 "latex.l"
+#line 110 "latex.l"
 {
                             printf("CONSTFLOAT ");
                             yylval.dvalue = atof(yytext);
@@ -1107,7 +1109,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 113 "latex.l"
+#line 115 "latex.l"
 {
                             printf("CONSTBOOL ");
                             if(strcmp(yytext, "\\true") == 0){
@@ -1120,19 +1122,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 122 "latex.l"
+#line 124 "latex.l"
 { printf("%c ", yytext[0]);return yytext[0]; }
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 123 "latex.l"
+#line 125 "latex.l"
 { printf("\n"); return yytext[0];}
 	YY_BREAK
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 125 "latex.l"
+#line 127 "latex.l"
 {
                       yylval.name = strdup(yytext);
                       printf("String --> %s", yytext);
@@ -1141,7 +1143,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 131 "latex.l"
+#line 133 "latex.l"
 {
                       yylval.name = strdup(yytext);
                       printf("ID --> %s", yytext);
@@ -1150,15 +1152,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 139 "latex.l"
+#line 141 "latex.l"
 { ; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 141 "latex.l"
+#line 143 "latex.l"
 ECHO;
 	YY_BREAK
-#line 1162 "lex.yy.c"
+#line 1164 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(texsci):
 	yyterminate();
@@ -2160,7 +2162,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 141 "latex.l"
+#line 143 "latex.l"
 
 
 

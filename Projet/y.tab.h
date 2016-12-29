@@ -138,7 +138,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 51 "latex.y" /* yacc.c:1909  */
+#line 46 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
@@ -151,9 +151,12 @@ union YYSTYPE
       int type;
     } valeurSt;
     expr_arithm expr_arithm;
+    expr_bool expr_bool;
+    struct_ctrl str_ctrl;
     variable var;
 
-#line 157 "y.tab.h" /* yacc.c:1909  */
+
+#line 160 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

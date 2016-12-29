@@ -38,11 +38,12 @@ Test d'affectations et de calculs élémentaires.
 
 \begin{texsci}{main}
 \Constant{$a = 42 \in \Integer,lo = 5.5 \in \Real$}
-\Local{$c \in \Integer,c2 \in \Real,c3 \in \Real,c4 \in \Integer$}
+\Local{$c \in \Integer,c2 \in \Real,c3 \in \Real,c4 \in \Integer, cbool \in \Boolean$}
 \BlankLine
-$\mbox{printInt($5$)}$\;
-$\mbox{printInt($42$)}$\;
-$\mbox{printText($"Bob"$)}$\;
+$c \leftarrow a + a + 2 + 3$\;
+$cbool \leftarrow \true$\;
+$cbool \leftarrow \false$\;
+$\mbox{printInt($c$)}$\;
 \end{texsci}
 
 \end{document}
