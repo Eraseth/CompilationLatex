@@ -1,7 +1,7 @@
 #include "include/quad.h"
 #include "include/expression_arithm.h"
 #include "include/expression_bool.h"
-#include "include/structure_controle.h"
+#include "include/statement.h"
 #include "y.tab.h"
 
 
@@ -40,12 +40,21 @@ void assembleur_quad(FILE *assembleur_file, quad q){
   if (q->label > -1) {
     fprintf(assembleur_file, "%s:\n", parse_label(q->label));
   }
+  if(arg1 == NULL && arg2 == NULL && result == NULL && q->operateur == QUAD_LABEL)
+  {
+    return ;//Ce quad sert uniquement à générer un label
+  }
   /*
   ====================================
   Gestion des opérations arithmétiques
   ====================================
   */
-  if (result->type == 0 || result->type == 2) {
+  if (result == NULL) {
+    printf("ERREUR, quad contenant un résultat inconnu.\n");
+    print_quad(q);
+    exit(EXIT_FAILURE);
+  }
+  else if (result->type == 0 || result->type == 2) {
     /* Cas entier et boolean (instructions assembleur différentes) */
     switch (q->operateur) {
       case PLUS:
@@ -121,7 +130,7 @@ void assembleur_quad(FILE *assembleur_file, quad q){
         fprintf(assembleur_file, "s.s $f0,var_%s\n", result->id);
         break;
       }
-  }
+    }
 
   /*
   ========================================================
@@ -188,7 +197,7 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           break;
         case TYPE_FLOAT:
         fprintf(assembleur_file, "# Type float\n");
-
+        //TODO Générer l'assembleur pour la comparaison de float
           break;
         case -1:
           /* Conversion en float */
@@ -201,9 +210,6 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           break;
       }
 
-      fprintf(assembleur_file, "li $v0,4\n");
-      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "syscall\n");
       break;
     case SUP:
       fprintf(assembleur_file, "# Jump conditionelle (>)\n");
@@ -224,10 +230,6 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           // }
           break;
       }
-
-      fprintf(assembleur_file, "li $v0,4\n");
-      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "syscall\n");
       break;
     case INF:
       fprintf(assembleur_file, "# Jump conditionelle (<)\n");
@@ -248,10 +250,6 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           // }
           break;
       }
-
-      fprintf(assembleur_file, "li $v0,4\n");
-      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "syscall\n");
       break;
     case INFEGAL:
       fprintf(assembleur_file, "# Jump conditionelle (<=)\n");
@@ -273,9 +271,6 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           break;
       }
 
-      fprintf(assembleur_file, "li $v0,4\n");
-      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "syscall\n");
       break;
     case SUPEGAL:
       fprintf(assembleur_file, "# Jump conditionelle (>=)\n");
@@ -296,11 +291,11 @@ void assembleur_quad(FILE *assembleur_file, quad q){
           // }
           break;
       }
-
-      fprintf(assembleur_file, "li $v0,4\n");
-      fprintf(assembleur_file, "la $a0,var_%s\n", arg1->id);
-      fprintf(assembleur_file, "syscall\n");
       break;
+      case QUAD_GOTO:
+        fprintf(assembleur_file, "# Jump\n");
+        fprintf(assembleur_file, "j %s\n", parse_label(result->val.iValue));
+        break;
   }
   fprintf(assembleur_file, "\n");
 }
@@ -427,6 +422,10 @@ void print_op(int operator)
       break;
     case PRINT_STRING:
       printf("print string")
+      ;
+      break;
+    case QUAD_GOTO:
+      printf("GOTO")
       ;
       break;
     default:

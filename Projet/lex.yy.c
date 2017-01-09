@@ -617,7 +617,7 @@ char *yytext;
   #include "include/variable.h"
   #include "include/expression_arithm.h"
   #include "include/expression_bool.h"
-  #include "include/structure_controle.h"
+  #include "include/statement.h"
   #include "y.tab.h"
 
 
@@ -1129,7 +1129,7 @@ case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
 #line 125 "latex.l"
-{ printf("\n"); return yytext[0];}
+{ printf("\n");}
 	YY_BREAK
 case 43:
 /* rule 43 can match eol */

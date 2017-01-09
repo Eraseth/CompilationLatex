@@ -90,6 +90,27 @@ void gen_assembleur_text(FILE *assembleur_file, quad_list code)
   }
 }
 
+quad_list complete(quad_list ql, int label){
+  quad_list temp = ql;
+
+  if (ql == NULL) {
+    printf("Warning, complete d'une liste vide\n");
+  }
+
+  while(temp!=NULL)
+  {
+    if (temp->quad->res != NULL) {
+      printf("ERROR, complete d'un quad possédant un resultat\n");
+      exit(EXIT_FAILURE);
+    } else {
+      temp->quad->res = new_variable_goto(label);
+    }
+    temp = temp->next;
+  }
+
+  return ql;
+}
+
 /* Pensez au doubles free */
 /*
 void main(){

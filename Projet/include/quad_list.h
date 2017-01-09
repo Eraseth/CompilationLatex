@@ -18,5 +18,5 @@ void print_quad_list(quad_list quad_l);
 void free_quad_list(quad_list quad_l);
 quad_list add_quad_list(quad_list q1 , quad_list q2);
 void gen_assembleur_text(FILE *assembleur_file, quad_list code);
-
+quad_list complete(quad_list ql, int label);
 #endif

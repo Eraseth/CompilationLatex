@@ -9,7 +9,7 @@
   #include "include/variable.h"
   #include "include/expression_arithm.h"
   #include "include/expression_bool.h"
-  #include "include/structure_controle.h"
+  #include "include/statement.h"
   #include "y.tab.h"
 
 %}
@@ -122,7 +122,7 @@ eoi              "\\;"
                             return CONSTBOOL;
                           }
 <texsci>[{}()$,^]         { printf("%c ", yytext[0]);return yytext[0]; }
-<texsci>[\n]              { printf("\n"); return yytext[0];}
+<texsci>[\n]              { printf("\n");}
 
 <texsci>{string}    {
                       yylval.name = strdup(yytext);

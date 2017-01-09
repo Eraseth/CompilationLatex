@@ -152,7 +152,7 @@ union YYSTYPE
     } valeurSt;
     expr_arithm expr_arithm;
     expr_bool expr_bool;
-    struct_ctrl str_ctrl;
+    statement statement;
     variable var;
 
 

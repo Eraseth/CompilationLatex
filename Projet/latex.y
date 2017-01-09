@@ -8,7 +8,7 @@
   #include "include/expression_arithm.h"
   #include "include/expression_bool.h"
   #include "include/gen_assembleur.h"
-  #include "include/structure_controle.h"
+  #include "include/statement.h"
   #include "y.tab.h"
 
   #define TEXCC_ERROR_GENERAL 4
@@ -19,7 +19,7 @@
   //Compteur pour la création de variable temporaire
   int compteurTemporaire = 0;
   //Compteur pour le prochain quad (marqueur)
-  int next_quad = 0;
+  int compteur_quad = 0;
 
   // Functions and global variables provided by Lex.
   int yylex();
@@ -56,7 +56,7 @@
     } valeurSt;
     expr_arithm expr_arithm;
     expr_bool expr_bool;
-    struct_ctrl str_ctrl;
+    statement statement;
     variable var;
 
 }
@@ -72,12 +72,13 @@
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
 
-%type <value> type operateur_f operateur_m operateur_affectation marqueur
+%type <value> type operateur_f operateur_m operateur_affectation marqueur relop
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
 %type <expr_bool> expr_boolean
 %type <var> argument_real argument_entier
-%type <str_ctrl> structure_controle
+%type <statement> structure_controle list_instructions instruction instruction_affectation
+%type <statement> instruction_fonction
 
 
 %right '=' LEFTARROW
@@ -101,7 +102,7 @@ algorithm_list:
   ;
 
 algorithm:
-    TEXSCI_BEGIN '{' ID '}' '\n' zone_declarations zone_instructions TEXSCI_END
+    TEXSCI_BEGIN '{' ID '}'  zone_declarations zone_instructions TEXSCI_END
     {
       //fprintf(stderr, "[texcc] info: algorithm \"%s\" parsed\n", $3);
       //free($3);
@@ -114,35 +115,56 @@ zone_instructions:
   list_instructions
   {
     printf("Liste d'instructions\n");
+    code = $1->code;
   }
   |
   { ; }
   ;
 list_instructions:
-  '$'  instruction '$' EOI '\n' list_instructions
+  instruction marqueur list_instructions
   {
     printf("list_instructions");
+    $1->next_list = complete($1->next_list,$2);
+    $$ = new_statement(new_quad_list(),new_quad_list());
+    $$->code = add_quad_list($$->code,$1->code);
+
+    $$->next_list = add_quad_list($$->next_list,$1->next_list);
+    $$->next_list = add_quad_list($$->next_list,$3->next_list);
+
+    if ($1->next_list != NULL){
+      quad qNext = new_quad(QUAD_LABEL, NULL, NULL, NULL);
+      set_label(qNext,compteur_quad);compteur_quad++;
+      $$->code = add_quad($$->code,qNext);
+    }
+    $$->code = add_quad_list($$->code,$3->code);
+
   }
   |
-  '$' instruction  '$' EOI  '\n'
+  instruction
   {
+    $1->next_list = complete($1->next_list,compteur_quad);
+    $$ = new_statement(new_quad_list(),new_quad_list());
+    $$->next_list = add_quad_list($$->next_list,$1->next_list);
+    $$->code = add_quad_list($$->code,$1->code);
     printf("list_instructions");
   }
   ;
 instruction:
-  instruction_affectation
+  '$' instruction_affectation '$' EOI
   {
     printf("Instruction Affectation");
+    $$ = new_statement($2->code,$2->next_list);
   }
   |
-  instruction_fonction
+  '$' instruction_fonction '$' EOI
   {
     printf("Instruction Fonction");
+    $$ = new_statement($2->code,$2->next_list);
   }
   |
   structure_controle
   {
-    printf("Structure de contrôle");
+    $$ = new_statement($1->code,$1->next_list);
   }
   ;
 instruction_affectation:
@@ -155,7 +177,6 @@ instruction_affectation:
     }
 
     //Ajout du code de l'expression arithmétiques
-    code = add_quad_list(code,$3->code);
     quad_list ql;
     quad q;
     //Convertit le type pour permettre l'Assignation
@@ -174,7 +195,7 @@ instruction_affectation:
     }
 
     print_quad_list(ql);
-    code = add_quad_list(code,ql);
+    $$ = new_statement(ql,new_quad_list());
   }
   ;
 instruction_fonction:
@@ -184,8 +205,7 @@ instruction_fonction:
       quad q = new_quad(PRINT_INT, $6, $6, $6);
 
       quad_list ql = add_quad(NULL,q);
-      code = add_quad_list(code,ql);
-
+      $$ = new_statement(ql,NULL);
     }
     |
     MBOX '{' PRINTREAL '('  '$' argument_real '$' ')' '}'
@@ -194,7 +214,7 @@ instruction_fonction:
       quad q = new_quad(PRINT_FLOAT, $6, $6, $6);
 
       quad_list ql = add_quad(NULL,q);
-      code = add_quad_list(code,ql);
+      $$ = new_statement(ql,NULL);
     }
     |
     MBOX '{' PRINTTEXT '('  '$' STRING '$' ')' '}'
@@ -203,7 +223,7 @@ instruction_fonction:
       tableS = add_variable(tableS, var);
       quad q = new_quad(PRINT_STRING, var, var, var);
       quad_list ql = add_quad(NULL,q);
-      code = add_quad_list(code,ql);
+      $$ = new_statement(ql,NULL);
     }
     ;
 argument_entier:
@@ -262,7 +282,18 @@ structure_controle:
   |
   IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}'
   {
-    ;
+
+    $4->true_list = complete($4->true_list, $7);
+
+    $$= new_statement(new_quad_list(), new_quad_list());
+    $$->next_list = add_quad_list($$->next_list, $4->false_list);
+    print_quad_list($$->next_list);
+    quad q = new_quad(QUAD_LABEL, NULL, NULL, NULL);
+    set_label(q,compteur_quad);compteur_quad++;
+    $$->code = add_quad_list($$->code, $4->code);
+    $$->code = add_quad($$->code, q);
+    $$->code = add_quad_list($$->code, $9->code);
+    print_quad_list($$->code);
   }
   |
   FOR marqueur '{' '$' instruction_affectation '$' KWTO '$' expression_arithmetique '$' '}' '{' list_instructions '}'
@@ -370,14 +401,14 @@ expression_arithmetique_f:
     variable var;
     switch($1.type){
               case TYPE_INT:
-              var = new_variable_int(generate_temp_name(),$1.valUnion.valInt);
-              break;
+                var = new_variable_int(generate_temp_name(),$1.valUnion.valInt);
+                break;
               case TYPE_FLOAT:
-              var = new_variable_float(generate_temp_name(),$1.valUnion.valFloat);
-              break;
+                var = new_variable_float(generate_temp_name(),$1.valUnion.valFloat);
+                break;
               case TYPE_BOOL:
-              var = new_variable_bool(generate_temp_name(),$1.valUnion.valInt);
-              break;
+                var = new_variable_bool(generate_temp_name(),$1.valUnion.valInt);
+                break;
               default:
                 printf("\nError : Type non reconnu %d(valeur)\n",$1.type);
                 exit(EXIT_FAILURE);
@@ -444,7 +475,24 @@ expr_boolean:
   |
   expression_arithmetique relop expression_arithmetique
   {
-    ;
+    printf("EXPRE BOOLEAAN\n");
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
+
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad($2, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+
+
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
+
   }
   |CONSTBOOL
   {
@@ -455,73 +503,73 @@ expr_boolean:
   relop:
     EGAL
     {
-      ;
+      $$ = EGAL;
     }
     |
     SUP
     {
-      ;
+      $$ = SUP;
     }
     |
     INF
     {
-      ;
+      $$ = INF;
     }
     |
     INFEGAL
     {
-      ;
+      $$ = INFEGAL;
     }
     |
     SUPEGAL
     {
-      ;
+      $$ = SUPEGAL;
     }
     ;
 marqueur:
   {
-      $$ = next_quad;
+      $$ = compteur_quad;
   }
   ;
 
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:
     zone_declaration_constante zone_declaration_input zone_declaration_output
-    zone_declaration_global zone_declaration_local BLANKLINE '\n'
+    zone_declaration_global zone_declaration_local BLANKLINE
     {
       printf("\nzone déclaration\n");
     }
   ;
 zone_declaration_constante:
-    DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}' '\n'
+    DECLARECONSTANT '{' '$' suite_declarations_constante '$' '}'
     {
       printf("\nzone déclaration DECLARECONSTANT\n");
     }
     | { ; }
   ;
 zone_declaration_input:
-    DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' '\n'
+    DECLAREINPUT '{' '$' suite_declarations_variable '$' '}'
     {
       printf("\nzone déclaration DECLAREINPUT\n");
     }
     | { ; }
   ;
 zone_declaration_output:
-    DECLAREOUTPUT '{' '$' declaration_variable '$' '}' '\n'
+    DECLAREOUTPUT '{' '$' declaration_variable '$' '}'
     {
       printf("\nzone déclaration DECLAREOUTPUT\n");
     }
     | { ; }
   ;
 zone_declaration_global:
-    DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' '\n'
+    DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}'
     {
       printf("\nzone déclaration DECLAREGLOBAL\n");
     }
     | { ; }
   ;
 zone_declaration_local:
-    DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' '\n'
+    DECLARELOCAL '{' '$' suite_declarations_variable '$' '}'
     {
       printf("\nzone déclaration local\n");
     }
@@ -649,14 +697,15 @@ int main(int argc, char* argv[]) {
   }
 
   yyparse();
-  variable v1 = new_variable_int("v1", 5);
+  /*variable v1 = new_variable_int("v1", 5);
   variable v2 = new_variable_int("v2", 5);
   variable v3 = new_variable_goto(5);
   quad q = new_quad(EGAL,v1,v2,v3);
   set_label(q, 5);
   quad_list ql = add_quad(NULL,q);
-  code = add_quad_list(code,ql);
+  code = add_quad_list(code,ql);*/
   generate_text(fd, code);
+  print_quad_list(code);
   generate_data(fd, tableS);
   fclose(yyin);
   fclose(fd);
