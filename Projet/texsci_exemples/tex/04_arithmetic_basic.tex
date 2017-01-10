@@ -38,8 +38,20 @@ Test d'affectations et de calculs élémentaires.
 
 \begin{texsci}{main}
 \BlankLine
-\If{$4 = 2$}{$\mbox{printText($"Baobab"$)}$\;}
-\If{$4 = 4$}{$\mbox{printText($"Baobab2"$)}$\;}
+\If{$4 = 4$}{
+$\mbox{printText($"Test"$)}$\;
+  \If{$4 = 4$}{
+  $\mbox{printText($"Test2"$)}$\;
+    \If{$4 = 4$}{
+    $\mbox{printText($"Test3"$)}$\;
+      \If{$4 = 3$}{
+        $\mbox{printText($"Test4"$)}$\;
+      }
+    }
+  }
+}
+\If{$4 = 2$}{$\mbox{printText($"Baobab3"$)}$\;}
+$\mbox{printText($"Baobab4"$)}$\;
 \end{texsci}
 
 \end{document}

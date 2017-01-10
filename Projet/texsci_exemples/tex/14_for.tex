@@ -38,12 +38,24 @@ Test de la boucle {\tt for}. Le résultat devrait être : {\tt 42}.
 
 \begin{texsci}{main}
 \Local{$a \in \Integer,
-        i \in \Integer$}
+        i \in \Integer,
+        j \in \Integer$}
 \BlankLine
 $a \leftarrow 0$\;
 \For{$i \leftarrow 0$ \KwTo $20$} {
   $a \leftarrow a + 3$\;
   $a \leftarrow a - 1$\;
+  \For{$j \leftarrow 0$ \KwTo $20$} {
+    $a \leftarrow a + 3$\;
+    $a \leftarrow a - 1$\;
+    $\mbox{printText($"j : "$)}$\;
+    $\mbox{printInt($j$)}$\;
+  }
+  $\mbox{printText($"\n"$)}$\;
+  $\mbox{printText($"i : "$)}$\;
+  $\mbox{printInt($i$)}$\;
+  $\mbox{printText($" "$)}$\;
+
 }
 $\mbox{printInt($a$)}$\;
 \end{texsci}

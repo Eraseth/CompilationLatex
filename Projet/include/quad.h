@@ -13,6 +13,7 @@
 #define PRINT_STRING -6
 #define QUAD_GOTO -7
 #define QUAD_LABEL -8
+#define QUAD_INCR -9
 //Structure pour notre code 3 adresses
 typedef struct quad_struct
 {

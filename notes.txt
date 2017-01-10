@@ -5,3 +5,5 @@ Assignation expr_boolean
 Addition d'un int et d'un flaot
 
 Conversions dans les comparaisons
+
+Attention --> expr_boolean : Attention, une expr_boolean cela peut etre qu'un int ou un bool /!\

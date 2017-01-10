@@ -72,21 +72,22 @@ extern int yydebug;
     OU = 282,
     EGAL = 283,
     SUP = 284,
-    INF = 285,
-    INFEGAL = 286,
-    SUPEGAL = 287,
-    PRINTINT = 288,
-    PRINTTEXT = 289,
-    PRINTREAL = 290,
-    CONSTINT = 291,
-    CONSTBOOL = 292,
-    DIV = 293,
-    CONSTFLOAT = 294,
-    MULT = 295,
-    MINUS = 296,
-    PLUS = 297,
-    EOI = 298,
-    ID = 299
+    NOEGAL = 285,
+    INF = 286,
+    INFEGAL = 287,
+    SUPEGAL = 288,
+    PRINTINT = 289,
+    PRINTTEXT = 290,
+    PRINTREAL = 291,
+    CONSTINT = 292,
+    CONSTBOOL = 293,
+    DIV = 294,
+    CONSTFLOAT = 295,
+    MULT = 296,
+    MINUS = 297,
+    PLUS = 298,
+    EOI = 299,
+    ID = 300
   };
 #endif
 /* Tokens.  */
@@ -117,28 +118,29 @@ extern int yydebug;
 #define OU 282
 #define EGAL 283
 #define SUP 284
-#define INF 285
-#define INFEGAL 286
-#define SUPEGAL 287
-#define PRINTINT 288
-#define PRINTTEXT 289
-#define PRINTREAL 290
-#define CONSTINT 291
-#define CONSTBOOL 292
-#define DIV 293
-#define CONSTFLOAT 294
-#define MULT 295
-#define MINUS 296
-#define PLUS 297
-#define EOI 298
-#define ID 299
+#define NOEGAL 285
+#define INF 286
+#define INFEGAL 287
+#define SUPEGAL 288
+#define PRINTINT 289
+#define PRINTTEXT 290
+#define PRINTREAL 291
+#define CONSTINT 292
+#define CONSTBOOL 293
+#define DIV 294
+#define CONSTFLOAT 295
+#define MULT 296
+#define MINUS 297
+#define PLUS 298
+#define EOI 299
+#define ID 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 46 "latex.y" /* yacc.c:1909  */
+#line 48 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
@@ -156,7 +158,7 @@ union YYSTYPE
     variable var;
 
 
-#line 160 "y.tab.h" /* yacc.c:1909  */
+#line 162 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

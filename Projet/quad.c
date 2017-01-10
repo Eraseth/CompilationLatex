@@ -85,6 +85,13 @@ void assembleur_quad(FILE *assembleur_file, quad q){
         fprintf(assembleur_file, "div $t0,$t0,$t1\n");
         fprintf(assembleur_file, "sw $t0,var_%s\n", result->id);
         break;
+      case QUAD_INCR:
+        fprintf(assembleur_file, "# Incrémentation de un d'une variable\n");
+        fprintf(assembleur_file, "lw $t0,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "li $t1,1\n");
+        fprintf(assembleur_file, "add $t0,$t0,$t1\n");
+        fprintf(assembleur_file, "sw $t0,var_%s\n", result->id);
+        break;
       case LEFTARROW:
       /* Ajout de EGAL (ou pas) */
         fprintf(assembleur_file, "# Assignation d'un entier\n");
@@ -121,6 +128,13 @@ void assembleur_quad(FILE *assembleur_file, quad q){
         fprintf(assembleur_file, "l.s $f0,var_%s\n", arg1->id);
         fprintf(assembleur_file, "l.s $f1,var_%s\n", arg2->id);
         fprintf(assembleur_file, "div.s $f0,$f0,$f1\n");
+        fprintf(assembleur_file, "s.s $f0,var_%s\n", result->id);
+        break;
+      case QUAD_INCR:
+        fprintf(assembleur_file, "# Incrémentation d'un réel\n");
+        fprintf(assembleur_file, "l.s $f0,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "li $f1,1.0\n");
+        fprintf(assembleur_file, "add.s $f0,$f0,$f1\n");
         fprintf(assembleur_file, "s.s $f0,var_%s\n", result->id);
         break;
       case LEFTARROW:
@@ -186,7 +200,7 @@ void assembleur_quad(FILE *assembleur_file, quad q){
     -------------------------------------------------------
     */
     case EGAL:
-      fprintf(assembleur_file, "# Jump conditionelle (==)\n");
+      fprintf(assembleur_file, "# Jump conditionel (==)\n");
       switch (testTypeVariables(arg1, arg2)) {
         case TYPE_INT: case TYPE_BOOL:
         fprintf(assembleur_file, "# Type int ou bool\n");
@@ -211,11 +225,41 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       }
 
       break;
-    case SUP:
-      fprintf(assembleur_file, "# Jump conditionelle (>)\n");
+    case NOEGAL:
+      fprintf(assembleur_file, "# Jump conditionel (!=)\n");
       switch (testTypeVariables(arg1, arg2)) {
         case TYPE_INT: case TYPE_BOOL:
+        fprintf(assembleur_file, "# Type int ou bool\n");
+        fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+        fprintf(assembleur_file, "bne $t1, $t2, %s\n", parse_label(result->val.iValue));
 
+          break;
+        case TYPE_FLOAT:
+        fprintf(assembleur_file, "# Type float\n");
+        //TODO Générer l'assembleur pour la comparaison de float
+          break;
+        case -1:
+          /* Conversion en float */
+          // if (arg1->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          // if(arg2->type != TYPE_FLOAT) {
+          //   convertIntToFloat(assembleur_file, arg1, "$t2", "$f1");
+          // }
+          break;
+      }
+
+      break;
+    case SUP:
+      fprintf(assembleur_file, "# Jump conditionel (>)\n");
+      switch (testTypeVariables(arg1, arg2)) {
+        case TYPE_INT: case TYPE_BOOL:
+          fprintf(assembleur_file, "# Type int ou bool\n");
+          fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+          fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+          fprintf(assembleur_file, "bgt $t1, $t2, %s\n", parse_label(result->val.iValue));
+        break;
           break;
         case TYPE_FLOAT:
 
@@ -232,10 +276,13 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       }
       break;
     case INF:
-      fprintf(assembleur_file, "# Jump conditionelle (<)\n");
+      fprintf(assembleur_file, "# Jump conditionel (<)\n");
       switch (testTypeVariables(arg1, arg2)) {
         case TYPE_INT: case TYPE_BOOL:
-
+          fprintf(assembleur_file, "# Type int ou bool\n");
+          fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+          fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+          fprintf(assembleur_file, "blt $t1, $t2, %s\n", parse_label(result->val.iValue));
           break;
         case TYPE_FLOAT:
 
@@ -252,10 +299,13 @@ void assembleur_quad(FILE *assembleur_file, quad q){
       }
       break;
     case INFEGAL:
-      fprintf(assembleur_file, "# Jump conditionelle (<=)\n");
+      fprintf(assembleur_file, "# Jump conditionel (<=)\n");
       switch (testTypeVariables(arg1, arg2)) {
         case TYPE_INT: case TYPE_BOOL:
-
+            fprintf(assembleur_file, "# Type int ou bool\n");
+            fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+            fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+            fprintf(assembleur_file, "ble $t1, $t2, %s\n", parse_label(result->val.iValue));
           break;
         case TYPE_FLOAT:
 
@@ -273,10 +323,13 @@ void assembleur_quad(FILE *assembleur_file, quad q){
 
       break;
     case SUPEGAL:
-      fprintf(assembleur_file, "# Jump conditionelle (>=)\n");
+      fprintf(assembleur_file, "# Jump conditionel (>=)\n");
       switch (testTypeVariables(arg1, arg2)) {
         case TYPE_INT: case TYPE_BOOL:
-
+          fprintf(assembleur_file, "# Type int ou bool\n");
+          fprintf(assembleur_file, "lw $t1,var_%s\n", arg1->id);
+          fprintf(assembleur_file, "lw $t2,var_%s\n", arg2->id);
+          fprintf(assembleur_file, "bge $t1, $t2, %s\n", parse_label(result->val.iValue));
           break;
         case TYPE_FLOAT:
 
@@ -429,7 +482,7 @@ void print_op(int operator)
       ;
       break;
     default:
-      printf("Operateur non reconnu\n");
+      printf("Operateur non reconnu : %d\n", operator);
       break;
   }
 }

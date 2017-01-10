@@ -17,7 +17,7 @@ EXECL = latex.l
 LEX = lex
 YACC = yacc -d -v
 SRC =
-DEPS = include/*.h ./*.h
+DEPS = include/*.h
 CFLAGS = -g -W -Wall
 LDFLAGS =  -lfl -ly
 
@@ -40,7 +40,7 @@ y.tab.c: $(EXECY) $(DEPS)
 
 # Suppression des fichiers temporaires
 clean:
-	rm -rf y.tab.c lex.yy.c $(OBJS)
+	rm -rf y.tab.c lex.yy.c y.tab.h y.output $(OBJS)
 
 mrproper: clean
 	rm $(BIN)
