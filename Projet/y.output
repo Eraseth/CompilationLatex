@@ -4,6 +4,9 @@ Terminaux inutilisés dans la grammaire
    '='
 
 
+État 96 conflits: 1 décalage/réduction
+
+
 Grammaire
 
     0 $accept: algorithm_list $end
@@ -61,7 +64,7 @@ Grammaire
 
    36 expr_boolean: expr_boolean OU marqueur expr_boolean
    37             | expr_boolean ET marqueur expr_boolean
-   38             | '(' expr_boolean
+   38             | '(' expr_boolean ')'
    39             | NO expr_boolean
    40             | expression_arithmetique relop expression_arithmetique
    41             | expression_arithmetique
@@ -120,7 +123,7 @@ Terminaux, suivis des règles où ils apparaissent
 $end (0) 0
 '$' (36) 8 9 12 13 14 19 20 21 22 50 52 54 56 58
 '(' (40) 12 13 14 27 38
-')' (41) 12 13 14 27
+')' (41) 12 13 14 27 38
 ',' (44) 60 64
 '=' (61)
 '{' (123) 3 12 13 14 19 20 21 22 50 52 54 56 58
@@ -871,7 +874,7 @@ type (84)
 État 67
 
    27 expression_arithmetique_f: '(' . expression_arithmetique ')'
-   38 expr_boolean: '(' . expr_boolean
+   38 expr_boolean: '(' . expr_boolean ')'
 
     NO          décalage et aller à l'état 61
     CONSTINT    décalage et aller à l'état 62
@@ -1166,6 +1169,7 @@ type (84)
     PLUS     décalage et aller à l'état 105
     ')'      décalage et aller à l'état 129
 
+    ')'       [réduction par utilisation de la règle 41 (expr_boolean)]
     $défaut  réduction par utilisation de la règle 41 (expr_boolean)
 
     operateur_m  aller à l'état 106
@@ -1176,9 +1180,11 @@ type (84)
 
    36 expr_boolean: expr_boolean . OU marqueur expr_boolean
    37             | expr_boolean . ET marqueur expr_boolean
-   38             | '(' expr_boolean .
+   38             | '(' expr_boolean . ')'
 
-    $défaut  réduction par utilisation de la règle 38 (expr_boolean)
+    ET   décalage et aller à l'état 111
+    OU   décalage et aller à l'état 112
+    ')'  décalage et aller à l'état 130
 
 
 État 98
@@ -1248,7 +1254,7 @@ type (84)
     ID          décalage et aller à l'état 66
     '('         décalage et aller à l'état 77
 
-    expression_arithmetique_t  aller à l'état 130
+    expression_arithmetique_t  aller à l'état 131
     expression_arithmetique_f  aller à l'état 70
     valeur                     aller à l'état 72
 
@@ -1264,7 +1270,7 @@ type (84)
     ID          décalage et aller à l'état 66
     '('         décalage et aller à l'état 77
 
-    expression_arithmetique    aller à l'état 131
+    expression_arithmetique    aller à l'état 132
     expression_arithmetique_t  aller à l'état 69
     expression_arithmetique_f  aller à l'état 70
     valeur                     aller à l'état 72
@@ -1295,7 +1301,7 @@ type (84)
     ID          décalage et aller à l'état 66
     '('         décalage et aller à l'état 77
 
-    expression_arithmetique_f  aller à l'état 132
+    expression_arithmetique_f  aller à l'état 133
     valeur                     aller à l'état 72
 
 
@@ -1305,7 +1311,7 @@ type (84)
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    marqueur  aller à l'état 133
+    marqueur  aller à l'état 134
 
 
 État 112
@@ -1314,42 +1320,42 @@ type (84)
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    marqueur  aller à l'état 134
+    marqueur  aller à l'état 135
 
 
 État 113
 
    20 structure_controle: IF '{' '$' expr_boolean '$' . '}' marqueur '{' list_instructions '}'
 
-    '}'  décalage et aller à l'état 135
+    '}'  décalage et aller à l'état 136
 
 
 État 114
 
    22 structure_controle: ELSEIF '{' '$' expr_boolean '$' . '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'
 
-    '}'  décalage et aller à l'état 136
+    '}'  décalage et aller à l'état 137
 
 
 État 115
 
    12 instruction_fonction: MBOX '{' PRINTINT '(' . '$' argument_entier '$' ')' '}'
 
-    '$'  décalage et aller à l'état 137
+    '$'  décalage et aller à l'état 138
 
 
 État 116
 
    14 instruction_fonction: MBOX '{' PRINTTEXT '(' . '$' STRING '$' ')' '}'
 
-    '$'  décalage et aller à l'état 138
+    '$'  décalage et aller à l'état 139
 
 
 État 117
 
    13 instruction_fonction: MBOX '{' PRINTREAL '(' . '$' argument_real '$' ')' '}'
 
-    '$'  décalage et aller à l'état 139
+    '$'  décalage et aller à l'état 140
 
 
 État 118
@@ -1368,18 +1374,18 @@ type (84)
 
    69 declaration_variable: ID IN . type
 
-    INTEGER  décalage et aller à l'état 140
-    BOOLEAN  décalage et aller à l'état 141
-    REAL     décalage et aller à l'état 142
+    INTEGER  décalage et aller à l'état 141
+    BOOLEAN  décalage et aller à l'état 142
+    REAL     décalage et aller à l'état 143
 
-    type  aller à l'état 143
+    type  aller à l'état 144
 
 
 État 120
 
    52 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' . '}'
 
-    '}'  décalage et aller à l'état 144
+    '}'  décalage et aller à l'état 145
 
 
 État 121
@@ -1391,7 +1397,7 @@ type (84)
 
     $défaut  réduction par utilisation de la règle 67 (suite_declarations_variable)
 
-    suite_declarations_variable  aller à l'état 145
+    suite_declarations_variable  aller à l'état 146
     declaration_variable         aller à l'état 84
 
 
@@ -1399,7 +1405,7 @@ type (84)
 
    54 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable . '$' '}'
 
-    '$'  décalage et aller à l'état 146
+    '$'  décalage et aller à l'état 147
 
 
 État 123
@@ -1411,7 +1417,7 @@ type (84)
 
     $défaut  réduction par utilisation de la règle 67 (suite_declarations_variable)
 
-    suite_declarations_variable  aller à l'état 147
+    suite_declarations_variable  aller à l'état 148
     declaration_variable         aller à l'état 84
 
 
@@ -1419,7 +1425,7 @@ type (84)
 
    58 zone_declaration_local: DECLARELOCAL '{' . '$' suite_declarations_variable '$' '}'
 
-    '$'  décalage et aller à l'état 148
+    '$'  décalage et aller à l'état 149
 
 
 État 125
@@ -1433,18 +1439,18 @@ type (84)
 
    68 declaration_constante: ID EGAL valeur IN . type
 
-    INTEGER  décalage et aller à l'état 140
-    BOOLEAN  décalage et aller à l'état 141
-    REAL     décalage et aller à l'état 142
+    INTEGER  décalage et aller à l'état 141
+    BOOLEAN  décalage et aller à l'état 142
+    REAL     décalage et aller à l'état 143
 
-    type  aller à l'état 149
+    type  aller à l'état 150
 
 
 État 127
 
    19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' . '}' marqueur '{' list_instructions '}'
 
-    '}'  décalage et aller à l'état 150
+    '}'  décalage et aller à l'état 151
 
 
 État 128
@@ -1454,7 +1460,7 @@ type (84)
 
     MINUS  décalage et aller à l'état 104
     PLUS   décalage et aller à l'état 105
-    '$'    décalage et aller à l'état 151
+    '$'    décalage et aller à l'état 152
 
     operateur_m  aller à l'état 106
 
@@ -1468,6 +1474,13 @@ type (84)
 
 État 130
 
+   38 expr_boolean: '(' expr_boolean ')' .
+
+    $défaut  réduction par utilisation de la règle 38 (expr_boolean)
+
+
+État 131
+
    23 expression_arithmetique: expression_arithmetique operateur_m expression_arithmetique_t .
    25 expression_arithmetique_t: expression_arithmetique_t . operateur_f expression_arithmetique_f
 
@@ -1479,7 +1492,7 @@ type (84)
     operateur_f  aller à l'état 110
 
 
-État 131
+État 132
 
    23 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
    40 expr_boolean: expression_arithmetique relop expression_arithmetique .
@@ -1492,35 +1505,16 @@ type (84)
     operateur_m  aller à l'état 106
 
 
-État 132
+État 133
 
    25 expression_arithmetique_t: expression_arithmetique_t operateur_f expression_arithmetique_f .
 
     $défaut  réduction par utilisation de la règle 25 (expression_arithmetique_t)
 
 
-État 133
-
-   37 expr_boolean: expr_boolean ET marqueur . expr_boolean
-
-    NO          décalage et aller à l'état 61
-    CONSTINT    décalage et aller à l'état 62
-    CONSTBOOL   décalage et aller à l'état 63
-    CONSTFLOAT  décalage et aller à l'état 64
-    MINUS       décalage et aller à l'état 65
-    ID          décalage et aller à l'état 66
-    '('         décalage et aller à l'état 67
-
-    expression_arithmetique    aller à l'état 68
-    expression_arithmetique_t  aller à l'état 69
-    expression_arithmetique_f  aller à l'état 70
-    expr_boolean               aller à l'état 152
-    valeur                     aller à l'état 72
-
-
 État 134
 
-   36 expr_boolean: expr_boolean OU marqueur . expr_boolean
+   37 expr_boolean: expr_boolean ET marqueur . expr_boolean
 
     NO          décalage et aller à l'état 61
     CONSTINT    décalage et aller à l'état 62
@@ -1539,16 +1533,26 @@ type (84)
 
 État 135
 
-   20 structure_controle: IF '{' '$' expr_boolean '$' '}' . marqueur '{' list_instructions '}'
+   36 expr_boolean: expr_boolean OU marqueur . expr_boolean
 
-    $défaut  réduction par utilisation de la règle 48 (marqueur)
+    NO          décalage et aller à l'état 61
+    CONSTINT    décalage et aller à l'état 62
+    CONSTBOOL   décalage et aller à l'état 63
+    CONSTFLOAT  décalage et aller à l'état 64
+    MINUS       décalage et aller à l'état 65
+    ID          décalage et aller à l'état 66
+    '('         décalage et aller à l'état 67
 
-    marqueur  aller à l'état 154
+    expression_arithmetique    aller à l'état 68
+    expression_arithmetique_t  aller à l'état 69
+    expression_arithmetique_f  aller à l'état 70
+    expr_boolean               aller à l'état 154
+    valeur                     aller à l'état 72
 
 
 État 136
 
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' . marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'
+   20 structure_controle: IF '{' '$' expr_boolean '$' '}' . marqueur '{' list_instructions '}'
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
@@ -1557,88 +1561,97 @@ type (84)
 
 État 137
 
-   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' . argument_entier '$' ')' '}'
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' . marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'
 
-    CONSTINT  décalage et aller à l'état 156
-    ID        décalage et aller à l'état 157
+    $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    argument_entier  aller à l'état 158
+    marqueur  aller à l'état 156
 
 
 État 138
 
-   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' . STRING '$' ')' '}'
+   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' . argument_entier '$' ')' '}'
 
-    STRING  décalage et aller à l'état 159
+    CONSTINT  décalage et aller à l'état 157
+    ID        décalage et aller à l'état 158
+
+    argument_entier  aller à l'état 159
 
 
 État 139
 
-   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' . argument_real '$' ')' '}'
+   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' . STRING '$' ')' '}'
 
-    CONSTFLOAT  décalage et aller à l'état 160
-    ID          décalage et aller à l'état 161
-
-    argument_real  aller à l'état 162
+    STRING  décalage et aller à l'état 160
 
 
 État 140
+
+   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' . argument_real '$' ')' '}'
+
+    CONSTFLOAT  décalage et aller à l'état 161
+    ID          décalage et aller à l'état 162
+
+    argument_real  aller à l'état 163
+
+
+État 141
 
    73 type: INTEGER .
 
     $défaut  réduction par utilisation de la règle 73 (type)
 
 
-État 141
+État 142
 
    74 type: BOOLEAN .
 
     $défaut  réduction par utilisation de la règle 74 (type)
 
 
-État 142
+État 143
 
    75 type: REAL .
 
     $défaut  réduction par utilisation de la règle 75 (type)
 
 
-État 143
+État 144
 
    69 declaration_variable: ID IN type .
 
     $défaut  réduction par utilisation de la règle 69 (declaration_variable)
 
 
-État 144
+État 145
 
    52 zone_declaration_input: DECLAREINPUT '{' '$' suite_declarations_variable '$' '}' .
 
     $défaut  réduction par utilisation de la règle 52 (zone_declaration_input)
 
 
-État 145
+État 146
 
    64 suite_declarations_variable: declaration_variable ',' suite_declarations_variable .
 
     $défaut  réduction par utilisation de la règle 64 (suite_declarations_variable)
 
 
-État 146
+État 147
 
    54 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' . '}'
 
-    '}'  décalage et aller à l'état 163
-
-
-État 147
-
-   56 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable . '$' '}'
-
-    '$'  décalage et aller à l'état 164
+    '}'  décalage et aller à l'état 164
 
 
 État 148
+
+   56 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable . '$' '}'
+
+    '$'  décalage et aller à l'état 165
+
+
+État 149
 
    58 zone_declaration_local: DECLARELOCAL '{' '$' . suite_declarations_variable '$' '}'
 
@@ -1647,34 +1660,34 @@ type (84)
 
     $défaut  réduction par utilisation de la règle 67 (suite_declarations_variable)
 
-    suite_declarations_variable  aller à l'état 165
+    suite_declarations_variable  aller à l'état 166
     declaration_variable         aller à l'état 84
 
 
-État 149
+État 150
 
    68 declaration_constante: ID EGAL valeur IN type .
 
     $défaut  réduction par utilisation de la règle 68 (declaration_constante)
 
 
-État 150
+État 151
 
    19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' . marqueur '{' list_instructions '}'
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    marqueur  aller à l'état 166
-
-
-État 151
-
-   21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' . KWTO '$' expression_arithmetique '$' '}' marqueur '{' list_instructions '}'
-
-    KWTO  décalage et aller à l'état 167
+    marqueur  aller à l'état 167
 
 
 État 152
+
+   21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' . KWTO '$' expression_arithmetique '$' '}' marqueur '{' list_instructions '}'
+
+    KWTO  décalage et aller à l'état 168
+
+
+État 153
 
    36 expr_boolean: expr_boolean . OU marqueur expr_boolean
    37             | expr_boolean . ET marqueur expr_boolean
@@ -1683,7 +1696,7 @@ type (84)
     $défaut  réduction par utilisation de la règle 37 (expr_boolean)
 
 
-État 153
+État 154
 
    36 expr_boolean: expr_boolean . OU marqueur expr_boolean
    36             | expr_boolean OU marqueur expr_boolean .
@@ -1694,122 +1707,107 @@ type (84)
     $défaut  réduction par utilisation de la règle 36 (expr_boolean)
 
 
-État 154
-
-   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}'
-
-    '{'  décalage et aller à l'état 168
-
-
 État 155
 
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}' marqueur '{' list_instructions '}'
+   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}'
 
     '{'  décalage et aller à l'état 169
 
 
 État 156
 
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}' marqueur '{' list_instructions '}'
+
+    '{'  décalage et aller à l'état 170
+
+
+État 157
+
    15 argument_entier: CONSTINT .
 
     $défaut  réduction par utilisation de la règle 15 (argument_entier)
 
 
-État 157
+État 158
 
    16 argument_entier: ID .
 
     $défaut  réduction par utilisation de la règle 16 (argument_entier)
 
 
-État 158
-
-   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier . '$' ')' '}'
-
-    '$'  décalage et aller à l'état 170
-
-
 État 159
 
-   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING . '$' ')' '}'
+   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier . '$' ')' '}'
 
     '$'  décalage et aller à l'état 171
 
 
 État 160
 
+   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING . '$' ')' '}'
+
+    '$'  décalage et aller à l'état 172
+
+
+État 161
+
    17 argument_real: CONSTFLOAT .
 
     $défaut  réduction par utilisation de la règle 17 (argument_real)
 
 
-État 161
+État 162
 
    18 argument_real: ID .
 
     $défaut  réduction par utilisation de la règle 18 (argument_real)
 
 
-État 162
+État 163
 
    13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real . '$' ')' '}'
 
-    '$'  décalage et aller à l'état 172
+    '$'  décalage et aller à l'état 173
 
 
-État 163
+État 164
 
    54 zone_declaration_output: DECLAREOUTPUT '{' '$' declaration_variable '$' '}' .
 
     $défaut  réduction par utilisation de la règle 54 (zone_declaration_output)
 
 
-État 164
+État 165
 
    56 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' . '}'
 
-    '}'  décalage et aller à l'état 173
-
-
-État 165
-
-   58 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable . '$' '}'
-
-    '$'  décalage et aller à l'état 174
+    '}'  décalage et aller à l'état 174
 
 
 État 166
 
-   19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}'
+   58 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable . '$' '}'
 
-    '{'  décalage et aller à l'état 175
+    '$'  décalage et aller à l'état 175
 
 
 État 167
 
-   21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO . '$' expression_arithmetique '$' '}' marqueur '{' list_instructions '}'
+   19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur . '{' list_instructions '}'
 
-    '$'  décalage et aller à l'état 176
+    '{'  décalage et aller à l'état 176
 
 
 État 168
 
-   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur '{' . list_instructions '}'
+   21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO . '$' expression_arithmetique '$' '}' marqueur '{' list_instructions '}'
 
-    WHILE   décalage et aller à l'état 13
-    FOR     décalage et aller à l'état 14
-    IF      décalage et aller à l'état 15
-    ELSEIF  décalage et aller à l'état 16
-    '$'     décalage et aller à l'état 17
-
-    list_instructions   aller à l'état 177
-    instruction         aller à l'état 20
-    structure_controle  aller à l'état 21
+    '$'  décalage et aller à l'état 177
 
 
 État 169
 
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' . list_instructions '}' marqueur '{' list_instructions '}'
+   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur '{' . list_instructions '}'
 
     WHILE   décalage et aller à l'état 13
     FOR     décalage et aller à l'état 14
@@ -1824,40 +1822,55 @@ type (84)
 
 État 170
 
-   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier '$' . ')' '}'
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' . list_instructions '}' marqueur '{' list_instructions '}'
 
-    ')'  décalage et aller à l'état 179
+    WHILE   décalage et aller à l'état 13
+    FOR     décalage et aller à l'état 14
+    IF      décalage et aller à l'état 15
+    ELSEIF  décalage et aller à l'état 16
+    '$'     décalage et aller à l'état 17
+
+    list_instructions   aller à l'état 179
+    instruction         aller à l'état 20
+    structure_controle  aller à l'état 21
 
 
 État 171
 
-   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING '$' . ')' '}'
+   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier '$' . ')' '}'
 
     ')'  décalage et aller à l'état 180
 
 
 État 172
 
-   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real '$' . ')' '}'
+   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING '$' . ')' '}'
 
     ')'  décalage et aller à l'état 181
 
 
 État 173
 
+   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real '$' . ')' '}'
+
+    ')'  décalage et aller à l'état 182
+
+
+État 174
+
    56 zone_declaration_global: DECLAREGLOBAL '{' '$' suite_declarations_variable '$' '}' .
 
     $défaut  réduction par utilisation de la règle 56 (zone_declaration_global)
 
 
-État 174
+État 175
 
    58 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' . '}'
 
-    '}'  décalage et aller à l'état 182
+    '}'  décalage et aller à l'état 183
 
 
-État 175
+État 176
 
    19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur '{' . list_instructions '}'
 
@@ -1867,12 +1880,12 @@ type (84)
     ELSEIF  décalage et aller à l'état 16
     '$'     décalage et aller à l'état 17
 
-    list_instructions   aller à l'état 183
+    list_instructions   aller à l'état 184
     instruction         aller à l'état 20
     structure_controle  aller à l'état 21
 
 
-État 176
+État 177
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' . expression_arithmetique '$' '}' marqueur '{' list_instructions '}'
 
@@ -1883,141 +1896,141 @@ type (84)
     ID          décalage et aller à l'état 66
     '('         décalage et aller à l'état 77
 
-    expression_arithmetique    aller à l'état 184
+    expression_arithmetique    aller à l'état 185
     expression_arithmetique_t  aller à l'état 69
     expression_arithmetique_f  aller à l'état 70
     valeur                     aller à l'état 72
 
 
-État 177
-
-   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions . '}'
-
-    '}'  décalage et aller à l'état 185
-
-
 État 178
 
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions . '}' marqueur '{' list_instructions '}'
+   20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions . '}'
 
     '}'  décalage et aller à l'état 186
 
 
 État 179
 
-   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier '$' ')' . '}'
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions . '}' marqueur '{' list_instructions '}'
 
     '}'  décalage et aller à l'état 187
 
 
 État 180
 
-   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING '$' ')' . '}'
+   12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier '$' ')' . '}'
 
     '}'  décalage et aller à l'état 188
 
 
 État 181
 
-   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real '$' ')' . '}'
+   14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING '$' ')' . '}'
 
     '}'  décalage et aller à l'état 189
 
 
 État 182
 
+   13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real '$' ')' . '}'
+
+    '}'  décalage et aller à l'état 190
+
+
+État 183
+
    58 zone_declaration_local: DECLARELOCAL '{' '$' suite_declarations_variable '$' '}' .
 
     $défaut  réduction par utilisation de la règle 58 (zone_declaration_local)
 
 
-État 183
+État 184
 
    19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions . '}'
 
-    '}'  décalage et aller à l'état 190
+    '}'  décalage et aller à l'état 191
 
 
-État 184
+État 185
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique . '$' '}' marqueur '{' list_instructions '}'
    23 expression_arithmetique: expression_arithmetique . operateur_m expression_arithmetique_t
 
     MINUS  décalage et aller à l'état 104
     PLUS   décalage et aller à l'état 105
-    '$'    décalage et aller à l'état 191
+    '$'    décalage et aller à l'état 192
 
     operateur_m  aller à l'état 106
 
 
-État 185
+État 186
 
    20 structure_controle: IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' .
 
     $défaut  réduction par utilisation de la règle 20 (structure_controle)
 
 
-État 186
+État 187
 
    22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' . marqueur '{' list_instructions '}'
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    marqueur  aller à l'état 192
+    marqueur  aller à l'état 193
 
 
-État 187
+État 188
 
    12 instruction_fonction: MBOX '{' PRINTINT '(' '$' argument_entier '$' ')' '}' .
 
     $défaut  réduction par utilisation de la règle 12 (instruction_fonction)
 
 
-État 188
+État 189
 
    14 instruction_fonction: MBOX '{' PRINTTEXT '(' '$' STRING '$' ')' '}' .
 
     $défaut  réduction par utilisation de la règle 14 (instruction_fonction)
 
 
-État 189
+État 190
 
    13 instruction_fonction: MBOX '{' PRINTREAL '(' '$' argument_real '$' ')' '}' .
 
     $défaut  réduction par utilisation de la règle 13 (instruction_fonction)
 
 
-État 190
+État 191
 
    19 structure_controle: WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' .
 
     $défaut  réduction par utilisation de la règle 19 (structure_controle)
 
 
-État 191
+État 192
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' . '}' marqueur '{' list_instructions '}'
 
-    '}'  décalage et aller à l'état 193
-
-
-État 192
-
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur . '{' list_instructions '}'
-
-    '{'  décalage et aller à l'état 194
+    '}'  décalage et aller à l'état 194
 
 
 État 193
+
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur . '{' list_instructions '}'
+
+    '{'  décalage et aller à l'état 195
+
+
+État 194
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' '}' . marqueur '{' list_instructions '}'
 
     $défaut  réduction par utilisation de la règle 48 (marqueur)
 
-    marqueur  aller à l'état 195
+    marqueur  aller à l'état 196
 
 
-État 194
+État 195
 
    22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' . list_instructions '}'
 
@@ -2027,26 +2040,26 @@ type (84)
     ELSEIF  décalage et aller à l'état 16
     '$'     décalage et aller à l'état 17
 
-    list_instructions   aller à l'état 196
+    list_instructions   aller à l'état 197
     instruction         aller à l'état 20
     structure_controle  aller à l'état 21
 
 
-État 195
+État 196
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' '}' marqueur . '{' list_instructions '}'
 
-    '{'  décalage et aller à l'état 197
-
-
-État 196
-
-   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions . '}'
-
-    '}'  décalage et aller à l'état 198
+    '{'  décalage et aller à l'état 198
 
 
 État 197
+
+   22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions . '}'
+
+    '}'  décalage et aller à l'état 199
+
+
+État 198
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' '}' marqueur '{' . list_instructions '}'
 
@@ -2056,26 +2069,26 @@ type (84)
     ELSEIF  décalage et aller à l'état 16
     '$'     décalage et aller à l'état 17
 
-    list_instructions   aller à l'état 199
+    list_instructions   aller à l'état 200
     instruction         aller à l'état 20
     structure_controle  aller à l'état 21
 
 
-État 198
+État 199
 
    22 structure_controle: ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions '}' .
 
     $défaut  réduction par utilisation de la règle 22 (structure_controle)
 
 
-État 199
+État 200
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' '}' marqueur '{' list_instructions . '}'
 
-    '}'  décalage et aller à l'état 200
+    '}'  décalage et aller à l'état 201
 
 
-État 200
+État 201
 
    21 structure_controle: FOR '{' '$' ID operateur_affectation expression_arithmetique '$' KWTO '$' expression_arithmetique '$' '}' marqueur '{' list_instructions '}' .
 

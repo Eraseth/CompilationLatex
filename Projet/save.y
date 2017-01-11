@@ -77,13 +77,7 @@
 %left NO
 %left PLUS MINUS
 %left MULT DIV
-%left '('
-
-/* Bison normally warns if there are any conflicts in the grammar (see Shift/Reduce Conflicts),
-but most real grammars have harmless shift/reduce conflicts which are resolved in a predictable way and would be difficult to eliminate.
-It is desirable to suppress the warning about these conflicts unless the number of conflicts changes. You can do this with the %expect declaration.
-%expect 1 */
-
+%left '(' ')'
 %%
 algorithm_list:
     algorithm_list algorithm
@@ -616,10 +610,10 @@ expr_boolean:
     $$->code = add_quad($$->code, trueL);
     $$->code = add_quad($$->code, falseL);
   }
-  |expression_arithmetique
+  |CONSTBOOL
   {
     //En fonction de la valeur de const bool jump soit à la false list, soit à la true list
-    /*$$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
+    $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
     if(yylval.value){
       quad trueL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
       $$->true_list = add_quad($$->true_list, trueL);
@@ -628,12 +622,15 @@ expr_boolean:
       quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
       $$->false_list = add_quad($$->false_list, falseL);
       $$->code = add_quad($$->code, falseL);
-    }*/
+    }
+  }
+  |ID
+  {
     $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
-    variable var = lookup_tds(tableS,$1->resultat->id);
+    variable var = lookup_tds(tableS,$1);
     variable var_bool_false = lookup_tds(tableS,VAR_BOOL_FALSE);
     if(var == NULL){
-      printf("ERROR : Variable %s non définie.\n", $1->resultat->id);
+      printf("ERROR : Variable %s non définie.\n", $1);
       exit(EXIT_FAILURE);
     };
     quad trueL = new_quad(NOEGAL, var, var_bool_false, NULL);

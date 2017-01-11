@@ -44,13 +44,18 @@ Test de boucle {\tt while} avec test simple. Le résultat devrait être {\tt -55
         e \in \Integer$}
 \BlankLine
 $b \leftarrow 20$\;
-$a \leftarrow 1$\;
+$a \leftarrow 50$\;
 $c \leftarrow -2$\;
 $d \leftarrow 54$\;
 $e \leftarrow 1$\;
-\While{$b\geq0$} {
+\While{$((c < 20) \wedge (a > 20))$} {
   $c \leftarrow c + 1$\;
   $b \leftarrow b - 1$\;
+  $\mbox{printText($"Nombre de passage : "$)}$\;
+  $\mbox{printInt($e$)}$\;
+  $\mbox{printText($" "$)}$\;
+  $e \leftarrow e + 1$\;
+
 }
 $\mbox{printInt($b$)}$\;
 $\mbox{printInt($c$)}$\;
