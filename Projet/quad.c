@@ -71,6 +71,12 @@ void assembleur_quad(FILE *assembleur_file, quad q){
         fprintf(assembleur_file, "sub $t0,$t0,$t1\n");
         fprintf(assembleur_file, "sw $t0,var_%s\n", result->id);
         break;
+      case NEGATE:
+        fprintf(assembleur_file, "# Negation d'un entier\n");
+        fprintf(assembleur_file, "lw $t0,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "neg $t0,$t0\n");
+        fprintf(assembleur_file, "sw $t0,var_%s\n", result->id);
+        break;
       case MULT:
         fprintf(assembleur_file, "# Multiplication d'un entier\n");
         fprintf(assembleur_file, "lw $t0,var_%s\n", arg1->id);
@@ -114,6 +120,12 @@ void assembleur_quad(FILE *assembleur_file, quad q){
         fprintf(assembleur_file, "l.s $f0,var_%s\n", arg1->id);
         fprintf(assembleur_file, "l.s $f1,var_%s\n", arg2->id);
         fprintf(assembleur_file, "sub.s $f0,$f0,$f1\n");
+        fprintf(assembleur_file, "s.s $f0,var_%s\n", result->id);
+        break;
+      case NEGATE:
+        fprintf(assembleur_file, "# Negation d'un réel\n");
+        fprintf(assembleur_file, "l.s $f0,var_%s\n", arg1->id);
+        fprintf(assembleur_file, "neg.s $f0,$f0\n");
         fprintf(assembleur_file, "s.s $f0,var_%s\n", result->id);
         break;
       case MULT:

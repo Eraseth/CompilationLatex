@@ -140,7 +140,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 48 "latex.y" /* yacc.c:1909  */
+#line 40 "latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
@@ -157,8 +157,7 @@ union YYSTYPE
     statement statement;
     variable var;
 
-
-#line 162 "y.tab.h" /* yacc.c:1909  */
+#line 161 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -10,10 +10,8 @@
   #include "include/gen_assembleur.h"
   #include "include/statement.h"
   #include "y.tab.h"
-
   #define TEXCC_ERROR_GENERAL 4
   #define VAR_BOOL_FALSE "var_bool_false"
-
   //Notre liste chaînée TDS
   tableSymbole tableS = NULL;
   quad_list code = NULL;
@@ -21,18 +19,14 @@
   int compteurTemporaire = 0;
   //Compteur pour le prochain quad (marqueur)
   int compteur_quad = 0;
-
-
   // Functions and global variables provided by Lex.
   int yylex();
   void texcc_lexer_free();
   extern FILE* yyin;
-
   void yyerror (char const *s) {
     fprintf (stderr, "%s\n", s);
     exit(EXIT_FAILURE);
   }
-
   char * generate_temp_name(){
     char * str = malloc(sizeof(char)*64*2);
     char * str2 = conversion_int_string(compteurTemporaire);
@@ -42,9 +36,7 @@
     compteurTemporaire++;
     return str;
   }
-
 %}
-
 %union {
   char* name;
   int value;
@@ -60,9 +52,7 @@
     expr_bool expr_bool;
     statement statement;
     variable var;
-
 }
-
 %token <value> TEXSCI_BEGIN TEXSCI_END BLANKLINE LEFTARROW IN MBOX STRING
 %token <value> INTEGER COMMENTAIRE BOOLEAN REAL EMPTYSET
 %token <value> WHILE FOR KWTO IF ELSEIF
@@ -73,7 +63,6 @@
 %token <dvalue> CONSTFLOAT
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
-
 %type <value> type operateur_f operateur_m operateur_affectation marqueur relop
 %type <valeurSt> valeur
 %type <expr_arithm> expression_arithmetique expression_arithmetique_t expression_arithmetique_f
@@ -81,8 +70,6 @@
 %type <var> argument_real argument_entier
 %type <statement> structure_controle list_instructions instruction instruction_affectation
 %type <statement> instruction_fonction
-
-
 %right '=' LEFTARROW
 %left OU
 %left ET
@@ -91,10 +78,7 @@
 %left PLUS MINUS
 %left MULT DIV
 %left '(' ')'
-
-
 %%
-
 algorithm_list:
     algorithm_list algorithm
   | algorithm
@@ -102,7 +86,6 @@ algorithm_list:
     printf("Algorithm Found !");
   }
   ;
-
 algorithm:
     TEXSCI_BEGIN '{' ID '}'  zone_declarations zone_instructions TEXSCI_END
     {
@@ -111,7 +94,6 @@ algorithm:
       printf("ALGORITHM\n");
     }
   ;
-
 /* ----------------Zone des instructions---------------- */
 zone_instructions:
   list_instructions
@@ -132,9 +114,7 @@ list_instructions:
     $1->next_list = complete($1->next_list,$2);
     $$ = new_statement(new_quad_list(),new_quad_list());
     $$->code = add_quad_list($$->code,$1->code);
-
     $$->next_list = add_quad_list($$->next_list,$3->next_list);
-
     if ($1->next_list != NULL){
       quad qNext = new_quad(QUAD_LABEL, NULL, NULL, NULL);
       set_label(qNext,$2);
@@ -179,7 +159,6 @@ instruction_affectation:
       printf("ERROR : Variable %s non définie.\n", $1);
       exit(EXIT_FAILURE);
     }
-
     //Ajout du code de l'expression arithmétiques
     quad_list ql;
     quad q;
@@ -198,25 +177,20 @@ instruction_affectation:
       //Ajout de notre nouveau quad (quad d'Assignation)
       ql = add_quad(ql,q);
     }
-
     $$ = new_statement(ql,new_quad_list());
   }
   ;
 instruction_fonction:
     MBOX '{' PRINTINT '('  '$' argument_entier '$' ')' '}'
     {
-
       quad q = new_quad(PRINT_INT, $6, $6, $6);
-
       quad_list ql = add_quad(NULL,q);
       $$ = new_statement(ql,NULL);
     }
     |
     MBOX '{' PRINTREAL '('  '$' argument_real '$' ')' '}'
     {
-
       quad q = new_quad(PRINT_FLOAT, $6, $6, $6);
-
       quad_list ql = add_quad(NULL,q);
       $$ = new_statement(ql,NULL);
     }
@@ -252,7 +226,6 @@ argument_entier:
     $$ = var;
   }
   ;
-
 argument_real:
   CONSTFLOAT
   {
@@ -284,7 +257,6 @@ structure_controle:
     printf("structure_controle : WHILE marqueur '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' --> Marqueur1 : %d --> Marqueur1 : %d\n", $2, $8);
     $5->true_list = complete($5->true_list, $8); //La true liste pointe sur le marqueur
     $10->next_list = complete($10->next_list, $2); //La next list pointe sur le marqueur
-
     $$= new_statement(new_quad_list(), new_quad_list());
     $$->next_list = add_quad_list($$->next_list, $5->false_list);
     print_quad_list($$->next_list);
@@ -306,20 +278,17 @@ structure_controle:
   {
     printf("structure_controle : IF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' --> Marqueur : %d\n", $7);
     $4->true_list = complete($4->true_list, $7); //La true liste pointe sur le marqueur
-
     $$= new_statement(new_quad_list(), new_quad_list());
     $$->next_list = add_quad_list($$->next_list, $4->false_list);
     $$->next_list = add_quad_list($$->next_list, $9->next_list);
     /* L'instruction ci-dessus va faire pointer la sortie du "if imbriqué" vers la même sortie
     que le if parent.
-
     Exemple :
     \If{$4 = 4$}{
       $\mbox{printText($"Test"$)}$\;
       \If{$3 = 4$}{$\mbox{printText($"Test1"$)}$\;}
     }
     La sortie du second if va pointer sur la même que le premier */
-
     quad q = new_quad(QUAD_LABEL, NULL, NULL, NULL);
     set_label(q,$7);
     $$->code = add_quad_list($$->code, $4->code);
@@ -333,13 +302,11 @@ structure_controle:
     printf("structure_controle : FOR marqueur '{' '$' instruction_affectation '$' KWTO '$' expression_arithmetique '$' '}' '{' list_instructions '}'\n");
     $15->next_list = complete($15->next_list, $13); //La next list pointe sur le marqueur
     $$= new_statement(new_quad_list(), new_quad_list());
-
     variable var_id = lookup_tds(tableS,$4);
     if(var_id == NULL){
       printf("ERROR : Variable %s non définie.\n", $4);
       exit(EXIT_FAILURE);
     }
-
     //Ajout du code de l'expression arithmétiques
     quad_list ql;
     quad q;
@@ -367,19 +334,15 @@ structure_controle:
     quad test = new_quad(SUPEGAL, var_id, $10->resultat, NULL);
     $$->next_list = add_quad($$->next_list, test);
     $$->code = add_quad($$->code, test);
-
     //Suivi du code de notre list d'instructions
     $$->code = add_quad_list($$->code, $15->code);
-
     //Incrémentation de la variable
     quad incr_indice = new_quad(QUAD_INCR, var_id, NULL, var_id);
     $$->code = add_quad($$->code, incr_indice);
-
     //Et le goto vers le test
     variable m = new_variable_goto($13);
     quad goto_for = new_quad(QUAD_GOTO, NULL, NULL, m);
     $$->code = add_quad($$->code, goto_for);
-
   }
   |
   ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'
@@ -387,38 +350,29 @@ structure_controle:
     printf("structure_controle : ELSEIF '{' '$' expr_boolean '$' '}' marqueur '{' list_instructions '}' marqueur '{' list_instructions '}'\n");
     $4->true_list = complete($4->true_list, $7); //La true liste pointe sur le marqueur
     $4->false_list = complete($4->false_list, $11); //La false liste pointe sur le second marqueur
-
     $$= new_statement(new_quad_list(), new_quad_list());
-
     /* L'instruction ci-dessus va faire pointer la sortie du "if imbriqué" vers la même sortie
     que le if parent.
-
     Exemple :
     \If{$4 = 4$}{
       $\mbox{printText($"Test"$)}$\;
       \If{$3 = 4$}{$\mbox{printText($"Test1"$)}$\;}
     }
     La sortie du second if va pointer sur la même que le premier */
-
     quad q_label_marqueur1 = new_quad(QUAD_LABEL, NULL, NULL, NULL);
     set_label(q_label_marqueur1, $7);
-
     quad q_label_marqueur2 = new_quad(QUAD_LABEL, NULL, NULL, NULL);
     set_label(q_label_marqueur2, $11);
-
     $$->code = add_quad_list($$->code, $4->code);
     $$->code = add_quad($$->code, q_label_marqueur1);
     $$->next_list = add_quad_list($$->next_list, $9->next_list);
     $$->code = add_quad_list($$->code, $9->code);
-
     quad goto_else_if1 = new_quad(QUAD_GOTO, NULL, NULL, NULL);
     $$->next_list = add_quad($$->next_list, goto_else_if1);
     $$->code = add_quad($$->code, goto_else_if1);
-
     $$->code = add_quad($$->code, q_label_marqueur2);
     $$->next_list = add_quad_list($$->next_list, $13->next_list);
     $$->code = add_quad_list($$->code, $13->code);
-
     quad goto_else_if2 = new_quad(QUAD_GOTO, NULL, NULL, NULL);
     $$->next_list = add_quad($$->next_list, goto_else_if2);
     $$->code = add_quad($$->code, goto_else_if2);
@@ -477,7 +431,6 @@ expression_arithmetique_t:
         exit(EXIT_FAILURE);
       }
     }
-
     variable var;
     expr_arithm expr_arithm;
     switch($1->resultat->type){
@@ -511,6 +464,30 @@ expression_arithmetique_f:
   '(' expression_arithmetique ')'
   {
     $$ =  $2;
+  }
+  |
+  MINUS expression_arithmetique_f
+  {
+    variable temp;
+    switch($2->resultat->type){
+      case TYPE_INT:
+        temp = new_variable_int(generate_temp_name(),0);
+        break;
+      case TYPE_FLOAT:
+        temp = new_variable_float(generate_temp_name(),0);
+        break;
+      case TYPE_BOOL:
+        printf("\nError : Impossible d'inverser la valeur d'un Boolean (utilisation de la syntaxe suivante : \"\\neg\")\n");
+        exit(EXIT_FAILURE);
+        break;
+      default:
+        printf("\nError : Type non reconnu %d(valeur)\n",$2->resultat->type);
+        exit(EXIT_FAILURE);
+        break;
+      }
+      tableS = add_variable(tableS, temp);
+      quad q = new_quad(NEGATE,$2->resultat,NULL,temp);
+      $$ = new_expr_arithm(temp, add_quad($2->code,q));
   }
   |
   valeur
@@ -556,7 +533,6 @@ operateur_f:
   {
     $$ = MULT;
   };
-
   operateur_m:
   PLUS
   {
@@ -567,13 +543,11 @@ operateur_f:
   {
     $$ = MINUS;
   };
-
   operateur_affectation:
   LEFTARROW
   {
     $$ = LEFTARROW;
   };
-
 /* Expression Boolean */
 expr_boolean:
   expr_boolean OU marqueur expr_boolean
@@ -603,17 +577,16 @@ expr_boolean:
     $$->code = add_quad($$->code, q_label);
     $$->code = add_quad_list($$->code, $4->code);
   }
-  /*|
+  |
   '(' expr_boolean ')'
   {
     printf("'(' expr_boolean ')'\n");
     $$ = new_expr_bool($2->code, $2->true_list, $2->false_list);
-  }*/
+  }
   |
   NO expr_boolean
   {
     printf("expr_boolean : NO expr_boolean\n");
-
     //Pour effectuer le NO on inverse la False List et la True List
     $$ = new_expr_bool($2->code, $2->false_list, $2->true_list);
   }
@@ -624,29 +597,23 @@ expr_boolean:
     variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
     variable res2 = $3->resultat;
     $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
-
     //NULL pour indiquer le label inconnu
     quad trueL = new_quad($2, res1, res2, NULL);
     quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
     //Génération des true et false lists
     $$->true_list = add_quad($$->true_list, trueL);
     $$->false_list = add_quad($$->false_list, falseL);
-
-
     $$->code = add_quad_list($$->code, $1->code);
     $$->code = add_quad_list($$->code, $3->code);
     /* On ajoute la True List et la False List dans notre code (on les compléteras par
     référence au fur et a mesure qu'on remonte dans notre grammaire) */
     $$->code = add_quad($$->code, trueL);
     $$->code = add_quad($$->code, falseL);
-
   }
   |CONSTBOOL
   {
-
     //En fonction de la valeur de const bool jump soit à la false list, soit à la true list
     $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
-
     if(yylval.value){
       quad trueL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
       $$->true_list = add_quad($$->true_list, trueL);
@@ -656,7 +623,6 @@ expr_boolean:
       $$->false_list = add_quad($$->false_list, falseL);
       $$->code = add_quad($$->code, falseL);
     }
-
   }
   |ID
   {
@@ -672,13 +638,10 @@ expr_boolean:
     //Génération des true et false lists
     $$->true_list = add_quad($$->true_list, trueL);
     $$->false_list = add_quad($$->false_list, falseL);
-
     /* On ajoute la True List et la False List dans notre code (on les compléteras par
     référence au fur et a mesure qu'on remonte dans notre grammaire) */
     $$->code = add_quad($$->code, trueL);
     $$->code = add_quad($$->code, falseL);
-
-
   }
   ;
   /* Operateur relationelle */
@@ -719,7 +682,6 @@ marqueur:
       compteur_quad++;
   }
   ;
-
 /* ----------------Zone de déclarations (ordre obligatoire ici)---------------- */
 zone_declarations:
     zone_declaration_constante zone_declaration_input zone_declaration_output
@@ -871,7 +833,6 @@ type:
     }
   ;
 %%
-
 int main(int argc, char* argv[]) {
   FILE *fd = fopen("assembleur.s", "w+");
   if (argc == 2) {
@@ -883,7 +844,6 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "[texcc] usage: %s input_file\n", argv[0]);
     exit(TEXCC_ERROR_GENERAL);
   }
-
   /* Ajoute une variable dans la table des symboles pour comparer les boolean
   Ex : if(true) générera une comparaison entre la variable CONSTBOOL et VAR_BOOL_FALSE */
   variable var_bool_false = new_variable_int(VAR_BOOL_FALSE, 0);
@@ -905,5 +865,4 @@ int main(int argc, char* argv[]) {
   print_tds(tableS);
   free_tds(tableS);
   return EXIT_SUCCESS;
-
 }
