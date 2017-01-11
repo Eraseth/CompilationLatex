@@ -77,7 +77,8 @@
 %left NO
 %left PLUS MINUS
 %left MULT DIV
-%left '(' ')'
+%left '('
+%nonassoc ')'
 %%
 algorithm_list:
     algorithm_list algorithm
@@ -578,7 +579,7 @@ expr_boolean:
     $$->code = add_quad_list($$->code, $4->code);
   }
   |
-  '(' expr_boolean ')'
+  '(' expr_boolean %prec ')'
   {
     printf("'(' expr_boolean ')'\n");
     $$ = new_expr_bool($2->code, $2->true_list, $2->false_list);
