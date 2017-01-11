@@ -7,3 +7,7 @@ Addition d'un int et d'un flaot
 Conversions dans les comparaisons
 
 Attention --> expr_boolean : Attention, une expr_boolean cela peut etre qu'un int ou un bool /!\
+
+Ne peut pas print une expression
+
+Revoir le fonctionnement des expressions (ID et valeur plus particulièrement)

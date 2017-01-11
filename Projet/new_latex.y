@@ -63,7 +63,7 @@
 %token <dvalue> CONSTFLOAT
 %token <value> MULT MINUS PLUS EOI
 %token <name> ID
-%type <value> type marqueur
+%type <value> type marqueur operateur_affectation
 %type <valeurSt> valeur
 %type <expr> expression
 %type <var> argument_real argument_entier
@@ -79,10 +79,6 @@
 %left MULT DIV
 %right NOR
 
-/* Bison normally warns if there are any conflicts in the grammar (see Shift/Reduce Conflicts),
-but most real grammars have harmless shift/reduce conflicts which are resolved in a predictable way and would be difficult to eliminate.
-It is desirable to suppress the warning about these conflicts unless the number of conflicts changes. You can do this with the %expect declaration.
-%expect 1 */
 
 %%
 algorithm_list:
@@ -158,7 +154,7 @@ instruction:
   }
   ;
 instruction_affectation:
-  ID LEFTARROW expression
+  ID operateur_affectation expression
   {
     variable var = lookup_tds(tableS, $1);
     if(var == NULL){
@@ -303,7 +299,7 @@ structure_controle:
     print_quad_list($$->code);
   }
   |
-  FOR '{' '$' ID LEFTARROW expression '$' KWTO '$' expression '$' '}' marqueur '{' list_instructions '}'
+  FOR '{' '$' ID operateur_affectation expression '$' KWTO '$' expression '$' '}' marqueur '{' list_instructions '}'
   {
     printf("structure_controle : FOR marqueur '{' '$' instruction_affectation '$' KWTO '$' expression '$' '}' '{' list_instructions '}'\n");
     $15->next_list = complete($15->next_list, $13); //La next list pointe sur le marqueur
@@ -386,80 +382,327 @@ structure_controle:
   ;
 
 expression:
-//Opérateur
+//Expression arithmétique
  expression DIV expression
   {
-    ;
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr nex_expr;
+    switch($1->resultat->type){
+      case TYPE_INT:
+        var = new_variable_int(generate_temp_name(), 0);
+        break;
+    case TYPE_FLOAT:
+      var = new_variable_float(generate_temp_name(), 0.0);
+      break;
+    case TYPE_BOOL:
+      var = new_variable_bool(generate_temp_name(), 0);
+      break;
+    default:
+      printf("\nError : Type non reconnu %d (valeur)_n", $1->resultat->type);
+      exit(EXIT_FAILURE);
+      break;
+    }
+    tableS = add_variable(tableS, var);
+    quad q = new_quad(DIV,$1->resultat,$3->resultat,var);
+    $$ = new_expr(add_quad(add_quad_list($1->code,$3->code),q), var, NULL, NULL, ARITHM);
   }
   |
  expression MULT expression
   {
-    ;
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr nex_expr;
+    switch($1->resultat->type){
+      case TYPE_INT:
+        var = new_variable_int(generate_temp_name(), 0);
+        break;
+      case TYPE_FLOAT:
+        var = new_variable_float(generate_temp_name(), 0.0);
+        break;
+      case TYPE_BOOL:
+        var = new_variable_bool(generate_temp_name(), 0);
+        break;
+      default:
+        printf("\nError : Type non reconnu %d (valeur)_n", $1->resultat->type);
+        exit(EXIT_FAILURE);
+        break;
+      }
+      tableS = add_variable(tableS, var);
+      quad q = new_quad(MULT,$1->resultat,$3->resultat,var);
+      $$ = new_expr(add_quad(add_quad_list($1->code,$3->code),q), var, NULL, NULL, ARITHM);
   }
   |
  expression PLUS expression
   {
-    ;
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr nex_expr;
+    switch($1->resultat->type){
+      case TYPE_INT:
+        var = new_variable_int(generate_temp_name(), 0);
+        break;
+    case TYPE_FLOAT:
+      var = new_variable_float(generate_temp_name(), 0.0);
+      break;
+    case TYPE_BOOL:
+      var = new_variable_bool(generate_temp_name(), 0);
+      break;
+    default:
+      printf("\nError : Type non reconnu %d (valeur)_n", $1->resultat->type);
+      exit(EXIT_FAILURE);
+      break;
+    }
+    tableS = add_variable(tableS, var);
+    quad q = new_quad(PLUS,$1->resultat,$3->resultat,var);
+    $$ = new_expr(add_quad(add_quad_list($1->code,$3->code),q), var, NULL, NULL, ARITHM);
   }
   |
  expression MINUS expression
   {
-    ;
+    if (($1->resultat->type) != ($3->resultat->type))
+    {
+      fprintf(stderr, "\n: Les variables %s et %s ne sont pas du mêmes types"
+      ,$1->resultat->id,$3->resultat->id);
+      exit(EXIT_FAILURE);
+    }
+    variable var;
+    expr nex_expr;
+    switch($1->resultat->type){
+      case TYPE_INT:
+        var = new_variable_int(generate_temp_name(), 0);
+        break;
+      case TYPE_FLOAT:
+        var = new_variable_float(generate_temp_name(), 0.0);
+        break;
+      case TYPE_BOOL:
+        var = new_variable_bool(generate_temp_name(), 0);
+        break;
+      default:
+        printf("\nError : Type non reconnu %d (valeur)_n", $1->resultat->type);
+        exit(EXIT_FAILURE);
+        break;
+    }
+    tableS = add_variable(tableS, var);
+    quad q = new_quad(MINUS, $1->resultat,$3->resultat,var);
+    $$ = new_expr(add_quad(add_quad_list($1->code,$3->code),q), var, NULL, NULL, ARITHM);
   }
   |
  MINUS expression %prec NOR
   {
-    ;
+
+    variable temp;
+    switch($2->resultat->type){
+      case TYPE_INT:
+        temp = new_variable_int(generate_temp_name(),0);
+        break;
+      case TYPE_FLOAT:
+        temp = new_variable_float(generate_temp_name(),0);
+        break;
+      case TYPE_BOOL:
+        printf("\nError : Impossible d'inverser la valeur d'un Boolean (utilisation de la syntaxe suivante : \"\\neg\")\n");
+        exit(EXIT_FAILURE);
+        break;
+      default:
+        printf("\nError : Type non reconnu %d(valeur)\n",$2->resultat->type);
+        exit(EXIT_FAILURE);
+        break;
+      }
+      tableS = add_variable(tableS, temp);
+      quad q = new_quad(NEGATE,$2->resultat,NULL,temp);
+      $$ = new_expr(add_quad($2->code,q), temp, NULL, NULL, ARITHM);
   }
   |
-  //Opérateur relationelle (relop)
+  //Expression boolean (relop)
+  expression OU marqueur expression
+  {
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    $1->false_list = complete($1->false_list, $3);
+    $$->true_list = add_quad_list($1->true_list, $4->true_list);
+    $$->false_list = add_quad_list($$->false_list, $4->false_list);
+    quad q_label = new_quad(QUAD_LABEL, NULL, NULL, NULL);
+    set_label(q_label,$3);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad($$->code, q_label);
+    $$->code = add_quad_list($$->code, $4->code);
+  }
+  |
+  expression ET marqueur expression
+  {
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    $1->true_list = complete($1->true_list, $3);
+    $$->false_list = add_quad_list($1->false_list, $4->false_list);
+    $$->true_list = add_quad_list($$->true_list, $4->true_list);
+    quad q_label = new_quad(QUAD_LABEL, NULL, NULL, NULL);
+    set_label(q_label,$3);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad($$->code, q_label);
+    $$->code = add_quad_list($$->code, $4->code);
+  }
+  |
   expression EGAL expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(EGAL, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   expression NOEGAL expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(NOEGAL, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   expression SUP expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(SUP, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   expression INF expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(INF, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   expression INFEGAL expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(INFEGAL, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   expression SUPEGAL expression
   {
-    ;
+    variable res1 = $1->resultat; //Récupère la valeur de l'expr arithm
+    variable res2 = $3->resultat;
+    $$ = new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), BOOL);
+    //NULL pour indiquer le label inconnu
+    quad trueL = new_quad(SUPEGAL, res1, res2, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    $$->code = add_quad_list($$->code, $1->code);
+    $$->code = add_quad_list($$->code, $3->code);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
   }
   |
   NO expression %prec NOR
   {
-    ;
+    printf("expr_boolean : NO expr_boolean\n");
+    //Pour effectuer le NO on inverse la False List et la True List
+    $$ = new_expr($2->code, NULL, $2->false_list, $2->true_list, BOOL);
   }
   |
+  //Les valeurs
   ID
   {
+    $$ =  new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), IDT);
     variable var = lookup_tds(tableS,$1);
-      if(var == NULL){
-        printf("ERROR : Variable %s non définie.\n", $1);
-        exit(EXIT_FAILURE);
-      }
-      $$ =  new_expr(NULL, var, NULL, NULL, ARITHM);
+    variable var_bool_false = lookup_tds(tableS,VAR_BOOL_FALSE);
+    if(var == NULL){
+      printf("ERROR : Variable %s non définie.\n", $1);
+      exit(EXIT_FAILURE);
+    }
+
+    //Utile dans le cas l'id est directement testé dans un une expr boolean
+    quad trueL = new_quad(NOEGAL, var, var_bool_false, NULL);
+    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+    //Génération des true et false lists
+    $$->true_list = add_quad($$->true_list, trueL);
+    $$->false_list = add_quad($$->false_list, falseL);
+    /* On ajoute la True List et la False List dans notre code (on les compléteras par
+    référence au fur et a mesure qu'on remonte dans notre grammaire) */
+    $$->code = add_quad($$->code, trueL);
+    $$->code = add_quad($$->code, falseL);
+    $$->resultat = var;
   }
   |
   valeur
   {
+    $$ =  new_expr(new_quad_list(), NULL, new_quad_list(), new_quad_list(), CONST);
     variable var;
     switch($1.type){
           case TYPE_INT:
@@ -470,21 +713,36 @@ expression:
             break;
           case TYPE_BOOL:
             var = new_variable_bool(generate_temp_name(),$1.valUnion.valInt);
+            if($1.valUnion.valInt){
+              quad trueL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+              $$->true_list = add_quad($$->true_list, trueL);
+              $$->code = add_quad($$->code, trueL);
+            } else {
+              quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
+              $$->false_list = add_quad($$->false_list, falseL);
+              $$->code = add_quad($$->code, falseL);
+            }
             break;
           default:
             printf("\nError : Type non reconnu %d(valeur)\n",$1.type);
             exit(EXIT_FAILURE);
             break;
           }
-  tableS = add_variable(tableS, var);
-  $$ =  new_expr(NULL, var, NULL, NULL, ARITHM);
+    tableS = add_variable(tableS, var);
+    $$->resultat = var;
   }
   |
   '(' expression ')'
   {
-    ;
+    $$ =  $2;
   }
   ;
+
+operateur_affectation:
+  LEFTARROW
+  {
+    $$ = LEFTARROW;
+  };
 
 marqueur:
   {

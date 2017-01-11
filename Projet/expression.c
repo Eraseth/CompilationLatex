@@ -13,11 +13,26 @@ expr new_expr(quad_list code, variable resultat, quad_list true_list, quad_list 
 
 void print_expr(expr ex)
 {
-  if (ex->type_ex == BOOL) {
-    printf("Expression (BOOL)\n");
-  } else if (ex->type_ex == ARITHM){
-    printf("Expression (ARITHM)\n");
+
+
+  switch (ex->type_ex) {
+    case BOOL:
+      printf("Expression (BOOL)\n");
+      break;
+    case ARITHM:
+      printf("Expression (ARITHM)\n");
+      break;
+    case IDT:
+      printf("Expression (ID)\n");
+      break;
+    case CONST:
+      printf("Expression (CONST)\n");
+      break;
+    default:
+      printf("Expression (INCONNU)\n");
+      break;
   }
+
   printf("\n Code :");
   print_quad_list(ex->code);
   printf("Resultat : \n");

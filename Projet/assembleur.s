@@ -1,15 +1,14 @@
 .text
 main:
+# Assignation d'un entier
+lw $t0,var_temp0
+sw $t0,var_a
 
-# Affichage d'un entier
-li $v0,1
-lw $a0,var_i
-syscall
+# Assignation d'un entier
+lw $t0,var_temp1
+sw $t0,var_b
 
-label1:
-li $v0,10
-syscall
-.data
-var_var_bool_false: .word 0
-var_i: .word 0
-var_temp0: .word 42
+# Assignation d'un entier
+lw $t0,var_temp2
+sw $t0,var_c
+

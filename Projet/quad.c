@@ -454,6 +454,10 @@ void print_op(int operator)
       printf("==")
       ;
       break;
+    case NOEGAL:
+      printf("!=")
+      ;
+      break;
     case SUP:
       printf(">")
       ;
@@ -492,6 +496,10 @@ void print_op(int operator)
       break;
     case QUAD_GOTO:
       printf("GOTO")
+      ;
+      break;
+    case QUAD_LABEL:
+      printf("LABEL")
       ;
       break;
     default:

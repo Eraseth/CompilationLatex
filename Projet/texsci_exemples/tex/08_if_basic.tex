@@ -37,11 +37,12 @@
 Test de conditionnelle avec test basique.
 
 \begin{texsci}{main}
-\Local{$a \in \Integer, b \in \Integer$}
+\Local{$a \in \Integer, b \in \Integer, c \in \Integer$}
 \BlankLine
-$a \leftarrow 40$\;
-$b \leftarrow 10$\;
-\If{$\neg (\true \vee \false)$}{$\mbox{printText($"NOT "$)}$\;}
+$a \leftarrow 0$\;
+$b \leftarrow 0$\;
+$c \leftarrow 1$\;
+\If{$c + 9 = 10$}{$\mbox{printText($"NOT "$)}$\;}
 $\mbox{printText($"OK !!!"$)}$\;
 \end{texsci}
 

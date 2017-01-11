@@ -6,7 +6,7 @@
 #include "quad_list.h"
 #include "variable.h"
 
-enum type {BOOL, ARITHM, NONE};
+enum type {BOOL, ARITHM, IDT, CONST};
 //Structure pour notre code 3 adresses
 typedef struct expr_struct
 {
