@@ -87,7 +87,8 @@ extern int yydebug;
     MINUS = 297,
     PLUS = 298,
     EOI = 299,
-    ID = 300
+    ID = 300,
+    NOR = 301
   };
 #endif
 /* Tokens.  */
@@ -134,13 +135,14 @@ extern int yydebug;
 #define PLUS 298
 #define EOI 299
 #define ID 300
+#define NOR 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 40 "latex.y" /* yacc.c:1909  */
+#line 41 "new_latex.y" /* yacc.c:1909  */
 
   char* name;
   int value;
@@ -152,12 +154,11 @@ union YYSTYPE
       } valUnion;
       int type;
     } valeurSt;
-    expr_arithm expr_arithm;
-    expr_bool expr_bool;
+    expr expr;
     statement statement;
     variable var;
 
-#line 161 "y.tab.h" /* yacc.c:1909  */
+#line 162 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

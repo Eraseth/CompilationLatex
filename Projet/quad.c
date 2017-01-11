@@ -1,6 +1,7 @@
 #include "include/quad.h"
 #include "include/expression_arithm.h"
 #include "include/expression_bool.h"
+#include "include/expression.h"
 #include "include/statement.h"
 #include "y.tab.h"
 
