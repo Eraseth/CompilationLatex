@@ -610,7 +610,7 @@ expr_boolean:
     $$->code = add_quad($$->code, trueL);
     $$->code = add_quad($$->code, falseL);
   }
-  |CONSTBOOL
+  |expression_arithmetique
   {
     //En fonction de la valeur de const bool jump soit à la false list, soit à la true list
     $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
@@ -623,25 +623,6 @@ expr_boolean:
       $$->false_list = add_quad($$->false_list, falseL);
       $$->code = add_quad($$->code, falseL);
     }
-  }
-  |ID
-  {
-    $$ = new_expr_bool(new_quad_list(), new_quad_list(), new_quad_list());
-    variable var = lookup_tds(tableS,$1);
-    variable var_bool_false = lookup_tds(tableS,VAR_BOOL_FALSE);
-    if(var == NULL){
-      printf("ERROR : Variable %s non définie.\n", $1);
-      exit(EXIT_FAILURE);
-    };
-    quad trueL = new_quad(NOEGAL, var, var_bool_false, NULL);
-    quad falseL = new_quad(QUAD_GOTO, NULL, NULL, NULL);
-    //Génération des true et false lists
-    $$->true_list = add_quad($$->true_list, trueL);
-    $$->false_list = add_quad($$->false_list, falseL);
-    /* On ajoute la True List et la False List dans notre code (on les compléteras par
-    référence au fur et a mesure qu'on remonte dans notre grammaire) */
-    $$->code = add_quad($$->code, trueL);
-    $$->code = add_quad($$->code, falseL);
   }
   ;
   /* Operateur relationelle */
