@@ -3,11 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #define TYPE_INT 0
 #define TYPE_FLOAT 1
 #define TYPE_BOOL 2
 #define TYPE_STRING 3
 #define TYPE_JUMP 4
+
+#define LEX_ERROR 1
+#define SYNTAX_ERROR 2
+#define SEMANTIC_ERROR 3
+#define OTHER_ERROR 4
 
 //Structure pour nos variables
 typedef struct variable_struct
@@ -19,7 +25,7 @@ typedef struct variable_struct
     int iValue;
     char * sValue;
   } val;
-
+  int init_bool;/* 0-> non initialisée , 1 -> initialisée*/
 }*variable;
 
 /* Fonctions sur la structure variable */
@@ -33,11 +39,7 @@ variable new_variable_bool(char *id, int val);
 
 variable new_variable_goto(int val);
 
-void update_variable_int(variable var, int val);
-
-void update_variable_float(variable var, float val);
-
-void update_variable_bool(variable var, int val);
+void set_init_bool_true(variable var);
 
 void print_variable(variable var);
 

@@ -1,4 +1,6 @@
 %option noyywrap
+%option yylineno
+
 %{
   #include <stdlib.h>
   #include <stdio.h>
@@ -7,8 +9,6 @@
   #include "include/quad_list.h"
   #include "include/quad.h"
   #include "include/variable.h"
-  #include "include/expression_arithm.h"
-  #include "include/expression_bool.h"
   #include "include/expression.h"
   #include "include/statement.h"
   #include "y.tab.h"
@@ -56,23 +56,24 @@ supegal          "\\geq"
 printInt         "printInt"
 printText        "printText"
 printReal        "printReal"
-constInt         [-+]?[0-9]([0-9])*
-constFloat       [-+]?[0-9]*\.?[0-9]+([-+]?[0-9]+)?
-constBool        "\\true"|"\\false"
+constInt         [-]?[0-9]([0-9])*
+constFloat       [-]?[0-9]*\.?[0-9]*
+constBoolTrue    "\\true"
+constBoolFalse   "\\false"
 eoi              "\\;"
 %%
 
-{begin}             { BEGIN(texsci); printf("BEGIN{texsci} ");   // Start TexSci scanning mode
+{begin}             { BEGIN(texsci); // Start TexSci scanning mode
                       return TEXSCI_BEGIN;
                     }
-<texsci>{end}       { BEGIN(INITIAL); printf("END "); // Reset to default scanning mode
+<texsci>{end}       { BEGIN(INITIAL); // Reset to default scanning mode
                       return TEXSCI_END;
 		                }
 <texsci>{blankline}       { return BLANKLINE; }
 <texsci>{leftarrow}       { return LEFTARROW; }
 <texsci>{in}              { return IN; }
 <texsci>{integer}         { return INTEGER; }
-<texsci>{commentaire}     { }
+<texsci>{commentaire}     { ; }
 <texsci>{boolean}         { return BOOLEAN; }
 <texsci>{eoi}             { return EOI; }
 <texsci>{real}            { return REAL; }
@@ -105,27 +106,24 @@ eoi              "\\;"
 <texsci>{printReal}       { return PRINTREAL; }
 <texsci>{mbox}            { return MBOX; }
 <texsci>{constInt}        {
-
                             yylval.value = atoi(yytext);
                             return CONSTINT;
                           }
 
 <texsci>{constFloat}      {
-
                             yylval.dvalue = atof(yytext);
                             return CONSTFLOAT;
                           }
-<texsci>{constBool}       {
-
-                            if(strcmp(yytext, "\\true") == 0){
-                              yylval.value = 1;
-                            } else {
-                              yylval.value = 0;
-                            }
+<texsci>{constBoolTrue}   {
+                            yylval.value = 1;
+                            return CONSTBOOL;
+                          }
+<texsci>{constBoolFalse}   {
+                            yylval.value = 0;
                             return CONSTBOOL;
                           }
 <texsci>[{}()$,^]         { return yytext[0]; }
-<texsci>[\n]              { }
+<texsci>[\n]              { ; }
 
 <texsci>{string}    {
                       yylval.name = strdup(yytext);
@@ -133,12 +131,19 @@ eoi              "\\;"
                     }
 
 <texsci>{id}        {
+                      if(strstr(yytext, "temp") != NULL) {
+                          printf("\nLe mot clé \"tempX\" est réservée\n");
+                          exit(OTHER_ERROR);
+                      }
                       yylval.name = strdup(yytext);
                       return ID;
                     }
-
-
-
+<texsci>" "         { ; }
+<texsci>.           {
+                      printf("\nERROR : Line %d --> Token invalide.", yylineno);
+                      exit(LEX_ERROR);
+                    }
+[\n]                { yylineno--; }
 .                   { ; }
 
 %%
@@ -147,11 +152,3 @@ void texcc_lexer_free() {
   yy_delete_buffer(YY_CURRENT_BUFFER);
   free(yy_buffer_stack);
 }
-
-/*int main(int argc, char* argv[])
-{
-	yyin = fopen(argv[1], "r");
-	yylex();
-	fclose(yyin);
-	return 0;
-}*/

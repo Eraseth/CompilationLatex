@@ -1,0 +1,101 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+
+% --- START - HEADER TO SUPPORT TexSci ALGORITHMS IN LaTeX DOCUMENTS
+\usepackage[vlined,ruled]{algorithm2e}
+\usepackage{amssymb}
+\usepackage{amsmath,alltt}
+\newenvironment{texsci}[1]{%
+\vspace{1cm}
+\renewcommand{\algorithmcfname}{Algorithm}
+\begin{algorithm}[H]
+\label{#1}
+\caption{#1}
+\SetKwInOut{Constant}{Constant}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwInOut{Global}{Global}
+\SetKwInOut{Local}{Local}
+}{%
+\end{algorithm}
+\vspace{1cm}
+}
+\newcommand{\true}{\mbox{\it true}}
+\newcommand{\false}{\mbox{\it false}}
+\newcommand{\Boolean}{\{\true,\false\}}
+\newcommand{\Integer}{\mathbb{Z}}
+\newcommand{\Real}{\mathbb{R}}
+% --- END - HEADER TO SUPPORT TexSci ALGORITHMS IN LaTeX DOCUMENTS
+
+\title{TexSci Test Suite -- Test Custom\\ Print en Vrac}
+\date{}
+
+\begin{document}
+\maketitle
+
+Test de l'affichage d'un entier.
+
+\begin{texsci}{main}
+\Local{$a \in \Boolean, b \in \Boolean, c \in \Integer, d \in \Integer, e \in \Real, f \in \Real$}
+\BlankLine
+$a \leftarrow \true$\;
+$b \leftarrow \false$\;
+$c \leftarrow 42$\;
+$d \leftarrow 0$\;
+$e \leftarrow 42.5$\;
+$f \leftarrow 0.0$\;
+
+$\mbox{printText($"\nIl est fortement recommandé de d'abord tester le fichier \"if_relop_en_vrac\" avant celui-ci.\n\n"$)}$\;
+
+$\mbox{printText($"\nCe fichier raconte des blalgues. Si celles-ci vous semblent incohérentes c'est qu'il y a des erreurs.\n\n"$)}$\;
+
+\If{$a$}{$\mbox{printText($"\n1. J'ai une blague sur "$)}$\;}
+\If{$50 \neq 3$}{$\mbox{printText($" UDP, mais je suis pas sûr que tu la captes.\n\n"$)}$\;}
+
+\If{$42 > 30$}{
+$\mbox{printText($"2. L'informatique, c'est l'art de passer 15 jours "$)}$\;
+  \If{$30 > 30$}{
+    $\mbox{printText($"NOP"$)}$\;
+  }
+
+  \If{$5.2 = 12 \vee 0 \geq 0.0$}{
+    $\mbox{printText($"à essayer de gagner quelques "$)}$\;
+
+    \If{$a = \true$}{
+      $\mbox{printText($"millisecondes. \n\n"$)}$\;
+    }
+  }
+}
+
+\If{$42 > 30$}{
+$\mbox{printText($"3. Les bisons c'est "$)}$\;
+  \If{$ (0 \geq -42 \wedge 10 \neq 1.6) \vee 42.2 = 12.78$}{
+    $\mbox{printText($"FLEXibles ? "$)}$\;
+    \If{$0.2454 < 0.245$}{
+      $\mbox{printText($"OUPS"$)}$\;
+    }
+  }
+
+  \If{$b$}{
+    $\mbox{printText($"OUPS"$)}$\;
+  }
+
+  \If{$5.2 = 12 \vee 0 \geq 0.0$}{
+    $\mbox{printText($"Oui ? YACCan même une chance de l'at"$)}$\;
+  }
+
+  \If{$45.8888 < 45.88799999$}{
+    $\mbox{printText($"AIE"$)}$\;
+  }
+
+  \If{$a = \true \wedge a \neq \false$}{
+    $\mbox{printText($"traper. \n\n"$)}$\;
+  }
+}
+
+$\mbox{printText($"\nFin des tests sur le if. \n"$)}$\;
+
+\end{texsci}
+
+\end{document}

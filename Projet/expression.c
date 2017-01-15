@@ -45,5 +45,5 @@ void print_expr(expr ex)
 
 void free_expr(expr ex)
 {
-  ;
+  free(ex);
 }

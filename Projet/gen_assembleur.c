@@ -4,7 +4,6 @@
 void generate_data(FILE *assembleur_file, tableSymbole table_symbole){
   fprintf(assembleur_file, "%s\n", ".data");
   gen_assembleur_data(assembleur_file, table_symbole);
-  //TODO --> __str1_reserved_
 }
 
 void generate_text(FILE *assembleur_file, quad_list code){

@@ -19,5 +19,5 @@ void print_statement(statement st)
 
 void free_statement(statement st)
 {
-  ;
+  free(st);
 }

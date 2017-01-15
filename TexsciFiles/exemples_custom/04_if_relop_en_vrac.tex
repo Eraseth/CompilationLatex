@@ -1,0 +1,206 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+
+% --- START - HEADER TO SUPPORT TexSci ALGORITHMS IN LaTeX DOCUMENTS
+\usepackage[vlined,ruled]{algorithm2e}
+\usepackage{amssymb}
+\usepackage{amsmath,alltt}
+\newenvironment{texsci}[1]{%
+\vspace{1cm}
+\renewcommand{\algorithmcfname}{Algorithm}
+\begin{algorithm}[H]
+\label{#1}
+\caption{#1}
+\SetKwInOut{Constant}{Constant}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwInOut{Global}{Global}
+\SetKwInOut{Local}{Local}
+}{%
+\end{algorithm}
+\vspace{1cm}
+}
+\newcommand{\true}{\mbox{\it true}}
+\newcommand{\false}{\mbox{\it false}}
+\newcommand{\Boolean}{\{\true,\false\}}
+\newcommand{\Integer}{\mathbb{Z}}
+\newcommand{\Real}{\mathbb{R}}
+% --- END - HEADER TO SUPPORT TexSci ALGORITHMS IN LaTeX DOCUMENTS
+
+\title{TexSci Test Suite -- Test Custom\\ Print en Vrac}
+\date{}
+
+\begin{document}
+\maketitle
+
+Test de l'affichage d'un entier.
+
+\begin{texsci}{main}
+\Local{$a \in \Boolean, b \in \Boolean, c \in \Integer, d \in \Integer, e \in \Real, f \in \Real$}
+\BlankLine
+$a \leftarrow \true$\;
+$b \leftarrow \false$\;
+$c \leftarrow 42$\;
+$d \leftarrow 0$\;
+$e \leftarrow 42.5$\;
+$f \leftarrow 0.0$\;
+
+\tcc{Le contexte}
+$\mbox{printText($"\nTest du IF. Notre contexte : \n"$)}$\;
+$\mbox{printText($"a = true\n"$)}$\;
+$\mbox{printText($"b = false\n"$)}$\;
+$\mbox{printText($"c = 42\n"$)}$\;
+$\mbox{printText($"d = 0\n"$)}$\;
+$\mbox{printText($"e = 42.5\n"$)}$\;
+$\mbox{printText($"f = 0.0\n"$)}$\;
+
+$\mbox{printText($"\n---IF BOOLEAN---\n"$)}$\;
+
+\tcc{If a}
+$\mbox{printText($"\nIf a --> C'est "$)}$\;
+\If{$a$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If !a}
+$\mbox{printText($"\nIf !a --> C'est "$)}$\;
+\If{$\neg a$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If a == b}
+$\mbox{printText($"\nIf a == b --> C'est "$)}$\;
+\If{$a = b$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If a = true}
+$\mbox{printText($"\nIf a == true --> C'est "$)}$\;
+\If{$a = \true$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If b}
+$\mbox{printText($"\nIf b --> C'est "$)}$\;
+\If{$b$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If !b}
+$\mbox{printText($"\nIf !b --> C'est "$)}$\;
+\If{$\neg b$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+$\mbox{printText($"\n---IF ARITHM (entier)---\n"$)}$\;
+
+\tcc{If 1}
+$\mbox{printText($"\nIf 1 --> C'est "$)}$\;
+\If{$1$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 0}
+$\mbox{printText($"\nIf 0 --> C'est "$)}$\;
+\If{$0$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If c}
+$\mbox{printText($"\nIf c --> C'est "$)}$\;
+\If{$c$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If d}
+$\mbox{printText($"\nIf d --> C'est "$)}$\;
+\If{$d$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If c - 42}
+$\mbox{printText($"\nIf c - 42 --> C'est "$)}$\;
+\If{$c - 42$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If d + 42}
+$\mbox{printText($"\nIf d + 42 --> C'est "$)}$\;
+\If{$d + 42$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+$\mbox{printText($"\n---IF ARITHM (real)---\n"$)}$\;
+
+\tcc{If 1.8}
+$\mbox{printText($"\nIf 1.8 --> C'est "$)}$\;
+\If{$1.8$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 0.0}
+$\mbox{printText($"\nIf 0.0 --> C'est "$)}$\;
+\If{$0.0$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If e}
+$\mbox{printText($"\nIf e --> C'est "$)}$\;
+\If{$e$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If f}
+$\mbox{printText($"\nIf f --> C'est "$)}$\;
+\If{$f$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If c - 42}
+$\mbox{printText($"\nIf c - 42 --> C'est "$)}$\;
+\If{$e - 42.5$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If e + 42.5}
+$\mbox{printText($"\nIf e + 42.5 --> C'est "$)}$\;
+\If{$d + 42$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+$\mbox{printText($"\n---IF RELOP (AND, OR, >, <, =, <=, >=)---\n"$)}$\;
+
+\tcc{If 10 = 20}
+$\mbox{printText($"\nIf 10 = 20 --> C'est "$)}$\;
+\If{$10 = 20$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If 20 != 10}
+$\mbox{printText($"\nIf 20 != 10 --> C'est "$)}$\;
+\If{$20 \neq 10$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 10 >= 10}
+$\mbox{printText($"\nIf 10 >= 10 --> C'est "$)}$\;
+\If{$10 \geq 10$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 100 <= 10}
+$\mbox{printText($"\nIf 100 <= 10 --> C'est "$)}$\;
+\If{$100 \leq 10$}{$\mbox{printText($"loupé et pas "$)}$\;}
+$\mbox{printText($"OK ! \n"$)}$\;
+
+\tcc{If 50 > 30}
+$\mbox{printText($"\nIf 50 > 30 --> C'est "$)}$\;
+\If{$50 > 30$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 30 < 150}
+$\mbox{printText($"\nIf 30 < 150 --> C'est "$)}$\;
+\If{$30 < 150$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 30 < 150 et 20 > 10}
+$\mbox{printText($"\nIf 30 < 150 et 20 > 10 --> C'est "$)}$\;
+\If{$30 < 150 \wedge 20 > 10$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 5.2 = 12 ou 0 >= 0.0}
+$\mbox{printText($"\nIf 5.2 = 12 ou 0 >= 0.0 --> C'est "$)}$\;
+\If{$5.2 = 12 \vee 0 \geq 0.0$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+\tcc{If 5.2 = 12.1 ou (0 >= -42 et 10 != 1)}
+$\mbox{printText($"\nIf 5.2 = 12.1 ou (0 >= -42 et 10 != 1) --> C'est "$)}$\;
+\If{$5.2 = 12.1 \vee (0 \geq -42 \wedge 10 \neq 1.6)$}{$\mbox{printText($"OK et pas "$)}$\;}
+$\mbox{printText($"loupé ! \n"$)}$\;
+
+$\mbox{printText($"\nFin des tests if/relop. \n"$)}$\;
+
+
+\end{texsci}
+
+\end{document}

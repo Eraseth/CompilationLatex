@@ -93,15 +93,11 @@ void gen_assembleur_text(FILE *assembleur_file, quad_list code)
 quad_list complete(quad_list ql, int label){
   quad_list temp = ql;
 
-  if (ql == NULL) {
-    printf("Warning, complete d'une liste vide\n");
-  }
-
   while(temp!=NULL)
   {
     if (temp->quad->res != NULL) {
-      printf("ERROR, complete d'un quad possédant un resultat\n");
-      exit(EXIT_FAILURE);
+      printf("\nERROR, complete d'un quad possédant un resultat\n");
+      exit(OTHER_ERROR);
     } else {
       temp->quad->res = new_variable_goto(label);
     }
@@ -110,28 +106,3 @@ quad_list complete(quad_list ql, int label){
 
   return ql;
 }
-
-/* Pensez au doubles free */
-/*
-void main(){
-  quad_list quadL = new_quad_list();
-  quad_list quadL2 = new_quad_list();
-
-  variable v1 = new_variable_int("abc", 1);
-  variable v2 = new_variable_double("ab", 2.5);
-  variable v3 = new_variable_bool("abcd", 1);
-
-  quad q1 = new_quad('+', v1, v2, v3);
-  quad q2 = new_quad('-', v1, v2, v3);
-  quad q3 = new_quad('*', v1, v2, v3);
-
-  quadL = add_quad(quadL, q1);
-  quadL = add_quad(quadL, q2);
-  quadL = add_quad(quadL, q3);
-
-  quadL2 = add_quad(quadL2, q3);
-  quadL = add_quad_list(quadL,quadL2);
-  print_quad_list(quadL);
-  free_quad_list(quadL);
-}
-*/

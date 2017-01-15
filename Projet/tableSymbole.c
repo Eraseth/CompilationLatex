@@ -7,8 +7,8 @@ tableSymbole new_tds(){
 
 tableSymbole add_variable(tableSymbole table, variable var){
   if (lookup_tds(table, var->id) != NULL) {
-    fprintf(stderr, "\n: La variable %s est déjà défini dans la Table des Symboles", var->id);
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "\nERROR : La variable %s est déjà défini dans la Table des Symboles\n", var->id);
+    exit(OTHER_ERROR);
   }
 	tableSymbole ajout = malloc(sizeof(struct tds_struct));
 	ajout->var = var;
@@ -107,17 +107,3 @@ void gen_assembleur_data(FILE *assembleur_file, tableSymbole table_symbole){
     return ;
   }
 }
-
-// void main(){
-//   variable v1 = new_variable_int("name", 45);
-//   variable v2 = new_variable_float("name", 45.2);
-//   tableSymbole tds = new_tds();
-//   tds = add_variable(tds, v1);
-//   tds = add_variable(tds, v2);
-//   print_tds(tds);
-//   print_variable(lookup_tds(tds, "name"));
-//   if (lookup_tds(tds, "namefqsfqd") == NULL) {
-//     printf("NULL\n");
-//   }
-//   print_variable(lookup_tds(tds, "name1"));
-// }

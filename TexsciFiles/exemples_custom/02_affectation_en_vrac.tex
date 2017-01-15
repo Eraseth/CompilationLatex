@@ -28,30 +28,33 @@
 \newcommand{\Real}{\mathbb{R}}
 % --- END - HEADER TO SUPPORT TexSci ALGORITHMS IN LaTeX DOCUMENTS
 
-\title{TexSci Test Suite -- Test 04\\ Arithméthique basique}
+\title{TexSci Test Suite -- Test Custom\\ Print en Vrac}
 \date{}
 
 \begin{document}
 \maketitle
 
-Test d'affectations et de calculs élémentaires.
+Test de l'affichage d'un entier.
 
 \begin{texsci}{main}
+\Local{$a \in \Boolean, b \in \Boolean, c \in \Integer, d \in \Integer, e \in \Real, f \in \Real$}
 \BlankLine
-\If{$4 = 4$}{
-$\mbox{printText($"Test"$)}$\;
-  \If{$4 = 4$}{
-  $\mbox{printText($"Test2"$)}$\;
-    \If{$4 = 4$}{
-    $\mbox{printText($"Test3"$)}$\;
-      \If{$4 = 3$}{
-        $\mbox{printText($"Test4"$)}$\;
-      }
-    }
-  }
-}
-\If{$4 = 2$}{$\mbox{printText($"Baobab3"$)}$\;}
-$\mbox{printText($"Baobab4"$)}$\;
+$a \leftarrow \true$\;
+$b \leftarrow \false$\;
+$c \leftarrow 2$\;
+$d \leftarrow 0$\;
+$e \leftarrow 42.5$\;
+$f \leftarrow 0.0$\;
+
+\tcc{Le contexte}
+$\mbox{printText($"a = true\n"$)}$\;
+$\mbox{printText($"b = false\n"$)}$\;
+$\mbox{printText($"c = 2\n"$)}$\;
+$\mbox{printText($"d = 0\n"$)}$\;
+$\mbox{printText($"e = 42.5\n"$)}$\;
+$\mbox{printText($"f = 0.0\n"$)}$\;
+
+
 \end{texsci}
 
 \end{document}

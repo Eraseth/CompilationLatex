@@ -1,18 +1,18 @@
 # Définition des cibles particulières
-.PHONY: clean, mrproper
+.PHONY: clean, mrproper , valgrind
 
 # Désactivation des règles implicites
 .SUFFIXES:
 
 # Variables
 CC = gcc
-PROJECT = Compilateur
+PROJECT = texcc
 TYPE = .out
 BIN = $(PROJECT)$(TYPE)
 DOUT =
-OBJS = variable.o tableSymbole.o expression.o quad.o quad_list.o expression_arithm.o\
-gen_assembleur.o expression_bool.o statement.o
-EXECY = new_latex.y
+OBJS = variable.o tableSymbole.o expression.o quad.o quad_list.o \
+gen_assembleur.o  statement.o
+EXECY = latex.y
 EXECL = latex.l
 LEX = lex
 YACC = yacc -d -v
@@ -40,7 +40,10 @@ y.tab.c: $(EXECY) $(DEPS)
 
 # Suppression des fichiers temporaires
 clean:
-	rm -rf y.tab.c lex.yy.c y.tab.h y.output $(OBJS)
+	rm -rf y.tab.c lex.yy.c y.tab.h y.output output.s $(OBJS)
 
 mrproper: clean
 	rm $(BIN)
+
+valgrind: all
+	valgrind --leak-check=yes ./$(BIN)

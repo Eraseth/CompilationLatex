@@ -1,8 +1,0 @@
-Questions :
-
-Dans la zone de déclaration : Qu'est ce qui est obligatoire ou non ?
-Une suite de déclaration peut-elle être vide ?
-TexSci, algo ?
-
-Syntaxe exacte du latex pour les expressions ou une syntaxe simplifiée qui permettent d'accomplir les exemples.
- - Faire la syntaxe axhaustive.
