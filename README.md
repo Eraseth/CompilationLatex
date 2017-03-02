@@ -18,3 +18,8 @@ Lex and Yacc are required.
 The generated assembly is write into the file "output.s".
 
 Many examples can be find into this repository.
+
+## Authors
+
+  - [Maxime W](https://github.com/Eraseth)
+  - [Pllavie](https://github.com/pllavie)
