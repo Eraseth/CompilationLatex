@@ -13,7 +13,7 @@ Lex and Yacc are required.
 
 ./texcc.out [file]
 
-./texcc.out ../TexsciFiles/exemples_dl/tex/03_print_int_42.tex for example.
+Example : ./texcc.out ../TexsciFiles/exemples_dl/tex/03_print_int_42.tex
 
 The generated assembly is write into the file "output.s".
 
